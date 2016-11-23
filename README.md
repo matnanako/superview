@@ -20,6 +20,7 @@ $ composer require xzwh/superview@dev
 Firstly, add "SuperView\Providers\SuperViewModelProvider::class" into the providers array in laravel's config/app.php.
 ``` php
 $superview = new SuperView\SuperView::getInstance($configs);
+$superview['soft']->getRecentList(['limit'=>50]);
 ```
 
 ## Configs
@@ -45,11 +46,11 @@ $superview = new SuperView\SuperView::getInstance($configs);
 参数
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| params        | 参数数组                            | 是    | null    |
+| params        | 参数数组                            | 否    | null    |
 params
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| category_id   | 分类id                              | 是    | 0       |
+| category_id   | 分类id                              | 否    | 0       |
 | page          | 分页数                              | 否    | 1       |
 | limit         | 每页数据量                          | 否    | 20      |
 | is_pic        | 是否只查询带图片的数据              | 否    | 0       |
@@ -58,11 +59,11 @@ params
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| params        | 参数数组                            | 是    | null    |
+| params        | 参数数组                            | 否    | null    |
 params:
 | 参数名        | 描述                                         | 必填  | 默认    |
 | ------------- | -------------------------------------------- | :---: | :-----: |
-| category_id   | 分类id                                       | 是    | 0       |
+| category_id   | 分类id                                       | 否    | 0       |
 | page          | 分页数                                       | 否    | 1       |
 | limit         | 每页数据量                                   | 否    | 20      |
 | is_pic        | 是否只查询带图片的数据                       | 否    | 0       |
