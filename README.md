@@ -40,7 +40,7 @@ $superview = new SuperView\SuperView::getInstance($configs);
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
 | id            | 分类id                              | 是    | null    |
-### content
+### content(支持使用具体的channel名称)
 #### 1. getRecentList($params)
 参数
 | 参数名        | 描述                                | 必填  | 默认    |
