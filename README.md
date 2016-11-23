@@ -36,12 +36,16 @@ $superview['soft']->getRecentList(['limit'=>50]);
 
 ## Api
 ### category
+
 #### 1. getInfo($id)
 ##### 参数
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
 | id            | 分类id                              | 是    | null    |
+
+
 ### content(支持使用具体的channel名称)
+
 #### 1. getRecentList($params)
 ##### 参数
 | 参数名        | 描述                                | 必填  | 默认    |
