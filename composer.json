@@ -6,13 +6,13 @@
         "xzwh",
         "superview"
     ],
-    "homepage": "https://github.com/xzwh/superview",
+    "homepage": "https://coding.net/u/huangyukun/p/superview/git",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_website",
+            "name": "yukun",
+            "email": "huangyukun@xzwh.com",
+            "homepage": "https://coding.net/u/huangyukun",
             "role": "Developer"
         }
     ],
