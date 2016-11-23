@@ -41,7 +41,7 @@ $superview = new SuperView\SuperView($configs);
 | ------------- | ----------------------------------- | :---: | :-----: |
 | id            | 分类id                              | 是    | null    |
 ### conten
-#### 1. getRecentList($params
+#### 1. getRecentList($params)
 参数
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
