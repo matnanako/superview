@@ -7,8 +7,6 @@ namespace SuperView\Dal\Api;
 */
 class Content extends Base
 {
-    protected $rankList = array('day','week','month','all');
-
     public function getList($parent_category_id, $page, $limit, $is_pic, $period)
     {
         if (empty($period)) {

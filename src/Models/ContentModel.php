@@ -25,13 +25,38 @@ class ContentModel extends BaseModel
      * 
      * @return array
      */
-    public function getList($params)
+    public function getRecentList($params)
+    {
+        return $this->getList($params);
+    }
+
+    /**
+     * Get rank list.
+     * 
+     * @return array
+     */
+    public function getRankList($params)
+    {
+        return $this->getList($params);
+    }
+
+    /**
+     * Get list.
+     * 
+     * @return array
+     */
+    private function getList($params)
     {
         // Import variables into the current symbol table from params.
         $this->setDefaultParams($params);
         extract($params);
 
         $data = $this->dal['content:' . $this->virtual_model]->getList($category_id, $page, $limit, $is_pic, $period);
+
+        foreach ($data['list'] as $key => &$list) {
+            $list['category_url'] = '';
+            $list['info_url'] = '';
+        }
         return $data;
     }
 

@@ -5,7 +5,7 @@ namespace SuperView\Models;
 class CategoryModel extends BaseModel
 {
 
-    protected $cache_param_keys = [];
+    protected static $cache_param_keys = [];
 
     /**
      * Get categories list and store in cache.
@@ -34,7 +34,7 @@ class CategoryModel extends BaseModel
      * @param  int  $id
      * @return array
      */
-    public function getDetail($id)
+    public function getInfo($id)
     {
         if (empty($id)) {
             throw new \SuperView\Exceptions\BaseException("SuperView Error!");
