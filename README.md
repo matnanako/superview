@@ -22,6 +22,16 @@ Firstly, add "SuperView\Providers\SuperViewModelProvider::class" into the provid
 $superview = new SuperView\SuperView($configs);
 ```
 
+## Configs
+```
+[
+    'api_base_url' => 'http://api.base.url',
+    'cache_minutes' => 120, // 通用缓存时间，单位：分
+    'info_route_role' => '/{channel}/{id}',
+    'category_route_role' => '/{category_id}',
+]
+```
+
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
