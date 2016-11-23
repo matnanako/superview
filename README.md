@@ -19,7 +19,7 @@ $ composer require xzwh/superview@dev
 ## Usage
 Firstly, add "SuperView\Providers\SuperViewModelProvider::class" into the providers array in laravel's config/app.php.
 ``` php
-$superview = new SuperView\SuperView($configs);
+$superview = new SuperView\SuperView::getInstance($configs);
 ```
 
 ## Configs
@@ -40,7 +40,7 @@ $superview = new SuperView\SuperView($configs);
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
 | id            | 分类id                              | 是    | null    |
-### conten
+### content
 #### 1. getRecentList($params)
 参数
 | 参数名        | 描述                                | 必填  | 默认    |
