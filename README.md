@@ -17,7 +17,7 @@ $ composer require xzwh/superview@dev
 ```
 
 ## Usage
-
+Firstly, add "SuperView\Providers\SuperViewModelProvider::class" into the providers array in laravel's config/app.php.
 ``` php
 $superview = new SuperView\SuperView($configs);
 ```
