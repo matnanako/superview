@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "xzwh\\superview\\": "src"
+            "SuperView\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "xzwh\\superview\\": "tests"
+            "SuperView\\": "tests"
         }
     },
     "scripts": {
