@@ -39,7 +39,7 @@ $superview['soft']->cache(20)->recent(); //使用新的缓存时间，并且只�
 [
     'api_base_url' => 'http://api.base.url',
     'cache_minutes' => 120, // 通用缓存时间，单位：分
-    'class_url' => '/{channel}/{class_name}/list-{classid}-1.html',
+    'class_url' => '/{channel}/{classname}/list-{classid}-1.html',
     'info_url' => '/{channel}/{id}.html',
 ]
 ```
