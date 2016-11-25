@@ -17,19 +17,30 @@ $ composer require xzwh/superview:~1.0@dev
 ```
 
 ## Usage
-Firstly, add "SuperView\Providers\SuperViewModelProvider::class" into the providers array in laravel's config/app.php.
 ``` php
-$superview = new SuperView\SuperView::getInstance($configs);
-$superview['soft']->getRecentList(['limit'=>50]);
+$superview =  SuperView\SuperView::getInstance($configs);
+$superview['soft']->recent();
 ```
+  
+缓存默认使用全局配置`cache_minutes`, 如果需要为单独的请求设置缓存时间，可以使用cache方法, 参数为分钟。
+``` php
+$superview['soft']->cache(10)->recent();
+```
+如果需要修改所有的查询都为设置的缓存时间，可以使用第二个参数，缓存时间将一直保留，直到下一次设置cache.
+``` php
+$superview['soft']->cache(10, true)->recent();
+$superview['soft']->recent(); //仍然使用上面的缓存时间
 
+$superview['soft']->cache(20)->recent(); //使用新的缓存时间，并且只在当前调用中
+```
+  
 ## Configs
 ```
 [
     'api_base_url' => 'http://api.base.url',
     'cache_minutes' => 120, // 通用缓存时间，单位：分
-    'info_route_role' => '/{channel}/{id}',
-    'category_route_role' => '/{category_id}',
+    'class_url' => '/{channel}/{class_name}/list-{classid}-1.html',
+    'info_url' => '/{channel}/{id}.html',
 ]
 ```
 
@@ -37,41 +48,110 @@ $superview['soft']->getRecentList(['limit'=>50]);
 ## Api
 ### category
 
-#### 1. getInfo($id)
-##### 参数
+#### 1. info($classid)
+获取分类信息
+
+参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| id            | 分类id                              | 是    | null    |
+| classid       | 分类id                              | 是    | null    |
+
+#### 2. finalChildren($classid)
+获取子终极分类
+
+参数:
+| 参数名        | 描述                                | 必填  | 默认    |
+| ------------- | ----------------------------------- | :---: | :-----: |
+| classid       | 分类id                              | 是    | null    |
+
+#### 3. children($classid)
+获取下一级子分类
+
+参数:
+| 参数名        | 描述                                | 必填  | 默认    |
+| ------------- | ----------------------------------- | :---: | :-----: |
+| classid       | 分类id                              | 是    | null    |
+
+#### 4. brothers($classid)
+获取同级兄弟分类
+
+参数:
+| 参数名        | 描述                                | 必填  | 默认    |
+| ------------- | ----------------------------------- | :---: | :-----: |
+| classid       | 分类id                              | 是    | null    |
 
 
 ### content(支持使用具体的channel名称)
 
-#### 1. getRecentList($params)
-##### 参数
+#### 1. info($id)
+获取内容信息
+
+参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| params        | 参数数组                            | 否    | null    |
-params:
+| id            | 内容id                              | 是    | null    |
+
+#### 2. recent($classid, $page, $limit, $is_pic)
+获取最新内容列表
+
+参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| category_id   | 分类id                              | 否    | 0       |
+| classid       | 分类id                              | 否    | 0       |
 | page          | 分页数                              | 否    | 1       |
 | limit         | 每页数据量                          | 否    | 20      |
 | is_pic        | 是否只查询带图片的数据              | 否    | 0       |
 
-#### 2. getRankList($params)
-##### 参数
-| 参数名        | 描述                                | 必填  | 默认    |
-| ------------- | ----------------------------------- | :---: | :-----: |
-| params        | 参数数组                            | 否    | null    |
-params:
+#### 3. rank($classid, $page, $limit, $is_pic, $period)
+获取周期排行列表
+
+参数:
 | 参数名        | 描述                                         | 必填  | 默认    |
 | ------------- | -------------------------------------------- | :---: | :-----: |
-| category_id   | 分类id                                       | 否    | 0       |
+| classid       | 分类id                                       | 否    | 0       |
 | page          | 分页数                                       | 否    | 1       |
 | limit         | 每页数据量                                   | 否    | 20      |
 | is_pic        | 是否只查询带图片的数据                       | 否    | 0       |
 | period        | 排名周期,'day','week','month','all'          | 否    | 0       |
+
+#### 4. good($classid, $page, $limit, $is_pic, $level, $order)
+获取推荐列表
+
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| classid       | 分类id                                       | 否    | 0        |
+| page          | 分页数                                       | 否    | 1        |
+| limit         | 每页数据量                                   | 否    | 20       |
+| is_pic        | 是否只查询带图片的数据                       | 否    | 0        |
+| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| order         | 排序字段                                     | 否    | newstime |
+
+#### 5. top($classid, $page, $limit, $is_pic, $level, $order)
+获取推荐列表
+
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| classid       | 分类id                                       | 否    | 0        |
+| page          | 分页数                                       | 否    | 1        |
+| limit         | 每页数据量                                   | 否    | 20       |
+| is_pic        | 是否只查询带图片的数据                       | 否    | 0        |
+| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| order         | 排序字段                                     | 否    | newstime |
+
+#### 6. firsttitle($classid, $page, $limit, $is_pic, $level, $order)
+获取推荐列表
+
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| classid       | 分类id                                       | 否    | 0        |
+| page          | 分页数                                       | 否    | 1        |
+| limit         | 每页数据量                                   | 否    | 20       |
+| is_pic        | 是否只查询带图片的数据                       | 否    | 0        |
+| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| order         | 排序字段                                     | 否    | newstime |
 
 ## Change log
 
