@@ -33,13 +33,15 @@ class Category extends Base
         // 如果在前面的递归中已经设置了当前分类的channel_id，不需要再处理。
         if (!isset($category['channel_id'])) {
             if ($category['bclassid'] == 0) {
-                $category['channel_id'] = 0;
+                $category['channel_id'] = $category['classid'];
                 $category['channel'] = $category['bname'];
             } else {
-                $category['channel_id'] = $this->getChannel($categories, $category['bclassid']);
-                $category['channel'] = $category['bname'];
+                $parentCategory = $this->getChannel($categories, $category['bclassid']);
+                $category['channel_id'] = $parentCategory['channel_id'];
+                $category['channel'] = $parentCategory['channel'];
             }
         }
+        return $category;
     }
 
     private function makeTrees(&$categories) {

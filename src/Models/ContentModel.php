@@ -94,11 +94,11 @@ class ContentModel extends BaseModel
         $info_url = \Config::get('info_url');
         foreach ($list as $key => &$value) {
             $category = $categoryModel->info($value['classid']);
-            $value['class'] = $category['classname'];
+            $value['classname'] = $category['classname'];
             $value['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
                 [$category['channel'], $category['bname'], $value['classid']],
                 $class_url);
-            $value['infourl'] = str_replace(['{channel}','{id}'], [$category['channel'],$value['id']], $info_url);
+            $value['infourl'] = str_replace(['{channel}','{classname}','{classid}','{id}'], [$category['channel'],$category['bname'],$value['classid'],$value['id']], $info_url);
         }
     }
 
