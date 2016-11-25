@@ -95,7 +95,7 @@ class ContentModel extends BaseModel
         foreach ($list as $key => &$value) {
             $category = $categoryModel->info($value['classid']);
             $value['class'] = $category['classname'];
-            $value['classurl'] = str_replace(['{channel}','{category_name}','{classid}'],
+            $value['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
                 [$category['channel'], $category['bname'], $value['classid']],
                 $class_url);
             $value['infourl'] = str_replace(['{channel}','{id}'], [$category['channel'],$value['id']], $info_url);
