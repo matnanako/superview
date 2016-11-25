@@ -6,42 +6,41 @@ use GuzzleHttp\Client as HttpClient;
 
 class Api
 {
-    protected $http;
+    private $http;
 
-    public function __construct()
+    private static $instance;
+
+    private function __construct()
     {
         $this->http = new HttpClient(['base_uri'=>\Config::get('api_base_url')]);
     }
 
+    public static function getInstance()
+    {
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     public function get($params)
     {
-        $this->convertToApiParams($params);
+        foreach ($params as $key => $value) {
+            if (empty($value)) {
+                unset($params[$key]);
+            }
+        }
         $params = ['query'=>$params];
         $data = $this->getData($params);
         return json_decode($data, true);
     }
 
-    public function post($params)
-    {
-        $this->convertToApiParams($params);
-        $params = ['form_params'=>$params];
-        $data = $this->getData($params, false);
-        return json_decode($data, true);
-    }
-
     private function getData($params, $cache = true)
     {
-        $response = $this->http->post('', $params);
+        $response = $this->http->get('', $params);
         $body = $response->getBody();
         $data = $body->getContents();
         return $data;
-    }
-
-    private function convertToApiParams(&$params)
-    {
-        if (!empty($params['category'])) {
-            $params['c'] = substr($params['category'], 0, strpos($params['category'], "/"));
-            $params['classid'] = \Config::get('categories')[$params['category']];
-        }
     }
 }

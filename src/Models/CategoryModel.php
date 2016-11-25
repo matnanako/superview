@@ -5,24 +5,24 @@ namespace SuperView\Models;
 class CategoryModel extends BaseModel
 {
 
-    protected static $cache_param_keys = [];
+    /**
+     * Use static variable type for we can read cache only one time during one request.
+     */
+    private static $categories;
 
     /**
      * Get categories list and store in cache.
      * 
      * @return array
      */
-    public function getList()
+    private function all()
     {
-        $cache_key = $this->makeCacheKey(__METHOD__);
+        $cache_key = parent::makeCacheKey(__METHOD__);
 
         // Store the cache forever.
         $categories = \Cache::sear($cache_key, function()  {
             $categories = $this->dal['category']->getList();
-            foreach ($categories as $category) {
-                $mapping[$category['category_id']] = $category;
-            }
-            return $mapping;
+            return $categories;
         });
 
         return $categories;
@@ -31,15 +31,126 @@ class CategoryModel extends BaseModel
     /**
      * Get category detail.
      * 
-     * @param  int  $id
-     * @return array
+     * @param  int  $classid
+     * @return boolean | array
      */
-    public function getInfo($id)
+    public function info($classid)
     {
-        if (empty($id)) {
-            throw new \SuperView\Exceptions\BaseException("SuperView Error!");
+        if (empty($classid)) {
+            return false;
         }
-        $categories = $this->getList();
-        return $categories[$id];
+
+        if (empty(self::$categories)) {
+            self::$categories = $this->all();
+        }
+
+        return self::$categories[$classid];
+    }
+
+    /**
+     * Get category final children.
+     * 
+     * @param  int  $classid
+     * @return boolean | array
+     */
+    public function finalChildren($classid)
+    {
+        if (empty($classid)) {
+            return false;
+        }
+        $category = $this->info($classid);
+        $children_ids = explode('|', trim($category['sonclass'], '|'));
+
+        $children = [];
+        foreach ($children_ids as $key => $child_id) {
+            $child = $this->info($child_id);
+            if (!empty($child)) {
+                $children[$child_id] = $child;
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * Get category  children.
+     * 
+     * @param  int  $classid
+     * @return boolean | array
+     */
+    public function children($classid)
+    {
+        if (empty($classid)) {
+            return false;
+        }
+
+        if (empty(self::$categories)) {
+            self::$categories = $this->all();
+        }
+
+        if (!isset(self::$categories[$classid]['children'])) {
+            return [];
+        }
+
+        return self::$categories[$classid]['children'];
+    }
+
+    /**
+     * Get category brothers.
+     * 
+     * @param  int  $classid
+     * @return boolean | array
+     */
+    public function brothers($classid)
+    {
+        if (empty($classid)) {
+            return false;
+        }
+        $category = $this->info($classid);
+        $parent_category_id = $category['bclassid'];
+        if ($parent_category_id == 0) {
+            $brothers = $this->getChannels();
+        } else {
+            $brothers = $this->children($parent_category_id);
+        }
+
+        // unset($brothers[$classid]); //剔除自己
+
+        return $brothers;
+    }
+
+    /**
+     * Get all top category.
+     * 
+     * @return boolean | array
+     */
+    public function getChannels()
+    {
+
+        $cache_key = parent::makeCacheKey(__METHOD__);
+
+        // Store the cache forever.
+        $channels = $categories = \Cache::sear($cache_key, function()  {
+            $categories = $this->all();
+            $channels = [];
+            foreach ($categories as $category) {
+                if ($category['bclassid'] == 0) {
+                    $channels[] = $category;
+                }
+            }
+            return $channels;
+        });
+
+        return $channels;
+    }
+
+    /**
+     * Category类不需要统一缓存.
+     * 
+     * @return string
+     */
+    public function makeCacheKey($method, $params = [])
+    {
+        return false;
     }
 }

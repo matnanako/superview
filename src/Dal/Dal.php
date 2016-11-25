@@ -10,27 +10,26 @@ use ArrayAccess;
 class Dal implements ArrayAccess
 {
 
-    private $dals;
+    private static $dals;
     
      public function offsetGet($offset)
     {
         $dals = \Config::get('dals');
-        $dals = $dals[\Config::get('default_dal')];
-        if (!isset($this->dals[$offset])) {
+        if (!isset(self::$dals[$offset])) {
             if (strstr($offset, 'content:')) {
-                $model = 'content';
-                $virtual_model = substr($offset, strpos($offset, ":") + 1);
+                $dal_key = 'content';
+                $virtual_dal = substr($offset, strpos($offset, ":") + 1);
             } else {
-                $model = $virtual_model = $offset;
+                $dal_key = $virtual_dal = $offset;
             }
-            if (isset($dals[$model]) && class_exists($dals[$model])) {
-                $this->dals[$model] = new $dals[$model]($virtual_model);
+            if (isset($dals[$dal_key]) && class_exists($dals[$dal_key])) {
+                self::$dals[$dal_key] = new $dals[$dal_key]($virtual_dal);
             } else {
-                throw new \Exception("Dal \"$offset\" not found!");
+                return [];
             }
         }
 
-        return $this->dals[$model];
+        return self::$dals[$dal_key];
     }
 
     public function offsetExists($offset) {}

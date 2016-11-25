@@ -11,6 +11,11 @@ use SuperView\Utils\Config;
 class SuperView implements ArrayAccess
 {
     private $model;
+
+    private $cacheMinutes;
+
+    private $keepCacheTime;
+
     private static $instance;
 
     private function __construct($configs)
@@ -39,45 +44,87 @@ class SuperView implements ArrayAccess
      */
     public function __call($method, $params)
     {
-        $params = isset($params[0]) ? $params[0] : []; // get param, e.g.['limit'=>1].
-
         // Get model to query data.
         $model = $this->getCallBindingModel();
 
-        if (empty($model)) {
+        if (empty($model) || !is_callable([$model, $method])) {
             return [];
         }
 
-        $cache_key = $model->makeCacheKey($method, $params);
-        if (empty($cache_key)) {
-            throw new \SuperView\Exceptions\BaseException("No cache key!");
+        // 统一设置缓存，如果cache_key为false则该model不设置缓存.
+        $cache_minutes = $this->getCacheTime();
+        $cache_key     = $this->getCacheKey($model, $method, $params, $cache_minutes);
+        if ($cache_key === false) {
+            $data = $model->$method(...$params);
+        } else {
+            $data = \Cache::remember($cache_key, $cache_minutes, function() use ($model, $method, $params) {
+                $data = $model->$method(...$params);
+                return $data;
+            });
         }
-
-        // Get data from cache.
-        $cache_minutes = config('app.debug') ? 0 : \Config::get('cache_minutes');
-        $data = \Cache::remember($cache_key, $cache_minutes, function() use ($model, $method, $params) {
-
-            // Get the response from super model.
-            $response = !is_callable([$model, $method]) ? [] : $model->$method($params);
-
-            return $response;
-        });
 
         return $data;
     }
 
     /**
+     * Set cache time.
+     * 
+     * @param  string  $minutes
+     * @param  array  $keep 是否保持设置
+     * @return object
+     */
+    public function cache($minutes, $keep = false)
+    {
+        $this->cacheMinutes = $minutes;
+        $this->keepCacheTime = $keep;
+
+        return $this;
+    }
+
+    /**
+     * Get cache time.
+     * 
+     * @return object
+     */
+    private function getCacheTime()
+    {
+        $cache_minutes = empty($this->cacheMinutes) ? \Config::get('cache_minutes') : $this->cacheMinutes;
+
+        // 如果不需要保持设置，使用之后清空$this->cacheMinutes。
+        if (!$this->keepCacheTime) {
+            $this->cacheMinutes = 0;
+        }
+
+        return $cache_minutes;
+    }
+
+    /**
+     * Get cache key.
+     * 
+     * @return object
+     */
+    private function getCachekey($model, $method, $params, $cache_minutes)
+    {
+        $params['cache'] = $cache_minutes;
+        $cache_key = $model->makeCacheKey($method, $params);
+
+        return $cache_key;
+    }
+
+    /**
      * Get binding model by model mapping
-     * which is configured in config.php
      * 
      * @return object
      */
     private function getCallBindingModel()
     {
-        if (array_key_exists($this->model, \Config::get('models'))) {
-            $model = app(\Config::get('model_prefix') . $this->model);
+        $models = \Config::get('models');
+        if (array_key_exists($this->model, $models)) {
+            $model = $models[$this->model];
+            $model = $model::getInstance();
         } else {
-            $model = app(\Config::get('model_prefix') . 'content');
+            $model = $models['content'];
+            $model = $model::getInstance();
             $model->setVirtualModel($this->model);
         }
 

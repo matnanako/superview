@@ -10,22 +10,28 @@ use SuperView\Utils\Api;
 class Base
 {
     protected $api;
-    private $virtual_model;
+    private $virtualDal;
 
-    public function __construct($virtual_model)
+    public function __construct($virtualDal)
     {
-        $this->api = new Api();
-        $this->virtual_model = $virtual_model;
+        $this->api = Api::getInstance();
+        $this->virtualDal = $virtualDal;
     }
 
-    public function getData($params)
+    public function getData($action, $params = [])
     {
-        $params['c'] = $this->virtual_model;
+        if (empty($this->virtualDal)) {
+            return false;
+        }
+
+        $params['c'] = $this->virtualDal;
+        $params['a'] = $action;
+
         $data = $this->api->get($params);
-        if (isset($data['data'])) {
+        if (isset($data['status']) && $data['status'] > 0) {
             return $data['data'];
         } else {
-            throw new \SuperView\Exceptions\BaseException("SuperView Error!");
+            return false;
         }
     }
 
