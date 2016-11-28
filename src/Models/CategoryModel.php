@@ -120,6 +120,39 @@ class CategoryModel extends BaseModel
     }
 
     /**
+     * Get category breadcrumb.
+     * 
+     * @return boolean | array
+     */
+    public function breadcrumb($classid)
+    {
+        if (empty($classid)) {
+            return false;
+        }
+
+        $category = $this->info($classid);
+        $categories = [$category];
+
+        while (isset($category['bclassid']) && $category['bclassid'] != 0) {
+            $parentCategory = $this->info($category['bclassid']);
+            $category = $parentCategory;
+            $categories[] = $category;
+        }
+
+        $class_url = \Config::get('class_url');
+        foreach ($categories as &$category) {
+            $category['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
+                [$category['channel'], $category['bname'], $category['classid']],
+                $class_url);
+        }
+
+        // 反序存储，让父类在数组的顶部
+        $breadcrumbs = array_reverse($categories);
+
+        return $breadcrumbs;
+    }
+
+    /**
      * Get all top category.
      * 
      * @return boolean | array
@@ -130,7 +163,7 @@ class CategoryModel extends BaseModel
         $cache_key = parent::makeCacheKey(__METHOD__);
 
         // Store the cache forever.
-        $channels = $categories = \Cache::sear($cache_key, function()  {
+        $channels = \Cache::sear($cache_key, function() {
             $categories = $this->all();
             $channels = [];
             foreach ($categories as $category) {

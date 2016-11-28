@@ -13,7 +13,12 @@ class ContentModel extends BaseModel
     public function info($id = 0)
     {
         $data = $this->dal['content:' . $this->virtualModel]->getInfo($id);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
@@ -25,7 +30,12 @@ class ContentModel extends BaseModel
     public function recent($classid = 0, $page = 1, $limit = 20, $is_pic = 0)
     {
         $data = $this->dal['content:' . $this->virtualModel]->getRecentList($classid, $page, $limit, $is_pic);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
@@ -37,7 +47,12 @@ class ContentModel extends BaseModel
     public function rank($classid = 0, $page = 1, $limit = 20, $is_pic = 0, $period = 'all')
     {
         $data = $this->dal['content:' . $this->virtualModel]->getRankList($classid, $page, $limit, $is_pic, $period);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
@@ -49,7 +64,12 @@ class ContentModel extends BaseModel
     public function good($classid = 0, $page = 1, $limit = 20, $is_pic = 0, $level = 0, $order = 'newstime')
     {
         $data = $this->dal['content:' . $this->virtualModel]->getCustomList('good', $classid, $page, $limit, $is_pic, $level, $order);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
@@ -61,7 +81,12 @@ class ContentModel extends BaseModel
     public function top($classid = 0, $page = 1, $limit = 20, $is_pic = 0, $level = 0, $order = 'newstime')
     {
         $data = $this->dal['content:' . $this->virtualModel]->getCustomList('top', $classid, $page, $limit, $is_pic, $level, $order);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
@@ -73,7 +98,12 @@ class ContentModel extends BaseModel
     public function firsttitle($classid = 0, $page = 1, $limit = 20, $is_pic = 0, $level = 0, $order = 'newstime')
     {
         $data = $this->dal['content:' . $this->virtualModel]->getCustomList('firsttitle', $classid, $page, $limit, $is_pic, $level, $order);
-        $this->addListInfo($data['list']);
+        if (isset($data['list'])) {
+            $this->addListInfo($data['list']);
+        } else {
+            $data = [];
+        }
+
         return $data;
     }
 
