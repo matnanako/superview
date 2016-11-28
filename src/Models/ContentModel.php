@@ -120,8 +120,8 @@ class ContentModel extends BaseModel
         }
 
         $categoryModel = CategoryModel::getInstance();
-        $class_url = \Config::get('class_url');
-        $info_url = \Config::get('info_url');
+        $class_url = \SConfig::get('class_url');
+        $info_url = \SConfig::get('info_url');
         foreach ($list as $key => &$value) {
             $category = $categoryModel->info($value['classid']);
             $value['classname'] = $category['classname'];

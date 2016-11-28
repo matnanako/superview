@@ -20,7 +20,7 @@ class CategoryModel extends BaseModel
         $cache_key = parent::makeCacheKey(__METHOD__);
 
         // Store the cache forever.
-        $categories = \Cache::sear($cache_key, function()  {
+        $categories = \SCache::sear($cache_key, function()  {
             $categories = $this->dal['category']->getList();
             return $categories;
         });
@@ -139,7 +139,7 @@ class CategoryModel extends BaseModel
             $categories[] = $category;
         }
 
-        $class_url = \Config::get('class_url');
+        $class_url = \SConfig::get('class_url');
         foreach ($categories as &$category) {
             $category['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
                 [$category['channel'], $category['bname'], $category['classid']],
@@ -163,7 +163,7 @@ class CategoryModel extends BaseModel
         $cache_key = parent::makeCacheKey(__METHOD__);
 
         // Store the cache forever.
-        $channels = \Cache::sear($cache_key, function() {
+        $channels = \SCache::sear($cache_key, function() {
             $categories = $this->all();
             $channels = [];
             foreach ($categories as $category) {

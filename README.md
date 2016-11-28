@@ -18,29 +18,30 @@ $ composer require xzwh/superview:~1.0@dev
 
 ## Usage
 ``` php
-$superview =  SuperView\SuperView::getInstance($configs);
-$superview['soft']->recent();
+SuperView::setConfig($configs);
+SuperView::get('soft')->recent();
 ```
   
 缓存默认使用全局配置`cache_minutes`, 如果需要为单独的请求设置缓存时间，可以使用cache方法, 参数为分钟。
 ``` php
-$superview['soft']->cache(10)->recent();
+SuperView::get('soft')->cache(10)->recent();
 ```
 如果需要修改所有的查询都为设置的缓存时间，可以使用第二个参数，缓存时间将一直保留，直到下一次设置cache.
 ``` php
-$superview['soft']->cache(10, true)->recent();
-$superview['soft']->recent(); //仍然使用上面的缓存时间
+SuperView::get('soft')->cache(10, true)->recent();
+SuperView::get('soft')->recent(); //仍然使用上面的缓存时间
 
-$superview['soft']->cache(20)->recent(); //使用新的缓存时间，并且只在当前调用中
+SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且只在当前调用中
 ```
   
 ## Configs
 ```
 [
     'api_base_url' => 'http://api.base.url',
-    'cache_minutes' => 120, // 通用缓存时间，单位：分
-    'class_url' => '/{channel}/{classname}/list-{classid}-1.html',
-    'info_url' => '/{channel}/{classname}/{classid}/{id}.html',
+    'cache_minutes' => 120, // 通用缓存时间，单位：分 默认120分钟
+    'refresh_cache' => 1, // 刷新所有方法的缓存, 1是，0否，默认0
+    'class_url' => '/{channel}/{classname}/{classid}.html', //支持参数列表
+    'info_url' => '/{channel}/{classname}/{classid}/{id}.html', //支持参数列表
 ]
 ```
 

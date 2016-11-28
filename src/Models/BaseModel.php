@@ -38,6 +38,6 @@ class BaseModel
      */
     public function makeCacheKey($method, $params = [])
     {
-        return md5(\Config::get('api_base_url') . get_class($this) . ':' . $this->virtualModel . ':' . $method . http_build_query($params));
+        return md5(\SConfig::get('api_base_url') . get_class($this) . ':' . $this->virtualModel . ':' . $method . http_build_query($params));
     }
 }

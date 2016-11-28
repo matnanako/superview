@@ -5,6 +5,8 @@ return [
 
     // Cache lifetime.
     'cache_minutes' => 0,
+    // 是否刷新缓存.
+    'refresh_cache' => 0,
 
     // Api service host.
     'api_base_url' => 'http://xzwh.api.zz314.com/downza/',

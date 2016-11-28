@@ -12,7 +12,7 @@ class Api
 
     private function __construct()
     {
-        $this->http = new HttpClient(['base_uri'=>\Config::get('api_base_url')]);
+        $this->http = new HttpClient(['base_uri'=>\SConfig::get('api_base_url')]);
     }
 
     public static function getInstance()

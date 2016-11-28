@@ -14,7 +14,7 @@ class Dal implements ArrayAccess
     
      public function offsetGet($offset)
     {
-        $dals = \Config::get('dals');
+        $dals = \SConfig::get('dals');
         if (!isset(self::$dals[$offset])) {
             if (strstr($offset, 'content:')) {
                 $dal_key = 'content';
