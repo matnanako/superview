@@ -39,18 +39,18 @@ class Content extends Base
         return $this->getData('info', $params);
     }
 
-    public function getRecentList($classid, $page, $limit, $is_pic)
+    public function getRecentList($classid, $page, $limit, $isPic)
     {
         $params = [
             'classid' => intval($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
-            'ispic'   => intval($is_pic),
+            'ispic'   => intval($isPic),
         ];
         return $this->getData('recent', $params);
     }
 
-    public function getRankList($classid, $page, $limit, $is_pic, $period)
+    public function getRankList($classid, $page, $limit, $isPic, $period)
     {
         if (!in_array($period, self::$rankPeriods)) {
             return false;
@@ -59,7 +59,7 @@ class Content extends Base
             'classid' => intval($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
-            'ispic'   => intval($is_pic),
+            'ispic'   => intval($isPic),
             'rank'    => $period,
         ];
 
@@ -67,10 +67,10 @@ class Content extends Base
     }
 
     /**
-     * 推荐自定义列表
+     * 推荐信息列表
      * @return boolean | array
      */
-    public function getCustomList($type, $classid, $page, $limit, $is_pic, $level, $order = '')
+    public function getLevelList($type, $classid, $page, $limit, $isPic, $level, $order)
     {
         if (!$this->isValidOrder($order) || !$this->isValidLevel($level)) {
             return false;
@@ -85,10 +85,145 @@ class Content extends Base
             'classid' => intval($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
-            'ispic'   => intval($is_pic),
+            'ispic'   => intval($isPic),
             'order'   => $order,
         ];
         return $this->getData($type, $params);
+    }
+
+    /**
+     * 今日更新列表
+     * @return boolean | array
+     */
+    public function getTodayList($classid, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+
+        $params = [
+            'classid' => intval($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('today', $params);
+    }
+
+    /**
+     * 时间段列表
+     * @return boolean | array
+     */
+    public function getIntervalList($startTime, $endTime, $classid, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+
+        if($startTime > $endTime || $startTime < 0 || $endTime < 0) {
+            return false;
+        }
+
+        $params = [
+            'start'   => intval($startTime),
+            'end'     => intval($endTime),
+            'classid' => intval($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('interval', $params);
+    }
+
+    /**
+     * 时间段列表
+     * @return boolean | array
+     */
+    public function getListByTitle($title, $classid, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+
+        $params = [
+            'title'   => $title,
+            'classid' => intval($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('title', $params);
+    }
+
+    /**
+     * 信息相关列表
+     * @return boolean | array
+     */
+    public function getRelatedList($id, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+
+        $params = [
+            'id'    => intval($id),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+            'ispic' => intval($isPic),
+            'order' => $order,
+        ];
+        return $this->getData('related', $params);
+    }
+
+    /**
+     * TAG信息列表
+     * @return boolean | array
+     */
+    public function getListByTag($tag, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+
+        $params = [
+            'tag'   => $tag,
+            'page'  => intval($page),
+            'limit' => intval($limit),
+            'ispic' => intval($isPic),
+            'order' => $order,
+        ];
+        return $this->getData('tag', $params);
+    }
+
+    /**
+     * 信息所属专题列表
+     * @return boolean | array
+     */
+    public function getInfoTopic($topicId, $limit)
+    {
+        $params = [
+            'ztid' => intval($topicId),
+            'limit' => intval($limit),
+        ];
+        return $this->getData('speciallist', $params);
+    }
+
+
+    /**
+     * 专题信息列表
+     * @return boolean | array
+     */
+    public function getListByTopic($topicId, $page, $limit)
+    {
+        $params = [
+            'ztid' => intval($topicId),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+        ];
+        return $this->getData('special', $params);
     }
 
 
