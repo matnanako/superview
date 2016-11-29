@@ -14,7 +14,7 @@ class BaseModel
 
     private function __construct()
     {
-        $this->dal = new Dal();
+        $this->dal = Dal::getInstance();
     }
 
     public static function getInstance()

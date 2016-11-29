@@ -8,19 +8,17 @@ namespace SuperView\Dal\Api;
 class Tag extends Base
 {
     
-    public function getInfo($params)
+    public function getList($classid, $isGood, $page, $limit, $order)
     {
-        $params['a'] = 'lists';
-        $params['c'] = $this->getClassInfo(__CLASS__);
-        $data = $this->makeData($params);
-        return $data;
+        $params = [
+            'cid'    => intval($classid),
+            'isgood' => intval($isGood),
+            'page'   => intval($page),
+            'limit'  => intval($limit),
+            'order'  => $order,
+        ];
+        return $this->getData('lists', $params);
     }
 
-    public function getfriendUrl($params)
-    {
-        $params['a'] = 'friendlinks';
-        $params['c'] = $this->getClassInfo(__CLASS__);
-        $data = $this->makeData($params);
-        return $data;
-    }
+
 }

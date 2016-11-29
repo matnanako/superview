@@ -31,7 +31,7 @@ class Base
         if (isset($data['status']) && $data['status'] > 0) {
             return $data['data'];
         } else {
-            return false;
+            return [];
         }
     }
 

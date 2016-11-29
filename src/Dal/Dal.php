@@ -10,9 +10,20 @@ use ArrayAccess;
 class Dal implements ArrayAccess
 {
 
-    private static $dals;
+    private $dals;
+
+    private static $instance;
     
-     public function offsetGet($offset)
+    public static function getInstance()
+    {
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+    
+    public function offsetGet($offset)
     {
         $dals = \SConfig::get('dals');
 
@@ -24,15 +35,15 @@ class Dal implements ArrayAccess
             $dalKey = $virtualDal = $offset;
         }
 
-        if (!isset(self::$dals[$dalKey])) {
+        if (!isset($this->dals[$dalKey])) {
             if (isset($dals[$dalKey]) && class_exists($dals[$dalKey])) {
-                self::$dals[$dalKey] = new $dals[$dalKey]($virtualDal);
+                $this->dals[$dalKey] = new $dals[$dalKey]($virtualDal);
             } else {
-                return [];
+                return false;
             }
         }
 
-        return self::$dals[$dalKey];
+        return $this->dals[$dalKey];
     }
 
     public function offsetExists($offset) {}

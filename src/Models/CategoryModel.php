@@ -34,7 +34,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function info($classid)
+    public function info($classid = 0)
     {
         if (empty($classid)) {
             return false;
@@ -53,7 +53,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function finalChildren($classid)
+    public function finalChildren($classid = 0)
     {
         if (empty($classid)) {
             return false;
@@ -78,7 +78,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function children($classid)
+    public function children($classid = 0)
     {
         if (empty($classid)) {
             return false;
@@ -101,7 +101,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function brothers($classid)
+    public function brothers($classid = 0)
     {
         if (empty($classid)) {
             return false;
@@ -124,7 +124,7 @@ class CategoryModel extends BaseModel
      * 
      * @return boolean | array
      */
-    public function breadcrumbs($classid)
+    public function breadcrumbs($classid = 0)
     {
         if (empty($classid)) {
             return false;
@@ -153,26 +153,72 @@ class CategoryModel extends BaseModel
     }
 
     /**
+     * Get category breadcrumb.
+     * 
+     * @return boolean | array
+     */
+    public function search($name = '', $classid = 0)
+    {
+        if (empty($name)) {
+            return false;
+        }
+
+        if (empty(self::$categories)) {
+            self::$categories = $this->all();
+        }
+
+        if (empty($classid)) {
+            $categories = $this->getChannels();
+        } else {
+            $categories = $this->children($classid);
+        }
+
+        $matches = [];
+        $this->searchCategoriesByName($categories, $name, $matches);
+
+        return $matches;
+    }
+
+    /**
+     * 根据分类名称模糊查询分类列表.
+     * 
+     * @return void
+     */
+    private function searchCategoriesByName($categories, $name, &$matches)
+    {
+        foreach ($categories as $key => $category) {
+            if (strpos($category['classname'], $name) !== false) {
+                $matches[] = $category;
+            }
+            if (isset($category['children'])) {
+                $this->searchCategoriesByName($category['children'], $name, $matches);
+            }
+        }
+    }
+
+    /**
      * Get all top category.
      * 
      * @return boolean | array
      */
-    public function getChannels()
+    private function getChannels()
     {
+        static $channels;
 
-        $cache_key = parent::makeCacheKey(__METHOD__);
-
-        // Store the cache forever.
-        $channels = \SCache::sear($cache_key, function() {
-            $categories = $this->all();
-            $channels = [];
-            foreach ($categories as $category) {
-                if ($category['bclassid'] == 0) {
-                    $channels[] = $category;
+        if(empty($channels)) {
+            // Store the cache forever.
+            $cache_key = parent::makeCacheKey(__METHOD__);
+            $channels = \SCache::sear($cache_key, function() {
+                $categories = $this->all();
+                $channels = [];
+                foreach ($categories as $category) {
+                    if ($category['bclassid'] == 0) {
+                        $channels[] = $category;
+                    }
                 }
-            }
-            return $channels;
-        });
+                return $channels;
+            });
+        }
 
         return $channels;
     }

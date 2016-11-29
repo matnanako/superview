@@ -22,24 +22,24 @@ SuperView::setConfig($configs);
 SuperView::get('soft')->recent();
 ```
   
-缓存默认使用全局配置`cache_minutes`, 如果需要为单独的请求设置缓存时间，可以使用cache方法, 参数为分钟。
+缓存默认使用全局配置`cache_minutes`, 如果需要为单独的请求设置缓存时间, 可以使用cache方法, 参数为分钟.
 ``` php
 SuperView::get('soft')->cache(10)->recent();
 ```
-如果需要修改所有的查询都为设置的缓存时间，可以使用第二个参数，缓存时间将一直保留，直到下一次设置cache.
+如果需要修改所有的查询都为设置的缓存时间, 可以使用第二个参数, 缓存时间将一直保留, 直到下一次设置cache.
 ``` php
 SuperView::get('soft')->cache(10, true)->recent();
 SuperView::get('soft')->recent(); //仍然使用上面的缓存时间
 
-SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且只在当前调用中
+SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且只在当前调用中
 ```
   
 ## Configs
 ```
 [
     'api_base_url' => 'http://api.base.url',
-    'cache_minutes' => 120, // 通用缓存时间，单位：分 默认120分钟
-    'refresh_cache' => 1, // 刷新所有方法的缓存, 1是，0否，默认0
+    'cache_minutes' => 120, // 通用缓存时间, 单位：分 默认120分钟, 如果设置为0则不使用缓存，但是所有的分类数据依然使用缓存，如果需要更新分类缓存可以设置refresh_cache.
+    'refresh_cache' => 1, // 刷新所有方法的缓存, 1是, 0否, 默认0
     'class_url' => '/{channel}/{classname}/{classid}.html', //支持参数列表
     'info_url' => '/{channel}/{classname}/{classid}/{id}.html', //支持参数列表
 ]
@@ -89,6 +89,15 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | ------------- | ----------------------------------- | :---: | :-----: |
 | classid       | 分类ID                              | 是    | null    |
   
+#### 6. search($name, $classid)
+根据分类名称搜索分类(模糊查询)
+
+参数:
+| 参数名        | 描述                                | 必填  | 默认    |
+| ------------- | ----------------------------------- | :---: | :-----: |
+| name          | 分类名称                            | 是    | null    |
+| classid       | 分类ID, 搜索该分类下的分类          | 否    | 0       |
+  
   
   
 ### content 内容模块(支持使用具体的channel名称)
@@ -110,7 +119,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                              | 否    | 0       |
 | page          | 分页数                              | 否    | 1       |
 | limit         | 每页数据量                          | 否    | 20      |
-| isPic         | 是否只查询带图片的数据              | 否    | 0       |
+| isPic         | 是否只查询带图片的数据, 1是, 0否    | 否    | 0       |
   
 #### 3. rank($classid, $page, $limit, $isPic, $period)
 获取周期排行列表
@@ -121,7 +130,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0       |
 | page          | 分页数                                       | 否    | 1       |
 | limit         | 每页数据量                                   | 否    | 20      |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0       |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0       |
 | period        | 排名周期,'day','week','month','all'          | 否    | 0       |
   
 #### 4. good($classid, $page, $limit, $isPic, $level, $order)
@@ -133,8 +142,8 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
-| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 5. top($classid, $page, $limit, $isPic, $level, $order)
@@ -146,8 +155,8 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
-| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 6. firsttitle($classid, $page, $limit, $isPic, $level, $order)
@@ -159,8 +168,8 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
-| level         | 置顶等级，0 - 9(0为不置顶)                   | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 7. today($classid, $page, $limit, $isPic, $order)
@@ -172,7 +181,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 8. interval($startTime, $endTime, $classid, $page, $limit, $isPic, $order)
@@ -186,7 +195,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 9. title($title, $classid, $page, $limit, $isPic, $order)
@@ -199,7 +208,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 10. related($id, $classid, $page, $limit, $isPic, $order)
@@ -211,7 +220,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | id            | 内容ID                                       | 是    | null     |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 11. tag($tag, $classid, $page, $limit, $isPic, $order)
@@ -223,7 +232,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | tag           | tag标题                                      | 是    | null     |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 12. infoTopics($id, $limit)
@@ -255,19 +264,20 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
-| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
+
 ### topic 专题模块
   
-#### 1. all($classid, $topicCategoryId, $page, $limit, $order)
+#### 1. index($topicCategoryId, $classid, $page, $limit, $order)
 获取专题列表
   
 参数:
 | 参数名          | 描述                                         | 必填  | 默认     |
 | --------------- | -------------------------------------------- | :---: | :------: |
-| classid         | 分类ID                                       | 否    | 0        |
 | topicCategryId  | 专题分类ID                                   | 否    | 0        |
+| classid         | 分类ID                                       | 否    | 0        |
 | page            | 分页数                                       | 否    | 1        |
 | limit           | 每页数据量                                   | 否    | 20       |
 | order           | 排序字段                                     | 否    | addtime  |
@@ -279,11 +289,39 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 | 参数名          | 描述                                         | 必填  | 默认     |
 | --------------- | -------------------------------------------- | :---: | :------: |
 | id              | 专题ID                                       | 是    | null     |
-| path            | 专题路径,例如：/zt/qq                        | 否    | ''       |
+| path            | 专题路径, 例如：/zt/qq                       | 否    | ''       |
   
 #### 3. categories()
 获取所有专题分类列表
   
+  
+### tag TAG模块
+  
+#### 1. index($classid, $isGood, $page, $limit, $order)
+获取专题列表
+  
+参数:
+| 参数名          | 描述                                         | 必填  | 默认     |
+| --------------- | -------------------------------------------- | :---: | :------: |
+| classid         | 分类ID                                       | 否    | 0        |
+| isGood          | 是否推荐, 1是, 0否                           | 否    | 0        |
+| page            | 分页数                                       | 否    | 1        |
+| limit           | 每页数据量                                   | 否    | 20       |
+| order           | 排序字段                                     | 否    | addtime  |
+  
+
+### utils 工具模块
+  
+#### 1. friendLinks($type, $classid, $limit)
+获取专题列表
+  
+参数:
+| 参数名          | 描述                                         | 必填  | 默认     |
+| --------------- | -------------------------------------------- | :---: | :------: |
+| type            | 是否推荐, 0不限, 1图片, 2文字                | 否    | 0        |
+| classid         | 分类ID                                       | 否    | 0        |
+| limit           | 数据量                                       | 否    | 20       |
+
 
 ## Change log
 

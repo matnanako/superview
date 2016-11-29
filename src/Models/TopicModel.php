@@ -8,9 +8,9 @@ class TopicModel extends BaseModel
     /**
      * 专题列表
      */
-    public function all($classid = 0, $topicCategoryId = 0, $page = 1, $limit = 20, $order = 'addtime')
+    public function index($topicCategoryId = 0, $classid = 0, $page = 1, $limit = 20, $order = 'addtime')
     {
-        $data = $this->dal['topic']->getList($classid, $topicCategoryId, $page, $limit, $order);
+        $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
         return $data;
     }
 
@@ -34,30 +34,4 @@ class TopicModel extends BaseModel
         $data = $this->dal['topic']->getCategories();
         return $data;
     }
-
-
-    // /**
-    //  * 添加列表包含信息： url.
-    //  * 
-    //  * @return void
-    //  */
-    // private function addListInfo(&$data)
-    // {
-    //     if (!isset($data['list'])) {
-    //         $data = [];
-    //         return;
-    //     }
-
-    //     $categoryModel = CategoryModel::getInstance();
-    //     $class_url = \SConfig::get('class_url');
-    //     $info_url = \SConfig::get('info_url');
-    //     foreach ($data['list'] as $key => &$value) {
-    //         $category = $categoryModel->info($value['classid']);
-    //         $value['classname'] = $category['classname'];
-    //         $value['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
-    //             [$category['channel'], $category['bname'], $value['classid']],
-    //             $class_url);
-    //         $value['infourl'] = str_replace(['{channel}','{classname}','{classid}','{id}'], [$category['channel'],$category['bname'],$value['classid'],$value['id']], $info_url);
-    //     }
-    // }
 }

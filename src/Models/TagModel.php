@@ -6,22 +6,11 @@ class TagModel extends BaseModel
 {
 
     /**
-     * TAG列表  
+     * TAG列表
      */
-    public function getInfo($params = [])
+    public function index($classid = 0, $isGood = 0, $page = 1, $limit = 20, $order = 'addtime')
     {
-        $data = $this->checkParams($params);
-        $data = $this->dal['tag']->getInfo($params);
-        return $data;
-    }
-
-    /**
-     * 友情链接
-     */
-    public function getUrl($params = [])
-    {
-        $data = $this->checkParams($params);
-        $data = $this->dal['tag']->getfriendUrl($params);
+        $data = $this->dal['tag']->getList($classid, $isGood, $page, $limit, $order);
         return $data;
     }
 
