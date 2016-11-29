@@ -10,7 +10,7 @@ use SuperView\Utils\Api;
 class Base
 {
     protected $api;
-    private $virtualDal;
+    protected $virtualDal;
 
     public function __construct($virtualDal)
     {

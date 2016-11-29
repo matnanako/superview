@@ -23,8 +23,7 @@ class Content extends Base
     ];
 
     /**
-     * 查询内容详情
-     * @param int $id 信息ID
+     * 内容详情
      * @return boolean | array
      */
     public function getInfo($id = 0)
@@ -39,6 +38,10 @@ class Content extends Base
         return $this->getData('info', $params);
     }
 
+    /**
+     * 最新列表
+     * @return boolean | array
+     */
     public function getRecentList($classid, $page, $limit, $isPic)
     {
         $params = [
@@ -50,6 +53,10 @@ class Content extends Base
         return $this->getData('recent', $params);
     }
 
+    /**
+     * 排名列表
+     * @return boolean | array
+     */
     public function getRankList($classid, $page, $limit, $isPic, $period)
     {
         if (!in_array($period, self::$rankPeriods)) {
@@ -202,10 +209,10 @@ class Content extends Base
      * 信息所属专题列表
      * @return boolean | array
      */
-    public function getInfoTopic($topicId, $limit)
+    public function getInfoTopic($id, $limit)
     {
         $params = [
-            'ztid' => intval($topicId),
+            'id'    => intval($id),
             'limit' => intval($limit),
         ];
         return $this->getData('speciallist', $params);
@@ -224,6 +231,23 @@ class Content extends Base
             'limit' => intval($limit),
         ];
         return $this->getData('special', $params);
+    }
+
+    /**
+     * 信息搜索列表
+     * @return boolean | array
+     */
+    public function getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order)
+    {
+        $params = [
+            'str'     => $keyword,
+            'classid' => intval($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('search', $params);
     }
 
 

@@ -6,7 +6,7 @@
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
-
+  
 
 ## Install
 
@@ -44,10 +44,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
     'info_url' => '/{channel}/{classname}/{classid}/{id}.html', //支持参数列表
 ]
 ```
-
+  
 
 ## Api
-### category
+### category 分类模块
 
 #### 1. info($classid)
 获取分类信息
@@ -55,7 +55,7 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 是    | null    |
+| classid       | 分类ID                              | 是    | null    |
 
 #### 2. finalChildren($classid)
 获取子终极分类
@@ -63,62 +63,56 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 是    | null    |
+| classid       | 分类ID                              | 是    | null    |
 
 #### 3. children($classid)
 获取下一级子分类
-
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 是    | null    |
-
+| classid       | 分类ID                              | 是    | null    |
+  
 #### 4. brothers($classid)
 获取同级兄弟分类
-
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 是    | null    |
-
+| classid       | 分类ID                              | 是    | null    |
+  
 #### 5. breadcrumbs($classid)
 获取分类的面包屑
-
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 是    | null    |
-
+| classid       | 分类ID                              | 是    | null    |
   
   
-### content(支持使用具体的channel名称)
+  
+### content 内容模块(支持使用具体的channel名称)
   
 #### 1. info($id)
 获取内容信息
-
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| id            | 内容id                              | 是    | null    |
+| id            | 内容ID                              | 是    | null    |
   
 #### 2. recent($classid, $page, $limit, $isPic)
 获取最新内容列表
-
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
-| classid       | 分类id                              | 否    | 0       |
+| classid       | 分类ID                              | 否    | 0       |
 | page          | 分页数                              | 否    | 1       |
 | limit         | 每页数据量                          | 否    | 20      |
 | isPic         | 是否只查询带图片的数据              | 否    | 0       |
   
 #### 3. rank($classid, $page, $limit, $isPic, $period)
 获取周期排行列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认    |
 | ------------- | -------------------------------------------- | :---: | :-----: |
-| classid       | 分类id                                       | 否    | 0       |
+| classid       | 分类ID                                       | 否    | 0       |
 | page          | 分页数                                       | 否    | 1       |
 | limit         | 每页数据量                                   | 否    | 20      |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0       |
@@ -126,11 +120,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 4. good($classid, $page, $limit, $isPic, $level, $order)
 获取推荐列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| classid       | 分类id                                       | 否    | 0        |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -139,11 +132,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 5. top($classid, $page, $limit, $isPic, $level, $order)
 获取置顶列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| classid       | 分类id                                       | 否    | 0        |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -152,11 +144,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 6. firsttitle($classid, $page, $limit, $isPic, $level, $order)
 获取头条列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| classid       | 分类id                                       | 否    | 0        |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -165,11 +156,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 7. today($classid, $page, $limit, $isPic, $order)
 获取今日列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| classid       | 分类id                                       | 否    | 0        |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -177,13 +167,12 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 8. interval($startTime, $endTime, $classid, $page, $limit, $isPic, $order)
 获取时间段列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
 | startTime     | 开始时间（时间戳）                           | 否    | 0        |
 | endTime       | 结束时间（时间戳）                           | 否    | 0        |
-| classid       | 分类id                                       | 否    | 0        |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -191,12 +180,11 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 9. title($title, $classid, $page, $limit, $isPic, $order)
 获取相同名称内容列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| title         | 内容标题                                     | 是    | ''       |
-| classid       | 分类id                                       | 否    | 0        |
+| title         | 内容标题                                     | 是    | null     |
+| classid       | 分类ID                                       | 否    | 0        |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -204,11 +192,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 10. related($id, $classid, $page, $limit, $isPic, $order)
 获取内容相关内容列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| id            | 内容id                                       | 是    | 0        |
+| id            | 内容ID                                       | 是    | null     |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
@@ -216,29 +203,82 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间，并且
   
 #### 11. tag($tag, $classid, $page, $limit, $isPic, $order)
 获取tag相关内容列表
-
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
-| tag           | tag标题                                      | 是    | ''       |
+| tag           | tag标题                                      | 是    | null     |
 | page          | 分页数                                       | 否    | 1        |
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据                       | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
-
-
   
-
+#### 12. infoTopics($id, $limit)
+获取信息所属专题列表
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| id            | 内容ID                                       | 是    | null     |
+| limit         | 每页数据量                                   | 否    | 20       |
+  
+#### 13. topic($topicId, $page, $limit)
+获取专题信息列表
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| topicId       | 专题ID                                       | 是    | null     |
+| page          | 分页数                                       | 否    | 1        |
+| limit         | 每页数据量                                   | 否    | 20       |
+  
+#### 14. search($keyword, $classid, $page, $limit, $isPic, $order)
+获取tag相关内容列表
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| keyword       | 关键词                                       | 是    | null     |
+| classid       | 分类ID                                       | 否    | 0        |
+| page          | 分页数                                       | 否    | 1        |
+| limit         | 每页数据量                                   | 否    | 20       |
+| isPic         | 是否只查询带图片的数据                       | 否    | 0        |
+| order         | 排序字段                                     | 否    | newstime |
+  
+### topic 专题模块
+  
+#### 1. all($classid, $topicCategoryId, $page, $limit, $order)
+获取专题列表
+参数:
+| 参数名          | 描述                                         | 必填  | 默认     |
+| --------------- | -------------------------------------------- | :---: | :------: |
+| classid         | 分类ID                                       | 否    | 0        |
+| topicCategryId  | 专题分类ID                                   | 否    | 0        |
+| page            | 分页数                                       | 否    | 1        |
+| limit           | 每页数据量                                   | 否    | 20       |
+| order           | 排序字段                                     | 否    | addtime  |
+  
+#### 2. info($id, $path)
+获取专题信息
+参数:
+| 参数名          | 描述                                         | 必填  | 默认     |
+| --------------- | -------------------------------------------- | :---: | :------: |
+| id              | 专题ID                                       | 是    | null     |
+| path            | 专题路径,例如：/zt/qq                        | 否    | ''       |
+  
+#### 3. categories()
+获取所有专题分类列表
+参数:
+| 参数名          | 描述                                         | 必填  | 默认     |
+| --------------- | -------------------------------------------- | :---: | :------: |
+|                |                                         |      |       |
+  
 
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
+  
 
 ## Security
 
 If you discover any security related issues, please email huangyukun@njxzwh.com instead of using the issue tracker.
-
+  
 
 ## License
 

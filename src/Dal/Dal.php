@@ -15,21 +15,24 @@ class Dal implements ArrayAccess
      public function offsetGet($offset)
     {
         $dals = \SConfig::get('dals');
-        if (!isset(self::$dals[$offset])) {
-            if (strstr($offset, 'content:')) {
-                $dal_key = 'content';
-                $virtual_dal = substr($offset, strpos($offset, ":") + 1);
-            } else {
-                $dal_key = $virtual_dal = $offset;
-            }
-            if (isset($dals[$dal_key]) && class_exists($dals[$dal_key])) {
-                self::$dals[$dal_key] = new $dals[$dal_key]($virtual_dal);
+
+        // 将content:soft转换成dalKey为content,virtualDal为soft
+        if (strstr($offset, 'content:')) {
+            $dalKey = 'content';
+            $virtualDal = substr($offset, strpos($offset, ":") + 1);
+        } else {
+            $dalKey = $virtualDal = $offset;
+        }
+
+        if (!isset(self::$dals[$dalKey])) {
+            if (isset($dals[$dalKey]) && class_exists($dals[$dalKey])) {
+                self::$dals[$dalKey] = new $dals[$dalKey]($virtualDal);
             } else {
                 return [];
             }
         }
 
-        return self::$dals[$dal_key];
+        return self::$dals[$dalKey];
     }
 
     public function offsetExists($offset) {}

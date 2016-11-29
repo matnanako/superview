@@ -96,7 +96,7 @@ class CategoryModel extends BaseModel
     }
 
     /**
-     * Get category brothers.
+     * Get category brother.
      * 
      * @param  int  $classid
      * @return boolean | array
@@ -124,7 +124,7 @@ class CategoryModel extends BaseModel
      * 
      * @return boolean | array
      */
-    public function breadcrumb($classid)
+    public function breadcrumbs($classid)
     {
         if (empty($classid)) {
             return false;

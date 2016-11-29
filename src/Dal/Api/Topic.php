@@ -7,12 +7,50 @@ namespace SuperView\Dal\Api;
 */
 class Topic extends Base
 {
-    public function getZt($params)
+
+    // 覆盖virtualDal.
+    public function __construct($virtualDal)
     {
-        $params['a'] =  isset($params['ztid']) ? 'infolist' :$params['type'];
-        $params['c'] = $this->getClassInfo(__CLASS__);
-        $data = $this->makeData($params);
-        return $data;
+        parent::__construct($virtualDal);
+        $this->virtualDal = 'zt';
+    }
+
+    /**
+     * 专题列表
+     * @return boolean | array
+     */
+    public function getList($classid, $topicCategoryId, $page, $limit, $order)
+    {
+        $params = [
+            'cid'   => intval($classid),
+            'zcid'  => intval($topicCategoryId),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+            'order' => $order,
+        ];
+        return $this->getData('lists', $params);
+    }
+
+    /**
+     * 专题详情
+     * @return boolean | array
+     */
+    public function getInfo($id, $path)
+    {
+        $params = [
+            'id'   => intval($id),
+            'path' => $path,
+        ];
+        return $this->getData('info', $params);
+    }
+
+    /**
+     * 专题分类列表
+     * @return boolean | array
+     */
+    public function getCategories()
+    {
+        return $this->getData('classlist');
     }
     
 }

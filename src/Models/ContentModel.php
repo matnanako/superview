@@ -23,7 +23,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getRecentList($classid, $page, $limit, $isPic);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -34,7 +33,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getRankList($classid, $page, $limit, $isPic, $period);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -45,7 +43,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getLevelList('good', $classid, $page, $limit, $isPic, $level, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -56,7 +53,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getLevelList('top', $classid, $page, $limit, $isPic, $level, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -67,7 +63,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getLevelList('firsttitle', $classid, $page, $limit, $isPic, $level, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -78,7 +73,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getTodayList('today', $classid, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -89,7 +83,6 @@ class ContentModel extends BaseModel
     {
         $data = $this->dal()->getIntervalList($start, $end, $classid, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -98,9 +91,11 @@ class ContentModel extends BaseModel
      */
     public function title($title = '', $classid = 0, $page = 1, $limit = 20, $isPic = 0, $order = 'newstime')
     {
+        if (empty($title)) {
+            return false;
+        }
         $data = $this->dal()->getListByTitle($title, $classid, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -109,9 +104,11 @@ class ContentModel extends BaseModel
      */
     public function related($id = 0, $page = 1, $limit = 20, $isPic = 0, $order = 'newstime')
     {
+        if (empty($id)) {
+            return false;
+        }
         $data = $this->dal()->getRelatedList($id, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -120,9 +117,11 @@ class ContentModel extends BaseModel
      */
     public function tag($tag = '', $page = 1, $limit = 20, $isPic = 0, $order = 'newstime')
     {
+        if (empty($tag)) {
+            return false;
+        }
         $data = $this->dal()->getListByTag($tag, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
-
         return $data;
     }
 
@@ -131,9 +130,10 @@ class ContentModel extends BaseModel
      */
     public function infoTopic($id = 0, $limit = 20)
     {
+        if (empty($id)) {
+            return false;
+        }
         $data = $this->dal()->getInfoTopic($id, $limit);
-        $this->addListInfo($data);
-
         return $data;
     }
 
@@ -142,21 +142,31 @@ class ContentModel extends BaseModel
      */
     public function topic($topicId = 0, $page = 1, $limit = 20)
     {
+        if (empty($topicId)) {
+            return false;
+        }
         $data = $this->dal()->getListByTopic($topicId, $page = 1, $limit);
         $this->addListInfo($data);
-
         return $data;
     }
 
-// 所属专题列表  speciallist    id  limit
-// 专题信息列表 special    ztid page limit
-// 信息搜索列表 search str classid page limit ispic order match wordsep
-
+    /**
+     * 信息搜索列表.
+     */
+    public function search($keyword = '', $classid = 0, $page = 1, $limit = 20, $isPic = 0, $order = 'newstime')
+    {
+        if (empty($keyword)) {
+            return false;
+        }
+        $data = $this->dal()->getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order);
+        $this->addListInfo($data);
+        return $data;
+    }
 
     /**
      * 添加列表包含信息：分类信息、url.
      * 
-     * @return array
+     * @return void
      */
     private function addListInfo(&$data)
     {
@@ -166,15 +176,15 @@ class ContentModel extends BaseModel
         }
 
         $categoryModel = CategoryModel::getInstance();
-        $class_url = \SConfig::get('class_url');
-        $info_url = \SConfig::get('info_url');
+        $classUrl = \SConfig::get('class_url');
+        $infoUrl  = \SConfig::get('info_url');
         foreach ($data['list'] as $key => &$value) {
             $category = $categoryModel->info($value['classid']);
             $value['classname'] = $category['classname'];
             $value['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
                 [$category['channel'], $category['bname'], $value['classid']],
-                $class_url);
-            $value['infourl'] = str_replace(['{channel}','{classname}','{classid}','{id}'], [$category['channel'],$category['bname'],$value['classid'],$value['id']], $info_url);
+                $classUrl);
+            $value['infourl'] = str_replace(['{channel}','{classname}','{classid}','{id}'], [$category['channel'],$category['bname'],$value['classid'],$value['id']], $infoUrl);
         }
     }
 
