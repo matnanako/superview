@@ -2,6 +2,8 @@
 
 namespace SuperView\Models;
 
+use SuperView\Utils\Page;
+
 class UtilsModel extends BaseModel
 {
 
@@ -12,6 +14,15 @@ class UtilsModel extends BaseModel
     {
         $data = $this->dal['utils']->getFriendLinks($type, $classid, $limit);
         return $data;
+    }
+
+    /**
+     * 专题列表
+     */
+    public function page($total, $perPage, $currentPage = null, array $options = [])
+    {
+        $page = new Page($total, $perPage, $currentPage, $options);
+        return $page->render();
     }
 
 }

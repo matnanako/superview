@@ -26,5 +26,15 @@ return [
         'topic' => SuperView\Dal\Api\Topic::class,
         'tag' => SuperView\Dal\Api\Tag::class,
         'utils' => SuperView\Dal\Api\Utils::class,
+    ],
+
+    'pagination' => [
+        'layout' => '<div class="pages pt-20">{total}{previous}{links}{next}</div>',
+        'total' => '<span class="pipe">共{total}页</span>',
+        'previous' => '<a href="{url}">上一页</a>',
+        'links' => '<a href="{url}">{page}</a>',
+        'link_active' => '<a class="on">{page}</a>',
+        'next' => '<a href="{url}">下一页</a>',
+        'dots' => '<span class="pipe">...</span>',
     ]
 ];
