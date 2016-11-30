@@ -42,6 +42,15 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且�
     'refresh_cache' => 1, // 刷新所有方法的缓存, 1是, 0否, 默认0
     'class_url' => '/{channel}/{classname}/{classid}.html', //支持参数列表
     'info_url' => '/{channel}/{classname}/{classid}/{id}.html', //支持参数列表
+    'pagination' => [
+        'layout' => '<div class="pages pt-20">{total}{previous}{links}{next}</div>',
+        'total' => '<span class="pipe">共{total}页</span>',
+        'previous' => '<a href="{url}">上一页</a>',
+        'links' => '<a href="{url}">{page}</a>',
+        'link_active' => '<a class="on">{page}</a>',
+        'next' => '<a href="{url}">下一页</a>',
+        'dots' => '<span class="pipe">...</span>',
+    ],
 ]
 ```
   

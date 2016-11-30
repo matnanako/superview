@@ -13,6 +13,8 @@ namespace SuperView\Utils;
 
 class Page
 {
+    protected $configs;
+
     protected $perPage;
 
     protected $currentPage;
@@ -44,18 +46,18 @@ class Page
             $this->{$key} = $value;
         }
 
+        if (!isset($options['path'])) {
+            $this->path = $_SERVER['REQUEST_URI'];
+        } else {
+            $this->path = $this->path != '/' ? rtrim($this->path, '/') : $this->path;
+        }
+
         $this->perPage = $perPage;
         $this->totalPage = $perPage > 1 ? ceil($total / $perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
         $this->setCurrentPage($currentPage);
 
         $this->configs = \SConfig::get('pagination');
-
-        if (!isset($this->options['path'])) {
-            $this->path = $_SERVER['REQUEST_URI'];
-        } else {
-            $this->path = $this->path != '/' ? rtrim($this->path, '/') : $this->path;
-        }
     }
 
     protected function setCurrentPage($currentPage)
@@ -130,8 +132,7 @@ class Page
 
         $url = $this->url($this->currentPage - 1);
 
-        $pagination = \SConfig::get('pagination');
-        return str_replace('{url}', $url, $pagination['previous']);
+        return str_replace('{url}', $url, $this->configs['previous']);
     }
 
     /**
@@ -143,8 +144,7 @@ class Page
     {
         $url = $this->url($this->currentPage + 1);
 
-        $pagination = \SConfig::get('pagination');
-        return str_replace('{url}', $url, $pagination['next']);
+        return str_replace('{url}', $url, $this->configs['next']);
     }
 
     /**
@@ -203,11 +203,10 @@ class Page
     public function render()
     {
         if ($this->hasMore) {
-            $pagination = \SConfig::get('pagination');
             return str_replace(
                 ['{total}', '{previous}', '{links}', '{next}'],
                 [$this->totalPage, $this->getPreviousButton(), $this->getLinks(), $this->getNextButton()],
-                $pagination['layout']
+                $this->configs['layout']
             );
         } else {
             return '';
@@ -256,8 +255,7 @@ class Page
      */
     protected function getAvailablePageWrapper($url, $page)
     {
-        $pagination = \SConfig::get('pagination');
-        return str_replace(['{url}', '{page}'], [$url, $page], $pagination['links']);
+        return str_replace(['{url}', '{page}'], [$url, $page], $this->configs['links']);
     }
 
     /**
@@ -279,8 +277,7 @@ class Page
      */
     protected function getActivePageWrapper($page)
     {
-        $pagination = \SConfig::get('pagination');
-        return str_replace('{page}', $page, $pagination['link_active']);
+        return str_replace('{page}', $page, $this->configs['link_active']);
     }
 
     /**
@@ -290,7 +287,6 @@ class Page
      */
     protected function getDots()
     {
-        $pagination = \SConfig::get('pagination');
-        return $pagination['dots'];
+        return $this->configs['dots'];
     }
 }
