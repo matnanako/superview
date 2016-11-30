@@ -51,7 +51,7 @@ class Page
 
         $this->configs = \SConfig::get('pagination');
 
-        if (isset($this->options['path'])) {
+        if (!isset($this->options['path'])) {
             $this->path = $_SERVER['REQUEST_URI'];
         } else {
             $this->path = $this->path != '/' ? rtrim($this->path, '/') : $this->path;
