@@ -36,32 +36,42 @@ class Page
      *
      * @param  mixed  $items
      * @param  int  $perPage
-     * @param  int|null  $currentPage
      * @param  array  $options (path, query, fragment, pageName)
      * @return void
      */
-    public function __construct($total, $perPage, $currentPage = null, $options)
+    public function __construct($total, $perPage, $options)
     {
         foreach ($options as $key => $value) {
             $this->{$key} = $value;
         }
 
+        $urlInfo = parse_url($_SERVER['REQUEST_URI']);
+
         if (!isset($options['path'])) {
-            $this->path = $_SERVER['REQUEST_URI'];
+            $this->path = $urlInfo['path'];
         } else {
             $this->path = $this->path != '/' ? rtrim($this->path, '/') : $this->path;
+        }
+
+        if (isset($urlInfo['query'])) {
+            $query = parse_str($urlInfo['query'], $queries);
+
+            if (count($queries) > 0) {
+                $this->query = array_merge($this->query, $queries);
+            }
         }
 
         $this->perPage = $perPage;
         $this->totalPage = $perPage > 1 ? ceil($total / $perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
-        $this->setCurrentPage($currentPage);
+        $this->setCurrentPage();
 
         $this->configs = \SConfig::get('pagination');
     }
 
-    protected function setCurrentPage($currentPage)
+    protected function setCurrentPage()
     {
+        $currentPage = empty($_GET[$this->pageName]) ? 0 : intval($_GET[$this->pageName]);
         $this->currentPage = (filter_var($currentPage, FILTER_VALIDATE_INT) !== false 
             && (int) $currentPage >= 1
             && (int) $currentPage <= $this->totalPage) ? $currentPage : 1;
