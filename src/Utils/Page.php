@@ -124,6 +124,16 @@ class Page
      * @param string $text
      * @return string
      */
+    protected function getTotalInfo()
+    {
+        return str_replace('{total}', $this->totalPage, $this->configs['total']);
+    }
+
+    /**
+     * 上一页按钮
+     * @param string $text
+     * @return string
+     */
     protected function getPreviousButton()
     {
         if ($this->currentPage <= 1) {
@@ -142,6 +152,10 @@ class Page
      */
     protected function getNextButton()
     {
+        if ($this->currentPage == $this->totalPage) {
+            return $this->getDisabledTextWrapper();
+        }
+
         $url = $this->url($this->currentPage + 1);
 
         return str_replace('{url}', $url, $this->configs['next']);
@@ -205,7 +219,7 @@ class Page
         if ($this->hasMore) {
             return str_replace(
                 ['{total}', '{previous}', '{links}', '{next}'],
-                [$this->totalPage, $this->getPreviousButton(), $this->getLinks(), $this->getNextButton()],
+                [$this->getTotalInfo(), $this->getPreviousButton(), $this->getLinks(), $this->getNextButton()],
                 $this->configs['layout']
             );
         } else {
