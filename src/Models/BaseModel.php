@@ -45,12 +45,12 @@ class BaseModel
 
     protected function getCurrentPage()
     {
-        return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 0;
+        return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 1;
     }
 
     protected function returnWithPage($data, $limit)
     {
-        if (empty($this->pageOptions)) {
+        if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
             $response = $data['list'];
         } else {
             $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['options']);

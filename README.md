@@ -22,7 +22,7 @@ SuperView::setConfig($configs);
 SuperView::get('soft')->recent();
 ```
   
-使用缓存：  
+### 使用缓存
 缓存默认使用全局配置`cache_minutes`, 如果需要为单独的请求设置缓存时间, 可以使用cache方法, 参数为分钟.
 ``` php
 SuperView::get('soft')->cache(10)->recent();
@@ -35,13 +35,14 @@ SuperView::get('soft')->recent(); //仍然使用上面的缓存时间
 SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且只在当前调用中
 ```
   
-使用分页：
-第一个参数用来生成分页的url，应该与路由里的列表页路由保持一致。  
-第三个参数可以支持自定义布局，参数可以参考Configs下的pagination
+### 使用分页
+#### 所有支持limit参数的方法都可以使用分页
+第一个参数用来生成分页的url, 应该与路由里的列表页路由保持一致.  
 ``` php
 SuperView::get('soft')->page('list-{page}.html')->recent();
 ```
-使用指定默认分页和自定义的布局
+使用指定默认分页和自定义的布局, 第二个参数指定分页, 第三个参数可以参考Configs下的`pagination`.
+``` php
 SuperView::get('soft')->page('list-{page}.html', 2,
     [
         'layout' => '<ul>{total}{previous}{links}{next}</ul>',
@@ -52,12 +53,17 @@ SuperView::get('soft')->page('list-{page}.html', 2,
         'next' => '<li href="{url}">下一页</li>',
         'dots' => '<li">...</li>',
     ])->recent();
-  
+```
+仅分页数据, 不需要生成page, 第一个参数设置为`false`.
+``` php
+SuperView::get('soft')->page(false, 2)->recent();
+```
+
 ## Configs
 ```
 [
     'api_base_url' => 'http://api.base.url',
-    'cache_minutes' => 120, // 通用缓存时间, 单位：分 默认120分钟, 如果设置为0则不使用缓存，但是所有的分类数据依然使用缓存，如果需要更新分类缓存可以设置refresh_cache.
+    'cache_minutes' => 120, // 通用缓存时间, 单位: 分 默认120分钟, 如果设置为0则不使用缓存, 但是所有的分类数据依然使用缓存, 如果需要更新分类缓存可以设置refresh_cache.
     'refresh_cache' => 1, // 刷新所有方法的缓存, 1是, 0否, 默认0
     'class_url' => '/{channel}/{classname}/{classid}.html', //支持参数列表
     'info_url' => '/{channel}/{classname}/{classid}/{id}.html', //支持参数列表
@@ -305,7 +311,7 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 | 参数名          | 描述                                         | 必填  | 默认     |
 | --------------- | -------------------------------------------- | :---: | :------: |
 | id              | 专题ID                                       | 是    | null     |
-| path            | 专题路径, 例如：/zt/qq                       | 否    | ''       |
+| path            | 专题路径, 例如: /zt/qq                       | 否    | ''       |
   
 #### 3. categories()
 获取所有专题分类列表
