@@ -93,13 +93,14 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 | ------------- | ----------------------------------- | :---: | :-----: |
 | classid       | 分类ID                              | 是    | null    |
 
-#### 3. children($classid)
+#### 3. children($classid, $limit)
 获取下一级子分类
   
 参数:
 | 参数名        | 描述                                | 必填  | 默认    |
 | ------------- | ----------------------------------- | :---: | :-----: |
 | classid       | 分类ID                              | 是    | null    |
+| limit         | 每页数据量                          | 否    | 20      |
   
 #### 4. brothers($classid)
 获取同级兄弟分类

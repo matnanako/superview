@@ -8,6 +8,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ### Added
 - SuperView增加page方法；
+- Category下的children方法参数增加limit；
   
 
 ### Fixed
