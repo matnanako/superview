@@ -161,7 +161,7 @@ SuperView::get('soft')->page(false, 2)->recent();
 参数:
 | 参数名        | 描述                                         | 必填  | 默认    |
 | ------------- | -------------------------------------------- | :---: | :-----: |
-| period        | 排名周期,'day','week','month','all'          | 是    | 0       |
+| period        | 排名周期,'day','week','month','all'          | 否    | all     |
 | classid       | 分类ID                                       | 否    | 0       |
 | limit         | 每页数据量                                   | 否    | 20      |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0       |
@@ -289,6 +289,15 @@ SuperView::get('soft')->page(false, 2)->recent();
 | limit         | 每页数据量                                   | 否    | 20       |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
+  
+#### 15. count($period, $classid)
+获取统计数量
+  
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| period        | 周期,'day','week','month','all'              | 否    | all      |
+| classid       | 分类ID                                       | 否    | 0        |
   
 
 ### topic 专题模块

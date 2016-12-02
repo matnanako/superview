@@ -11,7 +11,7 @@ class Content extends Base
      /**
      * 排名因子枚举
      */
-    private static $rankPeriods = [
+    private static $periods = [
         'day', 'week', 'month', 'all'
     ];
 
@@ -59,7 +59,7 @@ class Content extends Base
      */
     public function getRankList($classid, $page, $limit, $isPic, $period)
     {
-        if (!in_array($period, self::$rankPeriods)) {
+        if (!in_array($period, self::$periods)) {
             return false;
         }
         $params = [
@@ -248,6 +248,23 @@ class Content extends Base
             'order'   => $order,
         ];
         return $this->getData('search', $params);
+    }
+
+    /**
+     * 获取数量统计
+     * @return boolean | array
+     */
+    public function getCount($period, $classid)
+    {
+        if (!in_array($period, self::$periods)) {
+            return false;
+        }
+        $params = [
+            'interval' => $period,
+            'classid'  => intval($classid)
+        ];
+
+        return $this->getData('count', $params);
     }
 
 

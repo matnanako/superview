@@ -174,6 +174,15 @@ class ContentModel extends BaseModel
     }
 
     /**
+     * 数量统计.
+     */
+    public function count($period = 'all', $classid = 0)
+    {
+        $data = $this->dal()->getCount($period, $classid);
+        return intval($data);
+    }
+
+    /**
      * 添加列表包含信息：分类信息、url.
      * 
      * @return void
