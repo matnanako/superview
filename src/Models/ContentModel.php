@@ -17,7 +17,7 @@ class ContentModel extends BaseModel
     /**
      * 最新信息列表.
      */
-    public function recent($classid = 0, $limit = 20, $isPic = 0)
+    public function recent($classid = 0, $limit = 0, $isPic = 0)
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRecentList($classid, $page, $limit, $isPic);
@@ -28,7 +28,7 @@ class ContentModel extends BaseModel
     /**
      * 排名信息列表.
      */
-    public function rank($period = 'all', $classid = 0, $limit = 20, $isPic = 0)
+    public function rank($period = 'all', $classid = 0, $limit = 0, $isPic = 0)
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRankList($classid, $page, $limit, $isPic, $period);
@@ -39,7 +39,7 @@ class ContentModel extends BaseModel
     /**
      * 推荐信息列表.
      */
-    public function good($classid = 0, $limit = 20, $isPic = 0, $level = 0, $order = 'newstime')
+    public function good($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('good', $classid, $page, $limit, $isPic, $level, $order);
@@ -50,7 +50,7 @@ class ContentModel extends BaseModel
     /**
      * 置顶信息列表.
      */
-    public function top($classid = 0, $limit = 20, $isPic = 0, $level = 0, $order = 'newstime')
+    public function top($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('top', $classid, $page, $limit, $isPic, $level, $order);
@@ -61,7 +61,7 @@ class ContentModel extends BaseModel
     /**
      * 头条信息列表.
      */
-    public function firsttitle($classid = 0, $limit = 20, $isPic = 0, $level = 0, $order = 'newstime')
+    public function firsttitle($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('firsttitle', $classid, $page, $limit, $isPic, $level, $order);
@@ -72,7 +72,7 @@ class ContentModel extends BaseModel
     /**
      * 今日更新列表.
      */
-    public function today($classid = 0, $limit = 20, $isPic = 0, $order = 'newstime')
+    public function today($classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getTodayList('today', $classid, $page, $limit, $isPic, $order);
@@ -83,7 +83,7 @@ class ContentModel extends BaseModel
     /**
      * 时间段列表.
      */
-    public function interval($start = 0, $end = 0, $classid = 0, $limit = 20, $isPic = 0, $order = 'newstime')
+    public function interval($start = 0, $end = 0, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getIntervalList($start, $end, $classid, $page, $limit, $isPic, $order);
@@ -94,7 +94,7 @@ class ContentModel extends BaseModel
     /**
      * 相同标题信息列表.
      */
-    public function title($title = '', $classid = 0, $limit = 20, $isPic = 0, $order = 'newstime')
+    public function title($title = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($title)) {
             return false;
@@ -108,7 +108,7 @@ class ContentModel extends BaseModel
     /**
      * 信息相关列表.
      */
-    public function related($id = 0, $limit = 20, $isPic = 0, $order = 'newstime')
+    public function related($id = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($id)) {
             return false;
@@ -122,7 +122,7 @@ class ContentModel extends BaseModel
     /**
      * TAG信息列表.
      */
-    public function tag($tag = '', $limit = 20, $isPic = 0, $order = 'newstime')
+    public function tag($tag = '', $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($tag)) {
             return false;
@@ -136,7 +136,7 @@ class ContentModel extends BaseModel
     /**
      * 获取信息所属专题列表.
      */
-    public function infoTopic($id = 0, $limit = 20)
+    public function infoTopic($id = 0, $limit = 0)
     {
         if (empty($id)) {
             return false;
@@ -148,7 +148,7 @@ class ContentModel extends BaseModel
     /**
      * 专题信息列表.
      */
-    public function topic($topicId = 0, $limit = 20)
+    public function topic($topicId = 0, $limit = 0)
     {
         if (empty($topicId)) {
             return false;
@@ -162,7 +162,7 @@ class ContentModel extends BaseModel
     /**
      * 信息搜索列表.
      */
-    public function search($keyword = '', $classid = 0, $limit = 20, $isPic = 0, $order = 'newstime')
+    public function search($keyword = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($keyword)) {
             return false;

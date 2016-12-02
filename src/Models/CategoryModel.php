@@ -53,7 +53,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function finalChildren($classid = 0)
+    public function finalChildren($classid = 0, $limit = 0)
     {
         if (empty($classid)) {
             return false;
@@ -68,8 +68,18 @@ class CategoryModel extends BaseModel
                 $children[$child_id] = $child;
             }
         }
+        
+        $this->addUrl($children);
 
-        return $children;
+        if (empty($limit)) {
+            return $children;
+        }
+
+        $page = $this->getCurrentPage();
+        $data['list'] = array_slice($children, ($page-1) * $limit, $limit);
+        $data['count'] = count($children);
+
+        return $this->returnWithPage($data, $limit);
     }
 
     /**
@@ -78,7 +88,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function children($classid = 0, $limit = 20)
+    public function children($classid = 0, $limit = 0)
     {
         if (empty($classid)) {
             return false;
@@ -92,10 +102,17 @@ class CategoryModel extends BaseModel
             return [];
         }
 
-        $page = $this->getCurrentPage();
+        $children = self::$categories[$classid]['children'];
+        $this->addUrl($children);
 
-        $data['list'] = array_slice(self::$categories[$classid]['children'], ($page-1) * $limit, $limit);
-        $data['count'] = count(self::$categories[$classid]['children']);
+        if (empty($limit)) {
+            return $children;
+        }
+
+        $page = $this->getCurrentPage();
+        $data['list'] = array_slice($children, ($page-1) * $limit, $limit);
+        $data['count'] = count($children);
+
         return $this->returnWithPage($data, $limit);
     }
 
@@ -142,13 +159,8 @@ class CategoryModel extends BaseModel
             $category = $parentCategory;
             $categories[] = $category;
         }
-
-        $class_url = \SConfig::get('class_url');
-        foreach ($categories as &$category) {
-            $category['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
-                [$category['channel'], $category['bname'], $category['classid']],
-                $class_url);
-        }
+        
+        $this->addUrl($categories);
 
         // 反序存储，让父类在数组的顶部
         $breadcrumbs = array_reverse($categories);
@@ -225,6 +237,21 @@ class CategoryModel extends BaseModel
         }
 
         return $channels;
+    }
+
+    /**
+     * Add url info.
+     * 
+     * @return boolean | array
+     */
+    private function addUrl(&$categories)
+    {
+        $class_url = \SConfig::get('class_url');
+        foreach ($categories as &$category) {
+            $category['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
+                [$category['channel'], $category['bname'], $category['classid']],
+                $class_url);
+        }
     }
 
     /**

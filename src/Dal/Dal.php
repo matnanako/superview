@@ -35,15 +35,15 @@ class Dal implements ArrayAccess
             $dalKey = $virtualDal = $offset;
         }
 
-        if (!isset($this->dals[$dalKey])) {
+        if (!isset($this->dals[$offset])) {
             if (isset($dals[$dalKey]) && class_exists($dals[$dalKey])) {
-                $this->dals[$dalKey] = new $dals[$dalKey]($virtualDal);
+                $this->dals[$offset] = new $dals[$dalKey]($virtualDal);
             } else {
                 return false;
             }
         }
 
-        return $this->dals[$dalKey];
+        return $this->dals[$offset];
     }
 
     public function offsetExists($offset) {}
