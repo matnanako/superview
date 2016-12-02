@@ -8,7 +8,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ### Added
 - SuperView增加page方法；
-- Category下的children方法参数增加limit；
+- Category下的children, finalChildren方法参数增加limit；
   
 
 ### Fixed
@@ -16,6 +16,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - 修改Utils下page方法名为renderPage;
 - 修改Tag下的index方法参数顺序;
 - 修改Content下的rank方法参数顺序;
+- 修改所有limit默认为0, 即不限制;
   
 
 
