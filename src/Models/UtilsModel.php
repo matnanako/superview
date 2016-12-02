@@ -19,9 +19,9 @@ class UtilsModel extends BaseModel
     /**
      * 专题列表
      */
-    public function page($total, $perPage, $currentPage = null, array $options = [])
+    public function renderPage($route, $total, $perPage, $currentPage = null, array $options = [])
     {
-        $page = new Page($total, $perPage, $currentPage, $options);
+        $page = new Page($route, $total, $perPage, $currentPage, $options);
         return $page->render();
     }
 

@@ -13,7 +13,7 @@ namespace SuperView\Utils;
 
 class Page
 {
-    protected $configs;
+    protected $route;
 
     protected $perPage;
 
@@ -21,57 +21,31 @@ class Page
 
     protected $totalPage;
 
-    protected $path = '/';
-
-    protected $query = [];
-
-    protected $fragment = null;
-
-    protected $pageName = 'p';
-
-    protected $options = [];
+    protected $options;
 
     /**
      * Create a new paginator instance.
      *
      * @param  mixed  $items
      * @param  int  $perPage
-     * @param  array  $options (path, query, fragment, pageName)
+     * @param  int|null  $currentPage
+     * @param  array  $url
      * @return void
      */
-    public function __construct($total, $perPage, $options)
+    public function __construct($route, $total, $perPage, $currentPage = null, $options = [])
     {
-        foreach ($options as $key => $value) {
-            $this->{$key} = $value;
-        }
-
-        $urlInfo = parse_url($_SERVER['REQUEST_URI']);
-
-        if (!isset($options['path'])) {
-            $this->path = $urlInfo['path'];
-        } else {
-            $this->path = $this->path != '/' ? rtrim($this->path, '/') : $this->path;
-        }
-
-        if (isset($urlInfo['query'])) {
-            $query = parse_str($urlInfo['query'], $queries);
-
-            if (count($queries) > 0) {
-                $this->query = array_merge($this->query, $queries);
-            }
-        }
-
+        $this->route = $route;
         $this->perPage = $perPage;
         $this->totalPage = $perPage > 1 ? ceil($total / $perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
-        $this->setCurrentPage();
+        $this->setCurrentPage($currentPage);
 
-        $this->configs = \SConfig::get('pagination');
+        $this->options = \SConfig::get('pagination');
+        $this->options = is_array($options) ? array_merge($this->options, $options) : $this->options;
     }
 
-    protected function setCurrentPage()
+    protected function setCurrentPage($currentPage)
     {
-        $currentPage = empty($_GET[$this->pageName]) ? 0 : intval($_GET[$this->pageName]);
         $this->currentPage = (filter_var($currentPage, FILTER_VALIDATE_INT) !== false 
             && (int) $currentPage >= 1
             && (int) $currentPage <= $this->totalPage) ? $currentPage : 1;
@@ -89,16 +63,7 @@ class Page
             $page = 1;
         }
 
-        $parameters = [$this->pageName => $page];
-
-        if (count($this->query) > 0) {
-            $parameters = array_merge($this->query, $parameters);
-        }
-
-        return $this->path
-                        .(strpos($this->path, '?') !== false ? '&' : '?')
-                        .http_build_query($parameters, '', '&')
-                        .$this->buildFragment();
+        return str_replace('{page}', $page, $this->route);
     }
 
     /**
@@ -136,7 +101,7 @@ class Page
      */
     protected function getTotalInfo()
     {
-        return str_replace('{total}', $this->totalPage, $this->configs['total']);
+        return str_replace('{total}', $this->totalPage, $this->options['total']);
     }
 
     /**
@@ -152,7 +117,7 @@ class Page
 
         $url = $this->url($this->currentPage - 1);
 
-        return str_replace('{url}', $url, $this->configs['previous']);
+        return str_replace('{url}', $url, $this->options['previous']);
     }
 
     /**
@@ -168,7 +133,7 @@ class Page
 
         $url = $this->url($this->currentPage + 1);
 
-        return str_replace('{url}', $url, $this->configs['next']);
+        return str_replace('{url}', $url, $this->options['next']);
     }
 
     /**
@@ -230,7 +195,7 @@ class Page
             return str_replace(
                 ['{total}', '{previous}', '{links}', '{next}'],
                 [$this->getTotalInfo(), $this->getPreviousButton(), $this->getLinks(), $this->getNextButton()],
-                $this->configs['layout']
+                $this->options['layout']
             );
         } else {
             return '';
@@ -279,7 +244,7 @@ class Page
      */
     protected function getAvailablePageWrapper($url, $page)
     {
-        return str_replace(['{url}', '{page}'], [$url, $page], $this->configs['links']);
+        return str_replace(['{url}', '{page}'], [$url, $page], $this->options['links']);
     }
 
     /**
@@ -301,7 +266,7 @@ class Page
      */
     protected function getActivePageWrapper($page)
     {
-        return str_replace('{page}', $page, $this->configs['link_active']);
+        return str_replace('{page}', $page, $this->options['link_active']);
     }
 
     /**
@@ -311,6 +276,6 @@ class Page
      */
     protected function getDots()
     {
-        return $this->configs['dots'];
+        return $this->options['dots'];
     }
 }

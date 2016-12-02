@@ -41,14 +41,34 @@ class SuperView
     /**
      * Set model.
      * 
-     * @param  string  $model
-     * @return object
+     * @param  string  $modelAlias
+     * @return SuperView\SuperView
      */
-    public static function get($model)
+    public static function get($modelAlias)
     {
-        self::$model = $model;
+        self::$model = self::getBindingModel($modelAlias);
 
         return self::getInstance();
+    }
+
+    /**
+     * Get binding model by model mapping
+     * 
+     * @return object
+     */
+    private static function getBindingModel($modelAlias)
+    {
+        $models = SConfig::get('models');
+        if (array_key_exists($modelAlias, $models)) {
+            $model = $models[$modelAlias];
+            $model = $model::getInstance();
+        } else {
+            $model = $models['content'];
+            $model = $model::getInstance();
+            $model->setVirtualModel($modelAlias);
+        }
+
+        return $model;
     }
 
     /**
@@ -56,11 +76,25 @@ class SuperView
      * 
      * @param  string  $minutes
      * @param  array  $keep 是否保持设置
-     * @return object
+     * @return SuperView\SuperView
      */
     public function cache($minutes, $keep = false)
     {
         \SCache::setCacheTime($minutes, $keep);
+
+        return $this;
+    }
+
+    /**
+     * Set page info.
+     * 
+     * @param  string  $minutes
+     * @param  array  $keep 是否保持设置
+     * @return SuperView\SuperView
+     */
+    public function page($route, $page = 1, $options = [])
+    {
+        self::$model->setPageOptions(['route'=>$route, 'currentPage'=>$page, 'options'=>$options]);
 
         return $this;
     }
@@ -72,11 +106,9 @@ class SuperView
      */
     public function __call($method, $params)
     {
-        // Get model to query data.
-        $model = self::getCallBindingModel();
-
+        $model = self::$model;
         if (empty($model) || !is_callable([$model, $method])) {
-            return [];
+            return false;
         }
 
         // 统一设置缓存，如果cache_key为false则该model不设置缓存.
@@ -92,27 +124,6 @@ class SuperView
         }
 
         return $data;
-    }
-
-
-    /**
-     * Get binding model by model mapping
-     * 
-     * @return object
-     */
-    private function getCallBindingModel()
-    {
-        $models = \SConfig::get('models');
-        if (array_key_exists(self::$model, $models)) {
-            $model = $models[self::$model];
-            $model = $model::getInstance();
-        } else {
-            $model = $models['content'];
-            $model = $model::getInstance();
-            $model->setVirtualModel(self::$model);
-        }
-
-        return $model;
     }
 
 }
