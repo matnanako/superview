@@ -78,7 +78,7 @@ class CategoryModel extends BaseModel
      * @param  int  $classid
      * @return boolean | array
      */
-    public function children($classid = 0)
+    public function children($classid = 0, $limit = 20)
     {
         if (empty($classid)) {
             return false;
@@ -92,7 +92,11 @@ class CategoryModel extends BaseModel
             return [];
         }
 
-        return self::$categories[$classid]['children'];
+        $page = $this->getCurrentPage();
+
+        $data['list'] = array_slice(self::$categories[$classid]['children'], ($page-1) * $limit, $limit);
+        $data['count'] = count(self::$categories[$classid]['children']);
+        return $this->returnWithPage($data, $limit);
     }
 
     /**
