@@ -22,7 +22,7 @@ class ContentModel extends BaseModel
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRecentList($classid, $page, $limit, $isPic);
         $this->addListInfo($data);
-        return $this->returnWithPage($data);
+        return $this->returnWithPage($data, $limit);
     }
 
     /**

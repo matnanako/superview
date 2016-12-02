@@ -286,7 +286,7 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 
 ### topic 专题模块
   
-#### 1. index($topicCategoryId, $classid, $page, $limit, $order)
+#### 1. index($topicCategoryId, $classid, $limit, $order)
 获取专题列表
   
 参数:
@@ -294,7 +294,6 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 | --------------- | -------------------------------------------- | :---: | :------: |
 | topicCategoryId | 专题分类ID                                   | 否    | 0        |
 | classid         | 分类ID                                       | 否    | 0        |
-| page            | 当前分页                                       | 否    | 1        |
 | limit           | 每页数据量                                   | 否    | 20       |
 | order           | 排序字段                                     | 否    | addtime  |
   
@@ -313,15 +312,14 @@ SuperView::get('soft')->page('list-{page}.html', 2,
   
 ### tag TAG模块
   
-#### 1. index($classid, $isGood, $page, $limit, $order)
-获取专题列表
+#### 1. index($isGood, $classid, $limit, $order)
+获取TAG列表
   
 参数:
 | 参数名          | 描述                                         | 必填  | 默认     |
 | --------------- | -------------------------------------------- | :---: | :------: |
-| classid         | 分类ID                                       | 否    | 0        |
 | isGood          | 是否推荐, 1是, 0否                           | 否    | 0        |
-| page            | 当前分页                                       | 否    | 1        |
+| classid         | 分类ID                                       | 否    | 0        |
 | limit           | 每页数据量                                   | 否    | 20       |
 | order           | 排序字段                                     | 否    | addtime  |
   
@@ -338,22 +336,18 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 | classid         | 分类ID                                       | 否    | 0        |
 | limit           | 数据量                                       | 否    | 20       |
 
-#### 2. page($total, $limit, $page, $options)
+#### 2. renderPage($route, $total, $limit, $page, $options)
 获取专题列表
   
 参数:
 | 参数名          | 描述                                         | 必填  | 默认     |
 | --------------- | -------------------------------------------- | :---: | :------: |
+| route           | 分页url规则                                  | 是    | null     |
 | total           | 数据总量                                     | 是    | null     |
 | limit           | 每页数据量, 需要大于1                        | 是    | null     |
-| options         | 数组                                         | 否    | 20       |
+| page            | 初始分页数                                   | 否    | 1        |
+| options         | 数组, 参考Configs下的pagination              | 否    | 20       |
 
-options:
-| 参数名          | 描述                                         | 必填  | 默认        |
-| --------------- | -------------------------------------------- | :---: | :---------: |
-| path            | 分页base url                                 | 否    | 当前页面uri |
-| query           | 数组，需要额外添加的参数, 例:['myparam'=>1]  | 否    | []          |
-| pageName        | 当前分页                                     | 否    | p           |
 
 ## Change log
 
