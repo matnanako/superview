@@ -167,40 +167,40 @@ SuperView::get('soft')->page(false, 2)->recent();
 | limit         | 每页数据量,0为不限制                         | 否    | 0       |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0       |
   
-#### 4. good($classid, $limit, $isPic, $level, $order)
+#### 4. good($level, $classid, $limit, $isPic, $order)
 获取推荐列表
   
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | classid       | 分类ID                                       | 否    | 0        |
 | limit         | 每页数据量,0为不限制                         | 否    | 0        |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
-| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
-#### 5. top($classid, $limit, $isPic, $level, $order)
+#### 5. top($level, $classid, $limit, $isPic, $order)
 获取置顶列表
   
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | classid       | 分类ID                                       | 否    | 0        |
 | limit         | 每页数据量,0为不限制                         | 否    | 0        |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
-| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
-#### 6. firsttitle($classid, $limit, $isPic, $level, $order)
+#### 6. firsttitle($level, $classid, $limit, $isPic, $order)
 获取头条列表
   
 参数:
 | 参数名        | 描述                                         | 必填  | 默认     |
 | ------------- | -------------------------------------------- | :---: | :------: |
+| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | classid       | 分类ID                                       | 否    | 0        |
 | limit         | 每页数据量,0为不限制                         | 否    | 0        |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
-| level         | 置顶等级, 0 - 9(0为不置顶)                   | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
   
 #### 7. today($classid, $limit, $isPic, $order)

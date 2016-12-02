@@ -16,6 +16,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - 修改Utils下page方法名为renderPage;
 - 修改Tag下的index方法参数顺序;
 - 修改Content下的rank方法参数顺序;
+- 修改Content下的top, good, firsttitle方法参数顺序;
 - 修改所有limit默认为0, 即不限制;
   
 

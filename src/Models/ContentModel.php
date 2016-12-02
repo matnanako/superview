@@ -39,7 +39,7 @@ class ContentModel extends BaseModel
     /**
      * 推荐信息列表.
      */
-    public function good($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
+    public function good($level = 0, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('good', $classid, $page, $limit, $isPic, $level, $order);
@@ -50,7 +50,7 @@ class ContentModel extends BaseModel
     /**
      * 置顶信息列表.
      */
-    public function top($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
+    public function top($level = 0, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('top', $classid, $page, $limit, $isPic, $level, $order);
@@ -61,7 +61,7 @@ class ContentModel extends BaseModel
     /**
      * 头条信息列表.
      */
-    public function firsttitle($classid = 0, $limit = 0, $isPic = 0, $level = 0, $order = 'newstime')
+    public function firsttitle($level = 0, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('firsttitle', $classid, $page, $limit, $isPic, $level, $order);
