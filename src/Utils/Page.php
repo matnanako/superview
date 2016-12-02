@@ -148,17 +148,18 @@ class Page
             'last'   => null
         ];
 
-        $side   = 2;
-        $window = $side * 2;
-        
-        if ($this->totalPage < $window * 2) {
+        $side = 2;
+        $both = $side * 2; // 表示当前页附近显示多少个页面
+
+        // 1...,4,5,6,7,8 ... N, 其中...应该表示至少两个页面
+        if ($this->totalPage <= $both + 5) { // 1,2,3,4,5,6,7,总分页如果小于等于both+当前页1+(...)2*2则显示全部分页
             $block['first'] = $this->getUrlRange(1, $this->totalPage);
-        } elseif ($this->currentPage <= $window) {
-            $block['first'] = $this->getUrlRange(1, $window + 1);
-            $block['last']  = $this->getUrlRange($this->totalPage - 1, $this->totalPage);
-        } elseif ($this->currentPage > ($this->totalPage - $window)) {
+        } elseif ($this->currentPage <= $both) { // 1,2,3,4,5...8, 当前分页在both范围内显示此种效果
+            $block['first'] = $this->getUrlRange(1, $both + 1);
+            $block['last']  = $this->getUrlRange($this->totalPage, $this->totalPage);
+        } elseif ($this->currentPage > ($this->totalPage - $both)) { // 1...4,5,6,7,8
             $block['first'] = $this->getUrlRange(1, 1);
-            $block['last']  = $this->getUrlRange($this->totalPage - ($window + 1), $this->totalPage);
+            $block['last']  = $this->getUrlRange($this->totalPage - ($both + 1), $this->totalPage);
         } else {
             $block['first']  = $this->getUrlRange(1, 1);
             $block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);

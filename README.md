@@ -37,9 +37,10 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且�
   
 ### 使用分页
 #### 所有支持limit参数的方法都可以使用分页
-第一个参数用来生成分页的url, 应该与路由里的列表页路由保持一致.  
+第一个参数用来生成分页的url, 应该与路由里的列表页路由保持一致.
+第二个参数指定当前分页.  
 ``` php
-SuperView::get('soft')->page('list-{page}.html')->recent();
+SuperView::get('soft')->page('list-{page}.html', $page)->recent();
 ```
 使用指定默认分页和自定义的布局, 第二个参数指定分页, 第三个参数可以参考Configs下的`pagination`.
 ``` php
