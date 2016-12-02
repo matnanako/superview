@@ -154,10 +154,10 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 参数:
 | 参数名        | 描述                                         | 必填  | 默认    |
 | ------------- | -------------------------------------------- | :---: | :-----: |
+| period        | 排名周期,'day','week','month','all'          | 是    | 0       |
 | classid       | 分类ID                                       | 否    | 0       |
 | limit         | 每页数据量                                   | 否    | 20      |
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0       |
-| period        | 排名周期,'day','week','month','all'          | 否    | 0       |
   
 #### 4. good($classid, $limit, $isPic, $level, $order)
 获取推荐列表
