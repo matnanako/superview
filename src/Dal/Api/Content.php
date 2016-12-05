@@ -209,7 +209,7 @@ class Content extends Base
      * 信息所属专题列表
      * @return boolean | array
      */
-    public function getInfoTopic($id, $limit)
+    public function getInfoTopics($id, $limit)
     {
         $params = [
             'id'    => intval($id),

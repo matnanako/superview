@@ -136,12 +136,12 @@ class ContentModel extends BaseModel
     /**
      * 获取信息所属专题列表.
      */
-    public function infoTopic($id = 0, $limit = 0)
+    public function infoTopics($id = 0, $limit = 0)
     {
         if (empty($id)) {
             return false;
         }
-        $data = $this->dal()->getInfoTopic($id, $limit);
+        $data = $this->dal()->getInfoTopics($id, $limit);
         return $data;
     }
 

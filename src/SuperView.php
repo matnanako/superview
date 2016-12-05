@@ -111,13 +111,13 @@ class SuperView
             return false;
         }
 
-        // 统一设置缓存，如果cache_key为false则该model不设置缓存.
-        $cache_minutes = \SCache::getCacheTime();
-        $cache_key     = \SCache::getCacheKey($model, $method, $params, $cache_minutes);
-        if ($cache_key === false) {
+        // 统一设置缓存，如果cacheKey为false则该model不设置缓存.
+        $cacheMinutes = \SCache::getCacheTime();
+        $cacheKey     = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
+        if ($cacheKey === false) {
             $data = $model->$method(...$params);
         } else {
-            $data = \SCache::remember($cache_key, $cache_minutes, function() use ($model, $method, $params) {
+            $data = \SCache::remember($cacheKey, $cacheMinutes, function() use ($model, $method, $params) {
                 $data = $model->$method(...$params);
                 return $data;
             });
