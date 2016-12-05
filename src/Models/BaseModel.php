@@ -55,10 +55,12 @@ class BaseModel
         } elseif (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
             $response = $data['list'];
         } else {
-            $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['options']);
-            $data['page'] = $page->render();
+            if ($this->pageOptions['route'] !== null) {
+                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['options']);
+                $data['page'] = $page->render();
+            }
             $response = $data;
-            $this->pageOptions = []; // 使用完销毁
+            $this->pageOptions = null; // 使用完销毁
         }
 
         return $response;

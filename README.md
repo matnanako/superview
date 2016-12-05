@@ -58,6 +58,11 @@ SuperView::get('soft')->page('list-{page}.html', 2,
 仅分页数据, 不需要生成page, 第一个参数设置为`false`.
 ``` php
 SuperView::get('soft')->page(false, 2)->recent();
+SuperView::get('soft')->page(false)->recent(); // 作用相当于不使用page方法, 默认为第一页
+```
+仅想获取总数count, 不传递任何参数, 数据以数组返回, 包含`count`,`list`.
+``` php
+SuperView::get('soft')->page()->recent();
 ```
 
 ## Configs

@@ -92,7 +92,7 @@ class SuperView
      * @param  array  $keep 是否保持设置
      * @return SuperView\SuperView
      */
-    public function page($route, $page = 1, $options = [])
+    public function page($route = null, $page = 1, $options = [])
     {
         self::$model->setPageOptions(['route'=>$route, 'currentPage'=>$page, 'options'=>$options]);
 
