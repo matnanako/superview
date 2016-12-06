@@ -34,6 +34,6 @@ class TopicModel extends BaseModel
     public function categories()
     {
         $data = $this->dal['topic']->getCategories();
-        return $data;
+        return $data['list'];
     }
 }

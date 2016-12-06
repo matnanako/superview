@@ -12,7 +12,6 @@ class TagModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal['tag']->getList($classid, $isGood, $page, $limit, $order);
-        dump($data);
         return $this->returnWithPage($data, $limit);
     }
 
