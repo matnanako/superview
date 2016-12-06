@@ -8,7 +8,7 @@ class TopicModel extends BaseModel
     /**
      * 专题列表
      */
-    public function index($topicCategoryId = 0, $classid = 0, $page = 1, $limit = 0, $order = 'addtime')
+    public function index($topicCategoryId = 0, $classid = 0, $limit = 0, $order = 'addtime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
