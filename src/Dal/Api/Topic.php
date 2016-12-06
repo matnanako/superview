@@ -51,11 +51,10 @@ class Topic extends Base
     public function getCategories()
     {
         $categories = $this->getData('classlist')['list'];
-        foreach ($categories as $key => $category) {
-            $categories[$category['classid']] = $category;
-            unset($categories[$key]);
+        foreach ($categories as $category) {
+            $categoryIndex[$category['classid']] = $category;
         }
-        return $categories;
+        return $categoryIndex;
     }
     
 }
