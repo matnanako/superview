@@ -33,7 +33,7 @@ class TopicModel extends BaseModel
      */
     public function categories()
     {
-        $categories = $this->dal['topic']->getList();
+        $categories = $this->dal['topic']->getCategories();
         return $categories;
     }
 }
