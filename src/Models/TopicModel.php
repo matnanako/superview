@@ -21,7 +21,7 @@ class TopicModel extends BaseModel
      */
     public function info($id, $path = '')
     {
-        if (empty($id)) {
+        if (empty($id) && empty($path)) {
             return false;
         }
         $data = $this->dal['topic']->getInfo($id, $path);

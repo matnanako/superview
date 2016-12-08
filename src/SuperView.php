@@ -10,23 +10,24 @@ use SuperView\Utils\Cache as SCache;
  */
 class SuperView
 {
-    private static $model;
+    private $model;
 
-    private static $instance;
+    private static $instances;
 
     private function __construct()
     {
-        class_alias(SConfig::class, 'SConfig');
-        class_alias(SCache::class, 'SCache');
+        class_exists('SConfig') ?: class_alias(SConfig::class, 'SConfig');
+        class_exists('SCache') ?: class_alias(SCache::class, 'SCache');
     }
 
-    private static function getInstance()
+    private static function getInstance($modelAlias)
     {
-        if (!(self::$instance instanceof self)) {
-            self::$instance = new self();
+        if (empty(self::$instances[$modelAlias])) {
+            self::$instances[$modelAlias] = new self();
+            self::$instances[$modelAlias]->model = self::getBindingModel($modelAlias);
         }
 
-        return self::$instance;
+        return self::$instances[$modelAlias];
     }
 
     /**
@@ -40,20 +41,18 @@ class SuperView
 
     /**
      * Set model.
-     * 
+     *
      * @param  string  $modelAlias
      * @return SuperView\SuperView
      */
     public static function get($modelAlias)
     {
-        self::$model = self::getBindingModel($modelAlias);
-
-        return self::getInstance();
+        return self::getInstance($modelAlias);
     }
 
     /**
      * Get binding model by model mapping
-     * 
+     *
      * @return object
      */
     private static function getBindingModel($modelAlias)
@@ -73,7 +72,7 @@ class SuperView
 
     /**
      * Set cache time.
-     * 
+     *
      * @param  string  $minutes
      * @param  array  $keep 是否保持设置
      * @return SuperView\SuperView
@@ -87,14 +86,14 @@ class SuperView
 
     /**
      * Set page info.
-     * 
+     *
      * @param  string  $minutes
      * @param  array  $keep 是否保持设置
      * @return SuperView\SuperView
      */
     public function page($route = null, $page = 1, $options = [])
     {
-        self::$model->setPageOptions(['route'=>$route, 'currentPage'=>$page, 'options'=>$options]);
+        $this->model->setPageOptions(['route'=>$route, 'currentPage'=>$page, 'options'=>$options]);
 
         return $this;
     }
@@ -106,7 +105,7 @@ class SuperView
      */
     public function __call($method, $params)
     {
-        $model = self::$model;
+        $model = $this->model;
         if (empty($model) || !is_callable([$model, $method])) {
             return false;
         }
@@ -117,7 +116,7 @@ class SuperView
         if ($cacheKey === false) {
             $data = $model->$method(...$params);
         } else {
-            $data = \SCache::remember($cacheKey, $cacheMinutes, function() use ($model, $method, $params) {
+            $data = \SCache::remember($cacheKey, $cacheMinutes, function () use ($model, $method, $params) {
                 $data = $model->$method(...$params);
                 return $data;
             });
@@ -125,5 +124,4 @@ class SuperView
 
         return $data;
     }
-
 }
