@@ -211,7 +211,7 @@ class ContentModel extends BaseModel
         $infoUrlTpl = \SConfig::get('info_url');
         $infourl = str_replace(
             ['{channel}', '{classname}', '{classid}', '{id}'],
-            [$category['channel'], $category['bname'], $classid, $id],
+            [$category['channel'], $category['bname'], $category['classid'], $id],
             $infoUrlTpl
         );
         return $infourl;
