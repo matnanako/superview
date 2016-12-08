@@ -184,7 +184,7 @@ class ContentModel extends BaseModel
 
     /**
      * 添加列表包含信息：分类信息、url.
-     * 
+     *
      * @return void
      */
     private function addListInfo(&$data)
@@ -195,21 +195,31 @@ class ContentModel extends BaseModel
         }
 
         $categoryModel = CategoryModel::getInstance();
-        $classUrl = \SConfig::get('class_url');
-        $infoUrl  = \SConfig::get('info_url');
         foreach ($data['list'] as $key => &$value) {
-            $category = $categoryModel->info($value['classid']);
-            $value['classname'] = $category['classname'];
-            $value['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
-                [$category['channel'], $category['bname'], $value['classid']],
-                $classUrl);
-            $value['infourl'] = str_replace(['{channel}','{classname}','{classid}','{id}'], [$category['channel'],$category['bname'],$value['classid'],$value['id']], $infoUrl);
+            $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
+            $value['infourl'] = $this->infoUrl($value['id'], $value['classid']);
         }
     }
 
     /**
+     * 获取详情页url.
+     */
+    private function infoUrl($id = 0, $classid = 0)
+    {
+        $categoryModel = CategoryModel::getInstance();
+        $category = $categoryModel->info($classid);
+        $infoUrlTpl = \SConfig::get('info_url');
+        $infourl = str_replace(
+            ['{channel}','{classname}','{classid}','{id}'],
+            [$category['channel'],$category['bname'], $classid, $id],
+            $infoUrlTpl
+        );
+        return $infourl;
+    }
+
+    /**
      * 获取dal模型.
-     * 
+     *
      * @return object
      */
     private function dal()

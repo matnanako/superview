@@ -1,6 +1,6 @@
 <?php
 return [
-    'class_url' => '/{channel}/{classname}/list-{classid}-1.html',
+    'class_url' => '/{channel}/{classname}/list-{classid}-{page}.html',
     'info_url' => '/{channel}/{classname}/{classid}/{id}.html',
 
     // Cache lifetime.

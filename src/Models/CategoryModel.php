@@ -12,7 +12,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get categories list and store in cache.
-     * 
+     *
      * @return array
      */
     private function all()
@@ -20,7 +20,7 @@ class CategoryModel extends BaseModel
         $cache_key = parent::makeCacheKey(__METHOD__);
 
         // Store the cache forever.
-        $categories = \SCache::sear($cache_key, function()  {
+        $categories = \SCache::sear($cache_key, function () {
             $categories = $this->dal['category']->getList();
             return $categories;
         });
@@ -30,7 +30,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category detail.
-     * 
+     *
      * @param  int  $classid
      * @return boolean | array
      */
@@ -49,7 +49,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category final children.
-     * 
+     *
      * @param  int  $classid
      * @return boolean | array
      */
@@ -68,8 +68,8 @@ class CategoryModel extends BaseModel
                 $children[$child_id] = $child;
             }
         }
-        
-        $this->addUrl($children);
+
+        $this->addCategoryUrl($children);
 
         if (empty($limit)) {
             return $children;
@@ -84,7 +84,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category  children.
-     * 
+     *
      * @param  int  $classid
      * @return boolean | array
      */
@@ -103,7 +103,7 @@ class CategoryModel extends BaseModel
         }
 
         $children = self::$categories[$classid]['children'];
-        $this->addUrl($children);
+        $this->addCategoryUrl($children);
 
         if (empty($limit)) {
             return $children;
@@ -118,7 +118,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category brother.
-     * 
+     *
      * @param  int  $classid
      * @return boolean | array
      */
@@ -142,7 +142,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category breadcrumb.
-     * 
+     *
      * @return boolean | array
      */
     public function breadcrumbs($classid = 0)
@@ -159,8 +159,8 @@ class CategoryModel extends BaseModel
             $category = $parentCategory;
             $categories[] = $category;
         }
-        
-        $this->addUrl($categories);
+
+        $this->addCategoryUrl($categories);
 
         // 反序存储，让父类在数组的顶部
         $breadcrumbs = array_reverse($categories);
@@ -170,7 +170,7 @@ class CategoryModel extends BaseModel
 
     /**
      * Get category breadcrumb.
-     * 
+     *
      * @return boolean | array
      */
     public function search($name = '', $classid = 0)
@@ -196,8 +196,25 @@ class CategoryModel extends BaseModel
     }
 
     /**
+     * Get category page url.
+     *
+     * @return boolean | array
+     */
+    public function categoryUrl($classid = 0, $page = 1)
+    {
+        $classUrlTpl = \SConfig::get('class_url');
+        $category = $this->info($classid);
+        $classurl = str_replace(
+            ['{channel}','{classname}','{classid}','{page}'],
+            [$category['channel'], $category['bname'], $classid, $page],
+            $classUrlTpl
+        );
+        return $classurl;
+    }
+
+    /**
      * 根据分类名称模糊查询分类列表.
-     * 
+     *
      * @return void
      */
     private function searchCategoriesByName($categories, $name, &$matches)
@@ -214,17 +231,17 @@ class CategoryModel extends BaseModel
 
     /**
      * Get all top category.
-     * 
+     *
      * @return boolean | array
      */
     private function getChannels()
     {
         static $channels;
 
-        if(empty($channels)) {
+        if (empty($channels)) {
             // Store the cache forever.
             $cache_key = parent::makeCacheKey(__METHOD__);
-            $channels = \SCache::sear($cache_key, function() {
+            $channels = \SCache::sear($cache_key, function () {
                 $categories = $this->all();
                 $channels = [];
                 foreach ($categories as $category) {
@@ -241,22 +258,20 @@ class CategoryModel extends BaseModel
 
     /**
      * Add url info.
-     * 
+     *
      * @return boolean | array
      */
-    private function addUrl(&$categories)
+    private function addCategoryUrl(&$categories)
     {
         $class_url = \SConfig::get('class_url');
         foreach ($categories as &$category) {
-            $category['classurl'] = str_replace(['{channel}','{classname}','{classid}'],
-                [$category['channel'], $category['bname'], $category['classid']],
-                $class_url);
+            $category['classurl'] = $this->categoryUrl($category['classid']);
         }
     }
 
     /**
      * Category类不需要统一缓存.
-     * 
+     *
      * @return string
      */
     public function makeCacheKey($method, $params = [])
