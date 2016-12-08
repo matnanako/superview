@@ -196,22 +196,22 @@ class ContentModel extends BaseModel
 
         $categoryModel = CategoryModel::getInstance();
         foreach ($data['list'] as $key => &$value) {
+            $category = $categoryModel->info($value['classid']);
+            $value['infourl'] = $this->infoUrl($value['id'], $category);
+            $value['classname'] = $category['classname'];
             $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
-            $value['infourl'] = $this->infoUrl($value['id'], $value['classid']);
         }
     }
 
     /**
      * 获取详情页url.
      */
-    private function infoUrl($id = 0, $classid = 0)
+    private function infoUrl($id, $category)
     {
-        $categoryModel = CategoryModel::getInstance();
-        $category = $categoryModel->info($classid);
         $infoUrlTpl = \SConfig::get('info_url');
         $infourl = str_replace(
-            ['{channel}','{classname}','{classid}','{id}'],
-            [$category['channel'],$category['bname'], $classid, $id],
+            ['{channel}', '{classname}', '{classid}', '{id}'],
+            [$category['channel'], $category['bname'], $classid, $id],
             $infoUrlTpl
         );
         return $infourl;
