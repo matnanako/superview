@@ -63,8 +63,7 @@ class SuperView
             $model = $model::getInstance();
         } else {
             $model = $models['content'];
-            $model = $model::getInstance();
-            $model->setVirtualModel($modelAlias);
+            $model = $model::getInstance($modelAlias);
         }
 
         return $model;

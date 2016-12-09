@@ -13,20 +13,22 @@ class BaseModel
 
     protected $pageOptions;
 
-    protected static $instance;
+    protected static $instances;
 
     private function __construct()
     {
         $this->dal = Dal::getInstance();
     }
 
-    public static function getInstance()
+    public static function getInstance($virtualModel = 'default')
     {
-        if (!(static::$instance instanceof static)) {
-            static::$instance = new static();
+        // 只有content model需要'$virtualModel', 其它model使用默认值
+        if (empty(static::$instances[$virtualModel])) {
+            static::$instances[$virtualModel] = new static();
+            static::$instances[$virtualModel]->setVirtualModel($virtualModel);
         }
 
-        return static::$instance;
+        return static::$instances[$virtualModel];
     }
 
     public function setVirtualModel($virtualModel)
@@ -68,7 +70,7 @@ class BaseModel
 
     /**
      * Generate cache key by params.
-     * 
+     *
      * @return string
      */
     public function makeCacheKey($method, $params = [])
