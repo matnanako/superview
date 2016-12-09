@@ -23,7 +23,7 @@ class BaseModel
     public static function getInstance($virtualModel = 'default')
     {
         // 只有content model需要'$virtualModel', 其它model使用默认值
-        if (empty(static::$instances[$virtualModel])) {
+        if (empty(static::$instances[$virtualModel]) || !(static::$instances[$virtualModel] instanceof static)) {
             static::$instances[$virtualModel] = new static();
             static::$instances[$virtualModel]->setVirtualModel($virtualModel);
         }
