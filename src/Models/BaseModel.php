@@ -20,15 +20,16 @@ class BaseModel
         $this->dal = Dal::getInstance();
     }
 
-    public static function getInstance($virtualModel = 'default')
+    public static function getInstance($virtualModel = '')
     {
         // 只有content model需要'$virtualModel', 其它model使用默认值
-        if (empty(static::$instances[$virtualModel]) || !(static::$instances[$virtualModel] instanceof static)) {
-            static::$instances[$virtualModel] = new static();
-            static::$instances[$virtualModel]->setVirtualModel($virtualModel);
+        $key = empty($virtualModel) ? static::class : $virtualModel;
+        if (empty(static::$instances[$key])) {
+            static::$instances[$key] = new static();
+            static::$instances[$key]->setVirtualModel($virtualModel);
         }
 
-        return static::$instances[$virtualModel];
+        return static::$instances[$key];
     }
 
     public function setVirtualModel($virtualModel)
