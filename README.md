@@ -286,7 +286,17 @@ SuperView::get('soft')->page()->recent();
 | topicId       | 专题ID                                       | 是    | null     |
 | limit         | 每页数据量,0为不限制                         | 否    | 0        |
 
-#### 14. search($keyword, $classid, $limit, $isPic, $order)
+#### 14. superTopic($topicId, $limit)
+获取专题信息列表, 如果无法指定`channel`, 使用该方法获取该专题下的所有`channel`的内容，否则直接使用topic方法
+
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| topicId       | 专题ID                                       | 是    | null     |
+| limit         | 每页数据量,0为不限制                         | 否    | 0        |
+
+
+#### 15. search($keyword, $classid, $limit, $isPic, $order)
 获取tag相关内容列表
 
 参数:
@@ -298,7 +308,7 @@ SuperView::get('soft')->page()->recent();
 | isPic         | 是否只查询带图片的数据, 1是, 0否             | 否    | 0        |
 | order         | 排序字段                                     | 否    | newstime |
 
-#### 15. count($period, $classid)
+#### 16. count($period, $classid)
 获取统计数量
 
 参数:
@@ -332,16 +342,6 @@ SuperView::get('soft')->page()->recent();
 
 #### 3. categories()
 获取所有专题分类列表
-
-#### 4. superTopic($topicId, $limit)
-获取专题信息列表, 如果无法指定`channel`, 使用该方法获取该专题下的所有`channel`的内容，否则直接使用topic方法
-
-参数:
-| 参数名        | 描述                                         | 必填  | 默认     |
-| ------------- | -------------------------------------------- | :---: | :------: |
-| topicId       | 专题ID                                       | 是    | null     |
-| limit         | 每页数据量,0为不限制                         | 否    | 0        |
-
 
 ### tag TAG模块
 
