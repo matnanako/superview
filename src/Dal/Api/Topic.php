@@ -56,5 +56,20 @@ class Topic extends Base
         }
         return $categoryIndex;
     }
-    
+
+
+    /**
+     * 专题信息列表
+     * @return boolean | array
+     */
+    public function getContentByTopicId($topicId, $page, $limit)
+    {
+        $params = [
+            'ztid'  => intval($topicId),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+        ];
+        return $this->getData('infolist', $params);
+    }
+
 }

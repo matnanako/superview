@@ -223,10 +223,10 @@ class Content extends Base
      * 专题信息列表
      * @return boolean | array
      */
-    public function getListByTopic($topicId, $page, $limit)
+    public function getListByTopicId($topicId, $page, $limit)
     {
         $params = [
-            'ztid' => intval($topicId),
+            'ztid'  => intval($topicId),
             'page'  => intval($page),
             'limit' => intval($limit),
         ];

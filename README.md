@@ -142,7 +142,8 @@ SuperView::get('soft')->page()->recent();
 
 
 
-### content 内容模块(支持使用具体的channel名称)
+### content 内容模块
+使用具体的`channel`名称, 只有不确定`channel`才使用`content`(目前只有`superTopic`方法支持使用`content`)
 
 #### 1. info($id)
 获取内容信息
@@ -331,6 +332,15 @@ SuperView::get('soft')->page()->recent();
 
 #### 3. categories()
 获取所有专题分类列表
+
+#### 4. superTopic($topicId, $limit)
+获取专题信息列表, 如果无法指定`channel`, 使用该方法获取该专题下的所有`channel`的内容，否则直接使用topic方法
+
+参数:
+| 参数名        | 描述                                         | 必填  | 默认     |
+| ------------- | -------------------------------------------- | :---: | :------: |
+| topicId       | 专题ID                                       | 是    | null     |
+| limit         | 每页数据量,0为不限制                         | 否    | 0        |
 
 
 ### tag TAG模块

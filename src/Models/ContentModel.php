@@ -154,7 +154,21 @@ class ContentModel extends BaseModel
             return false;
         }
         $page = $this->getCurrentPage();
-        $data = $this->dal()->getListByTopic($topicId, $page, $limit);
+        $data = $this->dal()->getListByTopicId($topicId, $page, $limit);
+        $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
+    }
+
+    /**
+     * 专题信息列表, 无法指定频道, 使用该方法获取该专题下的所有频道的内容.
+     */
+    public function superTopic($topicId = 0, $limit = 0)
+    {
+        if (empty($topicId)) {
+            return false;
+        }
+        $page = $this->getCurrentPage();
+        $data = $this->dal['topic']->getContentByTopicId($topicId, $page, $limit);
         $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
