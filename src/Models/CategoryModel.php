@@ -44,7 +44,7 @@ class CategoryModel extends BaseModel
             self::$categories = $this->all();
         }
 
-        return self::$categories[$classid];
+        return empty(self::$categories[$classid]) ? 0 : self::$categories[$classid];
     }
 
     /**
