@@ -54,7 +54,7 @@ class BaseModel
     protected function returnWithPage($data, $limit)
     {
         $data['list'] = empty($data['list']) ? [] : $data['list'];
-        $data['count'] = empty($data['count']) ? [] : $data['count'];
+        $data['count'] = empty($data['count']) ? 0 : $data['count'];
         if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
             $response = $data['list'];
         } else {
