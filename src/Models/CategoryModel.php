@@ -273,7 +273,7 @@ class CategoryModel extends BaseModel
     /**
      * Add url info.
      *
-     * @return boolean | array
+     * @return boolean
      */
     private function addCategoryUrl(&$categories)
     {

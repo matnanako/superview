@@ -119,6 +119,10 @@ class SuperView
                 $data = $model->$method(...$params);
                 return $data;
             });
+            // 如果数据为空, 不保存缓存
+            if (empty($data)) {
+                \SCache::forget($cacheKey);
+            }
         }
 
         return $data;
