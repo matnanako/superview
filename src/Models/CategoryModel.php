@@ -44,7 +44,7 @@ class CategoryModel extends BaseModel
             self::$categories = $this->all();
         }
 
-        return empty(self::$categories[$classid]) ? 0 : self::$categories[$classid];
+        return empty(self::$categories[$classid]) ? null : self::$categories[$classid];
     }
 
     /**
@@ -59,6 +59,9 @@ class CategoryModel extends BaseModel
             return false;
         }
         $category = $this->info($classid);
+        if (empty($category)) {
+            return [];
+        }
         $children_ids = explode('|', trim($category['sonclass'], '|'));
 
         $children = [];
@@ -128,6 +131,9 @@ class CategoryModel extends BaseModel
             return false;
         }
         $category = $this->info($classid);
+        if (empty($category)) {
+            return [];
+        }
         $parent_category_id = $category['bclassid'];
         if ($parent_category_id == 0) {
             $brothers = $this->getChannels();
@@ -152,11 +158,16 @@ class CategoryModel extends BaseModel
         }
 
         $category = $this->info($classid);
+        if (empty($category)) {
+            return [];
+        }
         $categories = [$category];
 
         while (isset($category['bclassid']) && $category['bclassid'] != 0) {
-            $parentCategory = $this->info($category['bclassid']);
-            $category = $parentCategory;
+            $category = $this->info($category['bclassid']);
+            if (empty($category)) {
+                break;
+            }
             $categories[] = $category;
         }
 
@@ -204,6 +215,9 @@ class CategoryModel extends BaseModel
     {
         $classUrlTpl = \SConfig::get('class_url');
         $category = $this->info($classid);
+        if (empty($category)) {
+            return '';
+        }
         $classurl = str_replace(
             ['{channel}','{classname}','{classid}','{page}'],
             [$category['channel'], $category['bname'], $classid, $page],
@@ -263,6 +277,9 @@ class CategoryModel extends BaseModel
      */
     private function addCategoryUrl(&$categories)
     {
+        if (empty($categories)) {
+            return false;
+        }
         $class_url = \SConfig::get('class_url');
         foreach ($categories as &$category) {
             $category['classurl'] = $this->categoryUrl($category['classid']);
