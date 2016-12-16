@@ -124,6 +124,8 @@ class SuperView
                 \SCache::forget($cacheKey);
             }
         }
+        // 重置$model状态(目前包括去除分页设置)
+        $model->reset();
 
         return $data;
     }

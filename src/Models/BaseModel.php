@@ -46,6 +46,11 @@ class BaseModel
         }
     }
 
+    public function reset()
+    {
+        $this->pageOptions = null;
+    }
+
     protected function getCurrentPage()
     {
         return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 1;
@@ -63,7 +68,6 @@ class BaseModel
                 $data['page'] = $page->render();
             }
             $response = $data;
-            $this->pageOptions = null; // 使用完销毁
         }
 
         return $response;
