@@ -4,6 +4,11 @@ All Notable changes to `superview` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## 1.0.2 - 2016-12-16
+
+### Added
+- Page方法新增第三个参数支持设置简洁模式;
+
 ## 1.0.1 - 2016-12-6
 
 ### Added
@@ -19,7 +24,6 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 - SuperView增加page方法;
 - Category下的children, finalChildren方法参数增加limit;
-
 
 ### Fixed
 - 去除所有的page参数;

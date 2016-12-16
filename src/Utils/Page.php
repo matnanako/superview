@@ -13,6 +13,8 @@ namespace SuperView\Utils;
 
 class Page
 {
+    protected $simple;
+
     protected $route;
 
     protected $perPage;
@@ -32,9 +34,10 @@ class Page
      * @param  array  $url
      * @return void
      */
-    public function __construct($route, $total, $perPage, $currentPage = null, $options = [])
+    public function __construct($route, $total, $perPage, $currentPage = null, $simple = false, $options = [])
     {
         $this->route = $route;
+        $this->simple = $simple;
         $this->perPage = $perPage;
         $this->totalPage = $perPage > 1 ? ceil($total / $perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
@@ -46,7 +49,7 @@ class Page
 
     protected function setCurrentPage($currentPage)
     {
-        $this->currentPage = (filter_var($currentPage, FILTER_VALIDATE_INT) !== false 
+        $this->currentPage = (filter_var($currentPage, FILTER_VALIDATE_INT) !== false
             && (int) $currentPage >= 1
             && (int) $currentPage <= $this->totalPage) ? $currentPage : 1;
     }
@@ -142,6 +145,9 @@ class Page
      */
     protected function getLinks()
     {
+        if ($this->simple) {
+            return '';
+        }
         $block = [
             'first'  => null,
             'slider' => null,

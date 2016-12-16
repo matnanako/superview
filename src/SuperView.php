@@ -16,6 +16,7 @@ class SuperView
 
     private function __construct()
     {
+        // 使用别名, 避免和框架全局类冲突
         class_exists('SConfig') ?: class_alias(SConfig::class, 'SConfig');
         class_exists('SCache') ?: class_alias(SCache::class, 'SCache');
     }
@@ -86,13 +87,15 @@ class SuperView
     /**
      * Set page info.
      *
-     * @param  string  $minutes
-     * @param  array  $keep 是否保持设置
+     * @param  string  $route url路由规则
+     * @param  int  $currentPage 当前分页
+     * @param  boolean  $simple 是否简洁模式
+     * @param  array  $options 分页样式配置
      * @return SuperView\SuperView
      */
-    public function page($route = null, $page = 1, $options = [])
+    public function page($route = null, $currentPage = 1, $simple = false, $options = [])
     {
-        $this->model->setPageOptions(['route'=>$route, 'currentPage'=>$page, 'options'=>$options]);
+        $this->model->setPageOptions(['route'=>$route, 'currentPage'=>$currentPage, 'simple'=>$simple, 'options'=>$options]);
 
         return $this;
     }
@@ -100,7 +103,7 @@ class SuperView
     /**
      * @param  string  $method
      * @param  array  $params
-     * @return array
+     * @return boolean | array
      */
     public function __call($method, $params)
     {
@@ -109,9 +112,10 @@ class SuperView
             return false;
         }
 
-        // 统一设置缓存，如果cacheKey为false则该model不设置缓存.
+        // 统一设置缓存
         $cacheMinutes = \SCache::getCacheTime();
         $cacheKey     = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
+        // 如果cacheKey为false则该model不设置缓存
         if ($cacheKey === false) {
             $data = $model->$method(...$params);
         } else {
@@ -125,6 +129,8 @@ class SuperView
             }
         }
         // 重置$model状态(目前包括去除分页设置)
+        // reset方法不可以在$model内自动调用,
+        // 因为如果缓存命中, $model的$method方法不会被执行
         $model->reset();
 
         return $data;

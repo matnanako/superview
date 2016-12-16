@@ -42,9 +42,9 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且�
 ``` php
 SuperView::get('soft')->page('list-{page}.html', $page)->recent();
 ```
-使用指定默认分页和自定义的布局, 第二个参数指定分页, 第三个参数可以参考Configs下的`pagination`.
+使用指定默认分页和自定义的布局, 第二个参数指定分页, 第三个参数指定是否使用简洁模式(默认`false`), 第四个参数可以参考Configs下的`pagination`.
 ``` php
-SuperView::get('soft')->page('list-{page}.html', 2,
+SuperView::get('soft')->page('list-{page}.html', 2, false,
     [
         'layout' => '<ul>{total}{previous}{links}{next}</ul>',
         'total' => '<li class="pipe">共{total}页</li>',
@@ -378,7 +378,7 @@ SuperView::get('soft')->page()->recent();
 | classid         | 分类ID                                       | 否    | 0        |
 | limit           | 数据量  ,0为不限制                           | 否    | 0        |
 
-#### 2. renderPage($route, $total, $limit, $page, $options)
+#### 2. renderPage($route, $total, $limit, $page, $simple, $options)
 获取专题列表
 
 参数:
@@ -388,6 +388,7 @@ SuperView::get('soft')->page()->recent();
 | total           | 数据总量                                     | 是    | null     |
 | limit           | 每页数据量, 需要大于1,0为不限制              | 是    | u ll     |
 | page            | 初始分页数                                   | 否    | 1        |
+| simple          | 是否使用简洁模式                             | 否    | false    |
 | options         | 数组, 参考Configs下的pagination              | 否    | 20       |
 
 
