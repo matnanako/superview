@@ -64,7 +64,7 @@ class BaseModel
             $response = $data['list'];
         } else {
             if ($this->pageOptions['route'] !== null) {
-                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['options']);
+                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
                 $data['page'] = $page->render();
             }
             $response = $data;
