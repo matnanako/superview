@@ -14,12 +14,13 @@ class Cache extends CacheFacade
 
     /**
      * 调用laravel Cache方法.
-     * 
+     *
      * @return object
      */
-    public static function __callStatic($method, $params) {
-        // 给'remember', 'sear', 'rememberForever'三种方法加上清缓存操作，
-        // 如果要添加方法，确保被添加的方法的第一个参数为$key.
+    public static function __callStatic($method, $params)
+    {
+        // 给'remember', 'sear', 'rememberForever'三种方法加上清缓存操作,
+        // 如果要添加方法，确保参数$params[0]为$key.
         if (in_array($method, ['remember', 'sear', 'rememberForever'])) {
             self::clearCache($params[0]);
         }
@@ -27,8 +28,8 @@ class Cache extends CacheFacade
     }
 
     /**
-     * Get cache time.
-     * 
+     * clear cache.
+     *
      * @return object
      */
     public static function clearCache($key)
@@ -41,16 +42,17 @@ class Cache extends CacheFacade
 
     /**
      * Get cache time.
-     * 
+     *
      * @return object
      */
     public static function getCacheTime()
     {
-        $cacheMinutes = empty(self::$cacheMinutes) ? \SConfig::get('cache_minutes') : self::$cacheMinutes;
+        // 如果未设置self::$cacheMinutes则使用默认配置
+        $cacheMinutes = is_null(self::$cacheMinutes) ? \SConfig::get('cache_minutes') : self::$cacheMinutes;
 
         // 如果不需要保持设置，使用之后清空self::$cacheMinutes。
         if (!self::$keepCacheTime) {
-            self::$cacheMinutes = 0;
+            self::$cacheMinutes = null;
         }
 
         return $cacheMinutes;
@@ -58,7 +60,7 @@ class Cache extends CacheFacade
 
     /**
      * Set cache time.
-     * 
+     *
      * @param  string  $minutes
      * @param  array  $keepCacheTime 是否保持设置
      * @return object
@@ -71,8 +73,8 @@ class Cache extends CacheFacade
 
 
     /**
-     * Get cache key.
-     * 
+     * 判断缓存时间并相应生成缓存KEY.
+     *
      * @return object
      */
     public static function getCachekey($model, $method, $params, $cacheMinutes)
@@ -85,5 +87,4 @@ class Cache extends CacheFacade
 
         return $cache_key;
     }
-
 }

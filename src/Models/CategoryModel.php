@@ -11,6 +11,7 @@ class CategoryModel extends BaseModel
     private static $categories;
 
     /**
+     * 所有方法依赖all
      * Get categories list and store in cache.
      *
      * @return array
@@ -86,7 +87,7 @@ class CategoryModel extends BaseModel
     }
 
     /**
-     * Get category  children.
+     * 获取分类的下一级分类.
      *
      * @param  int  $classid
      * @return boolean | array
@@ -97,21 +98,19 @@ class CategoryModel extends BaseModel
             return false;
         }
 
-        if (empty(self::$categories)) {
-            self::$categories = $this->all();
-        }
-
-        if (!isset(self::$categories[$classid]['children'])) {
+        $category = $this->info($classid);
+        if (empty($category) || !isset($category['children'])) {
             return [];
         }
 
-        $children = self::$categories[$classid]['children'];
+        $children = $category['children'];
         $this->addCategoryUrl($children);
 
         if (empty($limit)) {
             return $children;
         }
 
+        // 需要生成分页
         $page = $this->getCurrentPage();
         $data['list'] = array_slice($children, ($page-1) * $limit, $limit);
         $data['count'] = count($children);
@@ -135,9 +134,11 @@ class CategoryModel extends BaseModel
             return [];
         }
         $parent_category_id = $category['bclassid'];
+        // 如果是顶级分类则直接获取所有顶级分类
         if ($parent_category_id == 0) {
             $brothers = $this->getChannels();
         } else {
+            // 否则获取父分类的子分类
             $brothers = $this->children($parent_category_id);
         }
 
@@ -163,6 +164,7 @@ class CategoryModel extends BaseModel
         }
         $categories = [$category];
 
+        // 查找当前分类的所有父分类
         while (isset($category['bclassid']) && $category['bclassid'] != 0) {
             $category = $this->info($category['bclassid']);
             if (empty($category)) {
@@ -173,7 +175,7 @@ class CategoryModel extends BaseModel
 
         $this->addCategoryUrl($categories);
 
-        // 反序存储，让父类在数组的顶部
+        // 反序，让父类在数组的顶部
         $breadcrumbs = array_reverse($categories);
 
         return $breadcrumbs;
@@ -190,10 +192,7 @@ class CategoryModel extends BaseModel
             return false;
         }
 
-        if (empty(self::$categories)) {
-            self::$categories = $this->all();
-        }
-
+        // 未设置分类ID则从顶级频道开始查找
         if (empty($classid)) {
             $categories = $this->getChannels();
         } else {
@@ -201,15 +200,15 @@ class CategoryModel extends BaseModel
         }
 
         $matches = [];
-        $this->searchCategoriesByName($categories, $name, $matches);
+        $this->searchCategoryByName($categories, $name, $matches);
 
         return $matches;
     }
 
     /**
-     * Get category page url.
+     * 根据class_url配置获取分类页url.
      *
-     * @return boolean | array
+     * @return string
      */
     public function categoryUrl($classid = 0, $page = 1)
     {
@@ -231,14 +230,14 @@ class CategoryModel extends BaseModel
      *
      * @return void
      */
-    private function searchCategoriesByName($categories, $name, &$matches)
+    private function searchCategoryByName($categories, $name, &$matches)
     {
         foreach ($categories as $key => $category) {
             if (strpos($category['classname'], $name) !== false) {
                 $matches[] = $category;
             }
             if (isset($category['children'])) {
-                $this->searchCategoriesByName($category['children'], $name, $matches);
+                $this->searchCategoryByName($category['children'], $name, $matches);
             }
         }
     }
@@ -271,7 +270,8 @@ class CategoryModel extends BaseModel
     }
 
     /**
-     * Add url info.
+     * 为分类添加分页页url.
+     * url未存入缓存, 确保可同时使用多个url规则.
      *
      * @return boolean
      */

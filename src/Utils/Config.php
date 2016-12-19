@@ -2,6 +2,9 @@
 
 namespace SuperView\Utils;
 
+/**
+ * 配置类, 所有方法静态调用, 无需初始化配置.
+ */
 class Config
 {
     protected static $configs = [];
@@ -15,6 +18,7 @@ class Config
 
     public static function __callStatic($method, $params)
     {
+        // 调用前检查有没有载入配置
         self::init();
         return self::$method(...$params);
     }

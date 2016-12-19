@@ -1,37 +1,30 @@
 <?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: zhangyajun <448901948@qq.com>
-// +----------------------------------------------------------------------
-
 namespace SuperView\Utils;
 
 class Page
 {
+    // 是否简洁模式
     protected $simple;
-
+    // 链接url路由格式
     protected $route;
-
+    // 每页数据量
     protected $perPage;
-
+    // 当前分页
     protected $currentPage;
-
+    // 总分页数
     protected $totalPage;
-
+    // 分页配置参数
     protected $options;
 
     /**
      * Create a new paginator instance.
      *
-     * @param  mixed  $items
+     * @param  string  $route
+     * @param  int  $total
      * @param  int  $perPage
      * @param  int|null  $currentPage
-     * @param  array  $url
+     * @param  boolean  $simple
+     * @param  array  $options
      * @return void
      */
     public function __construct($route, $total, $perPage, $currentPage = null, $simple = false, $options = [])
@@ -60,7 +53,7 @@ class Page
      * @param $page
      * @return string
      */
-    public function url($page)
+    protected function url($page)
     {
         if ($page <= 0) {
             $page = 1;
@@ -76,7 +69,7 @@ class Page
      * @param  int $end
      * @return array
      */
-    public function getUrlRange($start, $end)
+    protected function getUrlRange($start, $end)
     {
         $urls = [];
 
@@ -155,7 +148,7 @@ class Page
         ];
 
         $side = 2;
-        $both = $side * 2; // 表示当前页附近显示多少个页面
+        $both = $side * 2; // 表示当前页两侧显示多少个页面
 
         // 1...,4,5,6,7,8 ... N, 其中...应该表示至少两个页面
         if ($this->totalPage <= $both + 5) { // 1,2,3,4,5,6,7,总分页如果小于等于both+当前页1+(...)2*2则显示全部分页

@@ -73,7 +73,7 @@ class SuperView
     /**
      * Set cache time.
      *
-     * @param  string  $minutes
+     * @param  string $minutes
      * @param  array  $keep 是否保持设置
      * @return SuperView\SuperView
      */

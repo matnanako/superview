@@ -24,13 +24,19 @@ class Api
         return self::$instance;
     }
 
+    /**
+     * Get data from web service.
+     *
+     * @param  array  $params
+     * @return array
+     */
     public function get($params)
     {
-        foreach ($params as $key => $value) {
-            if (empty($value)) {
-                unset($params[$key]);
-            }
-        }
+        // 过滤空的参数
+        $params = array_filter($params, function ($value) {
+            return !empty($value);
+        });
+        // 生成get查询
         $params = ['query'=>$params];
         $data = $this->getData($params);
         return json_decode($data, true);

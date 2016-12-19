@@ -37,12 +37,12 @@ SuperView::get('soft')->cache(20)->recent(); //使用新的缓存时间, 并且�
 
 ### 使用分页
 #### 所有支持limit参数的方法都可以使用分页
-第一个参数用来生成分页的url, 应该与路由里的列表页路由保持一致.
+第一个参数用来生成分页的url, 应该与路由格式保持一致.
 第二个参数指定当前分页.
 ``` php
 SuperView::get('soft')->page('list-{page}.html', $page)->recent();
 ```
-使用指定默认分页和自定义的布局, 第二个参数指定分页, 第三个参数指定是否使用简洁模式(默认`false`), 第四个参数可以参考Configs下的`pagination`.
+使用指定分页和自定义的布局, 第二个参数指定分页, 第三个参数指定是否使用简洁模式(默认`false`), 第四个参数参考Configs下的`pagination`.
 ``` php
 SuperView::get('soft')->page('list-{page}.html', 2, false,
     [
@@ -55,14 +55,18 @@ SuperView::get('soft')->page('list-{page}.html', 2, false,
         'dots' => '<li">...</li>',
     ])->recent();
 ```
-仅分页数据, 不需要生成page, 第一个参数设置为`false`.
+返回数据格式:
+``` php
+[
+  "count" => "594",
+  "list" => [],
+  "page" => ""
+]
+```
+仅分页数据, 不需要返回`page`和`count`, 第一个参数设置为`false`.
 ``` php
 SuperView::get('soft')->page(false, 2)->recent();
-SuperView::get('soft')->page(false)->recent(); // 作用相当于不使用page方法, 默认为第一页
-```
-仅想获取总数count, 不传递任何参数, 数据以数组返回, 包含`count`,`list`.
-``` php
-SuperView::get('soft')->page()->recent();
+SuperView::get('soft')->page(false)->recent(); // 默认为第一页, 作用相当于不使用page方法
 ```
 
 ## Configs
