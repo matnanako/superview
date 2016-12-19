@@ -9,6 +9,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 - Page方法新增第三个参数支持设置简洁模式;
 
+### Fixed
+- 有缓存的时候，page方法设置的参数会被下一次调用使用;
+
 ## 1.0.1 - 2016-12-6
 
 ### Added
