@@ -94,7 +94,6 @@ class BaseModel
      */
     public function makeCacheKey($method, $params = [])
     {
-        $page = $this->getCurrentPage();
         return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
     }
 

@@ -32,7 +32,7 @@ class Page
         $this->route = $route;
         $this->simple = $simple;
         $this->perPage = $perPage;
-        $this->totalPage = $perPage > 1 ? ceil($total / $perPage) : 1;
+        $this->totalPage = $perPage >= 1 ? ceil($total / $perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
         $this->setCurrentPage($currentPage);
 
