@@ -11,22 +11,23 @@ class Category extends Base
     public function getList()
     {
         $categories = $this->getData('all');
+        // 生成分类树结构
         $this->makeTrees($categories);
 
-        // Generate normative model data.
+        // 设置频道数据.
         foreach ($categories as $key => &$category) {
-            $this->getChannel($categories, $category['classid']);
+            $this->setChannel($categories, $category['classid']);
         }
         return $categories;
     }
 
     /**
      * Set top category id.
-     * 
+     *
      * @param  int  $classid
      * @return array
      */
-    private function getChannel(&$categories, $classid)
+    private function setChannel(&$categories, $classid)
     {
         $category =& $categories[$classid];
 
@@ -36,7 +37,7 @@ class Category extends Base
                 $category['channel_id'] = $category['classid'];
                 $category['channel'] = $category['bname'];
             } else {
-                $parentCategory = $this->getChannel($categories, $category['bclassid']);
+                $parentCategory = $this->setChannel($categories, $category['bclassid']);
                 $category['channel_id'] = $parentCategory['channel_id'];
                 $category['channel'] = $parentCategory['channel'];
             }
@@ -44,7 +45,8 @@ class Category extends Base
         return $category;
     }
 
-    private function makeTrees(&$categories) {
+    private function makeTrees(&$categories)
+    {
         foreach ($categories as $key => $category) {
             $parentId = $category['bclassid'];
             if ($parentId != 0 && isset($categories[$parentId])) {

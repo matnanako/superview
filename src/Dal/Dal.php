@@ -13,7 +13,7 @@ class Dal implements ArrayAccess
     private $dals;
 
     private static $instance;
-    
+
     public static function getInstance()
     {
         if (!(self::$instance instanceof self)) {
@@ -22,12 +22,12 @@ class Dal implements ArrayAccess
 
         return self::$instance;
     }
-    
+
     public function offsetGet($offset)
     {
         $dals = \SConfig::get('dals');
 
-        // 将content:soft转换成dalKey为content,virtualDal为soft
+        // 如果是"content:soft"格式, dalKey为content,virtualDal为soft
         if (strstr($offset, 'content:')) {
             $dalKey = 'content';
             $virtualDal = substr($offset, strpos($offset, ":") + 1);
