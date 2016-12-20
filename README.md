@@ -390,7 +390,7 @@ SuperView::get('soft')->page(false)->recent(); // 默认为第一页, 作用相�
 | --------------- | -------------------------------------------- | :---: | :------: |
 | route           | 分页url规则                                  | 是    | null     |
 | total           | 数据总量                                     | 是    | null     |
-| limit           | 每页数据量, 需要大于1,0为不限制              | 是    | u ll     |
+| limit           | 每页数据量, 需要大于1,0为不限制              | 是    | null     |
 | page            | 初始分页数                                   | 否    | 1        |
 | simple          | 是否使用简洁模式                             | 否    | false    |
 | options         | 数组, 参考Configs下的pagination              | 否    | 20       |
