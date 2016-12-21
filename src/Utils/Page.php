@@ -31,8 +31,8 @@ class Page
     {
         $this->route = $route;
         $this->simple = $simple;
-        $this->perPage = $perPage;
-        $this->totalPage = $perPage >= 1 ? ceil(intval($total) / intval($perPage)) : 1;
+        $this->perPage = intval($perPage);
+        $this->totalPage = $perPage >= 1 ? ceil(intval($total) / $this->perPage) : 1;
         $this->hasMore = $this->totalPage > 1;
         $this->setCurrentPage($currentPage);
 
