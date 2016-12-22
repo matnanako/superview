@@ -10,8 +10,13 @@ use SuperView\Utils\Cache as SCache;
  */
 class SuperView
 {
+    // 存储当前Model实例
     private $model;
 
+     // 存放的是SuperView实例, 并不是Model实例
+     // 其中SuperView实例里存储的$model是对应的Model实例
+     // 每一个$modelAlias会生成一个Model实例, 每一个Model实例存储在一个SuperView实例中以被使用
+     // 意义在于SuperView可以统一处理所有的Model方法调用
     private static $instances;
 
     private function __construct()
@@ -32,6 +37,24 @@ class SuperView
     }
 
     /**
+     * Get binding model by model mapping
+     *
+     * @return object
+     */
+    private static function getBindingModel($modelAlias)
+    {
+        $models = SConfig::get('models');
+        if (array_key_exists($modelAlias, $models)) {
+            $model = $models[$modelAlias];
+        } else {
+            $model = $models['content'];
+        }
+        $model = $model::getInstance($modelAlias);
+
+        return $model;
+    }
+
+    /**
      * @param  array  $configs
      * @return void
      */
@@ -49,25 +72,6 @@ class SuperView
     public static function get($modelAlias)
     {
         return self::getInstance($modelAlias);
-    }
-
-    /**
-     * Get binding model by model mapping
-     *
-     * @return object
-     */
-    private static function getBindingModel($modelAlias)
-    {
-        $models = SConfig::get('models');
-        if (array_key_exists($modelAlias, $models)) {
-            $model = $models[$modelAlias];
-            $model = $model::getInstance();
-        } else {
-            $model = $models['content'];
-            $model = $model::getInstance($modelAlias);
-        }
-
-        return $model;
     }
 
     /**

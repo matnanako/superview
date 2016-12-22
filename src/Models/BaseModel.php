@@ -22,16 +22,13 @@ class BaseModel
 
     public static function getInstance($virtualModel = '')
     {
-        // 只有content model需要$virtualModel, 其它model为空.
-        // 使用$virtualModel或当前类名作为实例的键名,
-        // 保证不同$virtualModel的content model使用不同的实例
-        $key = empty($virtualModel) ? static::class : $virtualModel;
-        if (empty(static::$instances[$key])) {
-            static::$instances[$key] = new static();
-            static::$instances[$key]->setVirtualModel($virtualModel);
+        // 每一个$virtualModel对应一个独立的实例
+        if (empty(static::$instances[$virtualModel])) {
+            static::$instances[$virtualModel] = new static();
+            static::$instances[$virtualModel]->setVirtualModel($virtualModel);
         }
 
-        return static::$instances[$key];
+        return static::$instances[$virtualModel];
     }
 
     protected function setVirtualModel($virtualModel)

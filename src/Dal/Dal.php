@@ -27,7 +27,7 @@ class Dal implements ArrayAccess
     {
         $dals = \SConfig::get('dals');
 
-        // 如果是"content:soft"格式, dalKey为content,virtualDal为soft
+        // 如果是"content:soft"格式, dalKey为content, virtualDal为soft
         if (strstr($offset, 'content:')) {
             $dalKey = 'content';
             $virtualDal = substr($offset, strpos($offset, ":") + 1);
