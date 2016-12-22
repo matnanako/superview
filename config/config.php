@@ -1,7 +1,7 @@
 <?php
 return [
-    'class_url' => '/{channel}/{classname}/list-{classid}-{page}.html',
-    'info_url' => '/{channel}/{classname}/{classid}/{id}.html',
+    'class_url' => '',
+    'info_url' => '',
 
     // Cache lifetime.
     'cache_minutes' => 2,
@@ -9,7 +9,7 @@ return [
     'refresh_cache' => 0,
 
     // Api service host.
-    'api_base_url' => 'http://xzwh.api.zz314.com/downza/',
+    'api_base_url' => '',
 
     // Models alias map to class.
     'models' => [
@@ -29,12 +29,12 @@ return [
     ],
 
     'pagination' => [
-        'layout' => '<div class="pages pt-20">{total}{previous}{links}{next}</div>',
-        'total' => '<span class="pipe">共{total}页</span>',
-        'previous' => '<a href="{url}">上一页</a>',
-        'links' => '<a href="{url}">{page}</a>',
-        'link_active' => '<a class="on">{page}</a>',
-        'next' => '<a href="{url}">下一页</a>',
-        'dots' => '<span class="pipe">...</span>',
+        'layout' => '',
+        'total' => '',
+        'previous' => '',
+        'links' => '',
+        'link_active' => '',
+        'next' => '',
+        'dots' => '',
     ]
 ];

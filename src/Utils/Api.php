@@ -12,7 +12,12 @@ class Api
 
     private function __construct()
     {
-        $this->http = new HttpClient(['base_uri'=>\SConfig::get('api_base_url')]);
+        $apiUrl = \SConfig::get('api_base_url');
+        if (empty($apiUrl)) {
+            throw new \Exception("请设置SuperView配置`api_base_url`!");
+
+        }
+        $this->http = new HttpClient(['base_uri' => $apiUrl]);
     }
 
     public static function getInstance()
