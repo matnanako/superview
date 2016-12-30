@@ -206,6 +206,23 @@ class CategoryModel extends BaseModel
     }
 
     /**
+     * 信息搜索列表：根据指定字段指定值
+     */
+    public function match($field,$value, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        $field = trim($field);
+        $value = trim($value);
+
+        if (empty($field) || empty($value)) {
+            return [];
+        }
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getListByFieldValue($field,$value, $classid, $page, $limit, $isPic, $order);
+        $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
+    }
+
+    /**
      * 根据class_url配置获取分类页url.
      *
      * @return string

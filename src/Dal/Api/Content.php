@@ -251,6 +251,24 @@ class Content extends Base
     }
 
     /**
+     * 信息搜索列表：根据指定字段指定值
+     * @return boolean | array
+     */
+    public function getListByFieldValue($field,$value, $classid, $page, $limit, $isPic, $order)
+    {
+        $params = [
+            'field'   => $field,
+            'value'   => $value,
+            'classid' => intval($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('match', $params);
+    }
+    
+    /**
      * 获取数量统计
      * @return boolean | array
      */

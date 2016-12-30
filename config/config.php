@@ -9,7 +9,7 @@ return [
     'refresh_cache' => 0,
 
     // Api service host.
-    'api_base_url' => '',
+    'api_base_url' => 'http://xzwh.api.zz314.com/downza',
 
     // Models alias map to class.
     'models' => [
