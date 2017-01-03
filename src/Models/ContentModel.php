@@ -188,6 +188,24 @@ class ContentModel extends BaseModel
     }
 
     /**
+     * 信息搜索列表的总个数
+     */
+    public function searchCount($keyword = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        if (empty($keyword)) {
+            return -1;
+        }
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order);
+        
+        if(empty($data['count'])){
+            return -1;
+        }
+
+        return $data['count'];
+    }
+
+    /**
      * 信息搜索列表：根据指定字段指定值
      */
     public function match($field,$value, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
