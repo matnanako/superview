@@ -221,7 +221,44 @@ class ContentModel extends BaseModel
         $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
-    
+
+    /**
+     * 查询小于[等于]某id的$limit范围内的信息列表
+     *
+     * @param integer $id 
+     * @param integer $limit
+     * @param integer $classid
+     * @param integer $equal 默认为0小于$id，1小于等于$id
+     *
+     * @return array 符合查询条件的帝国cms的信息列表
+     */
+    public function near($id,$limit = 20,$classid = 0,$equal = 0,$ispic = 0,$order = 'newstime')
+    {
+        //参数检查
+        if($id < 1 || $limit < 1){
+            return [];
+        }
+
+        if($classid < 0){
+            $classid = 0;
+        }
+
+        $equal = $equal == 1 ? 1 : 0;
+        $ispic = $ispic == 1 ? 1 : 0;
+
+        if(empty(trim($order))){
+            $order = 'newstime';
+        }
+
+        $data = $this->dal()->near($id,$limit,$classid,$equal,$ispic,$order);
+        $this->addListInfo($data);
+        if(empty($data['list'])){
+            return [];
+        }
+        return $data['list'];
+    }
+
+
     /**
      * 数量统计.
      */

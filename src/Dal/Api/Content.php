@@ -267,7 +267,31 @@ class Content extends Base
         ];
         return $this->getData('match', $params);
     }
-    
+
+    /**
+     * 查询小于[等于]某id的$limit范围内的信息列表
+     *
+     * @param integer $id 
+     * @param integer $limit
+     * @param integer $classid
+     * @param integer $equal 默认为0小于$id，1小于等于$id
+     *
+     * @return array 符合查询条件的帝国cms的信息列表
+     */
+    public function near($id,$limit,$classid,$equal,$isPic,$order)
+    {
+        $params = [
+            'id'   => $id,
+            'limit'   => $limit,
+            'classid' => intval($classid),
+            'equal'    => intval($equal),
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+        ];
+        return $this->getData('near', $params);
+    }
+
+
     /**
      * 获取数量统计
      * @return boolean | array
