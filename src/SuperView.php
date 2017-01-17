@@ -113,7 +113,7 @@ class SuperView
     {
         $model = $this->model;
         if (empty($model) || !is_callable([$model, $method])) {
-            return false;
+            return [];
         }
 
         // 统一设置缓存
@@ -125,6 +125,9 @@ class SuperView
         } else {
             $data = \SCache::remember($cacheKey, $cacheMinutes, function () use ($model, $method, $params) {
                 $data = $model->$method(...$params);
+                if(empty($data)){
+                    $data = [];
+                }
                 return $data;
             });
             // 如果数据为空, 不保存缓存
@@ -137,6 +140,9 @@ class SuperView
         // 因为如果缓存命中, $model的$method方法不会被执行
         $model->reset();
 
+        if(empty($data)){
+            $data = [];
+        }
         return $data;
     }
 }
