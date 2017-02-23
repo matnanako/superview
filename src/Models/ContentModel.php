@@ -92,6 +92,20 @@ class ContentModel extends BaseModel
     }
 
     /**
+     * interval查询结果的总个数
+     */
+    public function intervalCount($start = 0, $end = 0, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getIntervalList($start, $end, $classid, $page, $limit, $isPic, $order);
+        if(empty($data['count'])){
+            return -1;
+        }
+
+        return $data['count'];
+    }
+    
+    /**
      * 相同标题信息列表.
      */
     public function title($title = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
