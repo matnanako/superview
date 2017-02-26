@@ -16,7 +16,7 @@ class CategoryModel extends BaseModel
      *
      * @return array
      */
-    private function all()
+    public function all()
     {
         $cache_key = parent::makeCacheKey(__METHOD__);
 
