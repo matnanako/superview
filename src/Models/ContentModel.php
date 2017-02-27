@@ -300,6 +300,7 @@ class ContentModel extends BaseModel
             $value['infourl'] = $this->infoUrl($value['id'], $category);
             $value['classname'] = $category['classname'];
             $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
+            $value['category'] = $category;
         }
     }
 
