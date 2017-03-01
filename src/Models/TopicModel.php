@@ -17,6 +17,19 @@ class TopicModel extends BaseModel
     }
 
     /**
+     * index查询结果的总个数
+     */
+    public function indexCount($topicCategoryId = 0, $classid = 0, $limit = 0, $order = 'addtime')
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
+        if(empty($data['count'])){
+            return -1;
+        }
+        return $data['count'];
+    }
+
+    /**
      * 专题详情
      */
     public function info($id, $path = '')

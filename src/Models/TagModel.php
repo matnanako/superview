@@ -15,4 +15,14 @@ class TagModel extends BaseModel
         return $this->returnWithPage($data, $limit);
     }
 
+    public function indexCount($isGood = 0, $classid = 0, $limit = 0, $order = 'addtime')
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal['tag']->getList($classid, $isGood, $page, $limit, $order);
+        if(empty($data['count'])){
+            return -1;
+        }
+        return $data['count'];
+    }
+
 }
