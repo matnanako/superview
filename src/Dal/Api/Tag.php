@@ -20,5 +20,11 @@ class Tag extends Base
         return $this->getData('lists', $params);
     }
 
-
+    public function getInfo($tagname)
+    {
+        $params = [
+            'tagname'    => $tagname
+        ];
+        return $this->getData('info', $params);
+    }
 }

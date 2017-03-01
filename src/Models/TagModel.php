@@ -25,4 +25,15 @@ class TagModel extends BaseModel
         return $data['count'];
     }
 
+    /**
+     * 根据tagname查询tag信息
+     */
+    public function info($tagname)
+    {
+        if (empty($tagname)) {
+            return [];
+        }
+        $data = $this->dal['tag']->getInfo($tagname);
+        return $data;
+    }
 }
