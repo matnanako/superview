@@ -148,6 +148,24 @@ class ContentModel extends BaseModel
     }
 
     /**
+     * 查询TAG信息总数
+     */
+    public function tagCount($tag = '', $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        if (empty($tag)) {
+            return 0;
+        }
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getListByTag($tag, $page, $limit, $isPic, $order);
+        
+        if(empty($data['count']) || $data['count'] < 0){
+            return 0;
+        }
+
+        return $data['count'];
+    }    
+
+    /**
      * 获取信息所属专题列表.
      */
     public function infoTopics($id = 0, $limit = 0)
