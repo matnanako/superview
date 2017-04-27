@@ -103,4 +103,40 @@ class BaseModel
     {
         return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 1;
     }
+
+    /**
+     * 添加列表包含信息：分类信息、url.
+     *
+     * @return void
+     */
+    public function addListInfo(&$data)
+    {
+        if (!isset($data['list'])) {
+            $data = [];
+            return;
+        }
+
+        $categoryModel = CategoryModel::getInstance();
+        foreach ($data['list'] as $key => &$value) {
+            $category = $categoryModel->info($value['classid']);
+            $value['infourl'] = $this->infoUrl($value['id'], $category);
+            $value['classname'] = $category['classname'];
+            $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
+            $value['category'] = $category;
+        }
+    }
+
+    /**
+     * 获取详情页url.
+     */
+    private function infoUrl($id, $category)
+    {
+        $infoUrlTpl = \SConfig::get('info_url');
+        $infourl = str_replace(
+            ['{channel}', '{classname}', '{classid}', '{id}'],
+            [$category['channel'], $category['bname'], $category['classid'], $id],
+            $infoUrlTpl
+        );
+        return $infourl;
+    }
 }

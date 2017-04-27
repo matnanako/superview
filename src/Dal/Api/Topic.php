@@ -72,4 +72,18 @@ class Topic extends Base
         return $this->getData('infolist', $params);
     }
 
+    /**
+     * 与专题相同tag的信息列表
+     *
+     */
+    public function taginfo($ztid, $classid, $page, $limit)
+    {
+        $params = [
+            'ztid'  => intval($ztid),
+            'classid'  => intval($classid),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+        ];
+        return $this->getData('taginfo', $params);
+    }
 }

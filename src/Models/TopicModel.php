@@ -13,7 +13,6 @@ class TopicModel extends BaseModel
         $page = $this->getCurrentPage();
         $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
         return $this->returnWithPage($data, $limit);
-        return $data;
     }
 
     /**
@@ -48,6 +47,14 @@ class TopicModel extends BaseModel
     {
         $categories = $this->dal['topic']->getCategories();
         return $categories;
+    }
+
+    public function taginfo($ztid,$classid,$limit)
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal['topic']->taginfo($ztid, $classid, $page, $limit);
+        $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
     }
 
 }
