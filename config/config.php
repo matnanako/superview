@@ -18,6 +18,7 @@ return [
         'topic' => SuperView\Models\TopicModel::class,
         'tag' => SuperView\Models\TagModel::class,
         'utils' => SuperView\Models\UtilsModel::class,
+        'chip' => SuperView\Models\ChipModel::class,
     ],
 
     'dals' => [
@@ -26,6 +27,7 @@ return [
         'topic' => SuperView\Dal\Api\Topic::class,
         'tag' => SuperView\Dal\Api\Tag::class,
         'utils' => SuperView\Dal\Api\Utils::class,
+        'chip' => SuperView\Dal\Api\Chip::class,
     ],
 
     'pagination' => [
