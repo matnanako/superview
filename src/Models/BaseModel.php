@@ -116,7 +116,7 @@ class BaseModel
             return;
         }
 
-        $categoryModel = CategoryModel::getInstance();
+        $categoryModel = CategoryModel::getInstance('category');
         foreach ($data['list'] as $key => &$value) {
             $category = $categoryModel->info($value['classid']);
             $value['infourl'] = $this->infoUrl($value['id'], $category);
