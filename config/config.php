@@ -4,7 +4,7 @@ return [
     'info_url' => '',
 
     // Cache lifetime.
-    'cache_minutes' => 3,
+    'cache_minutes' => 2,
     // 是否刷新缓存.
     'refresh_cache' => 0,
 
