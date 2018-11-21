@@ -1,21 +1,12 @@
 {
-    "name": "xzwh/superview",
+    "name": "njxzwh/superview",
     "type": "library",
     "description": "A simple CMS content helper.",
     "keywords": [
-        "xzwh",
+        "njxzwh",
         "superview"
     ],
-    "homepage": "https://coding.net/u/huangyukun/p/superview/git",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "yukun",
-            "email": "huangyukun@njxzwh.com",
-            "homepage": "https://coding.net/u/huangyukun",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "illuminate/support": "~5.1",
         "php" : "~5.6|~7.0",
