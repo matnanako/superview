@@ -13,7 +13,7 @@
 Via Composer
 
 ``` bash
-$ composer require xzwh/superview:~1.0@dev
+$ composer require "njxzwh/superview @dev"
 ```
 
 ## Usage
