@@ -66,7 +66,7 @@ class BaseModel
      * @return array
      */
     protected function returnWithPage($data, $limit)
-    { dd($data);
+    {
         $data['list'] = empty($data['list']) ? [] : $data['list'];
         $data['count'] = empty($data['count']) ? 0 : $data['count'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.
@@ -80,7 +80,6 @@ class BaseModel
             }
             $response = $data;
         }
-        //dd($response);
         return $response;
     }
 
