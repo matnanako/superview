@@ -22,8 +22,8 @@ class Topic extends Base
     public function getList($topicCategoryId, $classid, $page, $limit, $order)
     {
         $params = [
-            'zcid'  => intval($topicCategoryId),
-            'cid'   => intval($classid),
+            'zcid'  => ($topicCategoryId),
+            'cid'   => ($classid),
             'page'  => intval($page),
             'limit' => intval($limit),
             'order' => $order,

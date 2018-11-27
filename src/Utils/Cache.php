@@ -79,13 +79,14 @@ class Cache extends CacheFacade
      */
     public static function getCachekey($model, $method, $params, $cacheMinutes)
     {
-//        if (empty($cacheMinutes)) {
-//            $cache_key = false;
-//        } else {
-//            $cache_key = $model->makeCacheKey($method, $params);
-//        }
-        //取消普通方法缓存
-        $cache_key = false;
+        if (empty($cacheMinutes)) {
+            $cache_key = false;
+        } else {
+            $cache_key = $model->makeCacheKey($method, $params);
+        }
         return $cache_key;
+    }
+    public static function has($key){
+        return parent::has($key);
     }
 }

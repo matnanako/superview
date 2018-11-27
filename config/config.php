@@ -19,6 +19,7 @@ return [
         'tag' => SuperView\Models\TagModel::class,
         'utils' => SuperView\Models\UtilsModel::class,
         'chip' => SuperView\Models\ChipModel::class,
+        'banner' => SuperView\Models\BannerModel::class,
     ],
 
     'dals' => [
@@ -28,6 +29,7 @@ return [
         'tag' => SuperView\Dal\Api\Tag::class,
         'utils' => SuperView\Dal\Api\Utils::class,
         'chip' => SuperView\Dal\Api\Chip::class,
+        'banner' => SuperView\Dal\Api\Banner::class,
     ],
 
     'pagination' => [
@@ -38,5 +40,13 @@ return [
         'link_active' => '',
         'next' => '',
         'dots' => '',
+    ],
+
+    //新缓存规则部分是使用
+    'type' => [
+        'category' => ['children','utils'],
+        'soft' => ['soft','android','iphone','tv','ipad','mac','bt','mobile','content'],
+        'article' => ['xueyuan','edu','news'],
+        'zt' => ['topic'],
     ]
 ];
