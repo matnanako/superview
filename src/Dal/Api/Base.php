@@ -27,7 +27,10 @@ class Base
         $params['c'] = $this->virtualDal;
         $params['a'] = $action;
 
+
         $data = $this->api->get($params);
+
+
         if (isset($data['status']) && $data['status'] > 0) {
             return $data['data'];
         } else {

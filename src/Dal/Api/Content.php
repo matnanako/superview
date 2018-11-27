@@ -45,7 +45,7 @@ class Content extends Base
     public function getRecentList($classid, $page, $limit, $isPic)
     {
         $params = [
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -59,11 +59,12 @@ class Content extends Base
      */
     public function getRankList($classid, $page, $limit, $isPic, $period)
     {
-        if (!in_array($period, self::$periods)) {
-            return false;
-        }
+        //取消时间段的验证，防止是数组
+//        if (!in_array($period, self::$periods)) {
+//            return false;
+//        }
         $params = [
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -88,8 +89,8 @@ class Content extends Base
         }
 
         $params = [
-            'level'   => intval($level),
-            'classid' => intval($classid),
+            'level'   => ($level),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),

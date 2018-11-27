@@ -104,7 +104,7 @@ class ContentModel extends BaseModel
 
         return $data['count'];
     }
-    
+
     /**
      * 相同标题信息列表.
      */
@@ -157,13 +157,13 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByTag($tag, $page, $limit, $isPic, $order);
-        
+
         if(empty($data['count']) || $data['count'] < 0){
             return 0;
         }
 
         return $data['count'];
-    }    
+    }
 
     /**
      * 获取信息所属专题列表.
@@ -229,7 +229,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order);
-        
+
         if(empty($data['count'])){
             return -1;
         }
@@ -257,7 +257,7 @@ class ContentModel extends BaseModel
     /**
      * 查询小于[等于]某id的$limit范围内的信息列表
      *
-     * @param integer $id 
+     * @param integer $id
      * @param integer $limit
      * @param integer $classid
      * @param integer $equal 默认为0小于$id，1小于等于$id
@@ -300,7 +300,7 @@ class ContentModel extends BaseModel
         return intval($data);
     }
 
-    
+
 
     /**
      * 获取dal模型.

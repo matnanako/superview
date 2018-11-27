@@ -2,6 +2,7 @@
 
 namespace SuperView;
 
+use Illuminate\Support\Facades\Cache;
 use SuperView\Utils\Config as SConfig;
 use SuperView\Utils\Cache as SCache;
 
@@ -112,37 +113,100 @@ class SuperView
     public function __call($method, $params)
     {
         $model = $this->model;
+
         if (empty($model) || !is_callable([$model, $method])) {
             return [];
         }
 
+        //分类直接返回
+        if($method=='children') {
+            $data = $model->$method(...$params);
+            return $data;
+        }
+
         // 统一设置缓存
         $cacheMinutes = \SCache::getCacheTime();
-        $cacheKey     = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
-        // 如果cacheKey为false则该model不设置缓存
-        if ($cacheKey === false) {
-            $data = $model->$method(...$params);
-        } else {
-            $data = \SCache::remember($cacheKey, $cacheMinutes, function () use ($model, $method, $params) {
+
+        $arr=$this->makeCahce($params, $model, $method, $cacheMinutes);
+
+       //先循环将没有缓存的数据组合，然后统一调取接口，对返回的数据拆分并进行缓存
+        foreach($arr['detail'] as $key=>$cacheKey){
+            // 如果cacheKey为false则该model不设置缓存(当存在false的情况证明必定是未二次修改的方法。不会以数组的形式执行，直接return便可)
+            if ($cacheKey['cacheKey'] === false) {
                 $data = $model->$method(...$params);
-                if(empty($data)){
-                    $data = [];
-                }
                 return $data;
-            });
-            // 如果数据为空, 不保存缓存
-            if (empty($data)) {
-                \SCache::forget($cacheKey);
+            } else {
+                if(!\SCache::has($cacheKey['cacheKey'])){
+                    if(isset($arr['long'])){
+                        $new_arr[]=current($cacheKey[$arr['long']]);
+                        $noCacheArr[current($cacheKey[$arr['long']])]=$cacheKey['cacheKey'];
+                    }else{
+                        $new_arr[]=$params;
+                    }
+                }
             }
         }
+        //是数组且存在没有缓存的情况
+        if(isset($arr['long']) && isset($new_arr)) {
+            $params[$arr['long']] = $new_arr;
+        }
+
+
+
+        //统一请求api接口
+        if(isset($new_arr)) {
+            $result = $model->$method(...$params);
+        }
+
+
+        //new_arr可判断是否有值没有缓存
+        if(isset($new_arr)){
+            if(isset($arr['long']) && count($noCacheArr)>1){
+               foreach($result as $k => $v){
+                   Cache::put($noCacheArr[$k], $v['list'], $cacheMinutes);
+               }
+            }elseif(isset($arr['long']) && count($noCacheArr)==1){
+                //防止数组中仅存在一个没有缓存的时候，此时请求接口传递的为单个数组如[1] ，此时接口返回的结果不包含cid为下标的返回
+                   Cache::put(current($noCacheArr), $result['list'], $cacheMinutes);
+            }else{
+                //针对未修改的方法（如superTopic）直接返回的list的值 故加判断。
+                if(isset($result['list'])) {
+                    Cache::put(current($arr['detail'])['cacheKey'], $result['list'], $cacheMinutes);
+                }else{
+                    Cache::put(current($arr['detail'])['cacheKey'], $result, $cacheMinutes);
+                }
+            }
+        }
+
+
+        //读取缓存数据 todo 根据实际需要取缓存值
+        foreach($arr['detail'] as $k => $v){
+            $data[]=Cache::get($v['cacheKey']);
+        }
+
         // 重置$model状态(目前包括去除分页设置)
         // reset方法不可以在$model内自动调用,
         // 因为如果缓存命中, $model的$method方法不会被执行
         $model->reset();
 
-        if(empty($data)){
-            $data = [];
-        }
         return $data;
+    }
+    //先拆分数组并生成缓存key
+    public function makeCahce($params, $model, $method, $cacheMinutes){
+         foreach($params as $k=>$v){
+             if(count($v)>1){
+                 $result['long']=$k;
+                 foreach($v as $ke=>$ve){
+                     $result['detail'][$ke]=$params;
+                     $result['detail'][$ke][$k]=[$ve];
+                     $result['detail'][$ke]['cacheKey'] = \SCache::getCacheKey($model, $method, $result['detail'][$ke], $cacheMinutes);
+                  }
+              }
+         }
+          if(!isset($result['long'])){
+              $result['detail'][0]=$params;
+              $result['detail'][0]['cacheKey'] = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
+          }
+      return $result;
     }
 }
