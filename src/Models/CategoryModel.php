@@ -291,7 +291,7 @@ class CategoryModel extends BaseModel
      *
      * @return string
      */
-    public function makeCacheKey($method, $params = [])
+    public function makeCacheKey($method, $params = [] ,$model='')
     {
         return false;
     }

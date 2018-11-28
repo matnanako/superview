@@ -82,11 +82,15 @@ class Cache extends CacheFacade
         if (empty($cacheMinutes)) {
             $cache_key = false;
         } else {
-            $cache_key = $model->makeCacheKey($method, $params);
+            $cache_key = $model->makeCacheKey($method ,$params ,$model);
         }
         return $cache_key;
     }
+
+
     public static function has($key){
         return parent::has($key);
     }
+
+
 }
