@@ -48,5 +48,6 @@ return [
         'soft' => ['soft','android','iphone','tv','ipad','mac','bt','mobile','content'],
         'article' => ['xueyuan','edu','news'],
         'zt' => ['topic'],
+        'bk' => ['softbaike']
     ]
 ];

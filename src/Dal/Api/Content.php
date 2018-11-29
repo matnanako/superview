@@ -110,7 +110,7 @@ class Content extends Base
         }
 
         $params = [
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -136,7 +136,7 @@ class Content extends Base
         $params = [
             'start'   => intval($startTime),
             'end'     => intval($endTime),
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -157,7 +157,7 @@ class Content extends Base
 
         $params = [
             'title'   => $title,
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -177,7 +177,7 @@ class Content extends Base
         }
 
         $params = [
-            'id'    => intval($id),
+            'id'    => ($id),
             'page'  => intval($page),
             'limit' => intval($limit),
             'ispic' => intval($isPic),
@@ -213,7 +213,7 @@ class Content extends Base
     public function getInfoTopics($id, $limit)
     {
         $params = [
-            'id'    => intval($id),
+            'id'    => ($id),
             'limit' => intval($limit),
         ];
         return $this->getData('speciallist', $params);
@@ -227,7 +227,7 @@ class Content extends Base
     public function getListByTopicId($topicId, $page, $limit)
     {
         $params = [
-            'ztid'  => intval($topicId),
+            'ztid'  => ($topicId),
             'page'  => intval($page),
             'limit' => intval($limit),
         ];
@@ -242,7 +242,7 @@ class Content extends Base
     {
         $params = [
             'str'     => $keyword,
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -260,7 +260,7 @@ class Content extends Base
         $params = [
             'field'   => $field,
             'value'   => $value,
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),
             'ispic'   => intval($isPic),
@@ -284,7 +284,7 @@ class Content extends Base
         $params = [
             'id'   => $id,
             'limit'   => $limit,
-            'classid' => intval($classid),
+            'classid' => ($classid),
             'equal'    => intval($equal),
             'ispic'   => intval($isPic),
             'order'   => $order,
@@ -304,7 +304,7 @@ class Content extends Base
         }
         $params = [
             'interval' => $period,
-            'classid'  => intval($classid)
+            'classid'  => ($classid)
         ];
 
         return $this->getData('count', $params);

@@ -3,12 +3,12 @@
 namespace SuperView\Utils;
 
 /**
- * 配置类, 所有方法静态调用, 无需初始化配置.
+ * 缓存生成规则和部分关于缓存生成逻辑功能以及缓存读取
  */
 class CacheKey
 {
     public static function makeCachekey($method, $params , $model ,$virtualModel){
-        $key=self::confirm_type($virtualModel);
+        $key=':' .self::confirm_type($virtualModel);
         $key.='::' .$virtualModel;
         $key.='::' . $method;
         //反射获取方法默认参数以及默认值
@@ -53,6 +53,9 @@ class CacheKey
         }
         if(in_array($type,$all_types['zt'])){
             return 'zt';
+        }
+        if(in_array($type,$all_types['bk'])){
+            return 'bk';
         }
     }
     //反射获取方法参数
@@ -114,7 +117,7 @@ class CacheKey
                 Cache::put(current($res['noCacheArr']), $result['list'], $cacheMinutes);
             }else{
                 //针对未修改的方法（如superTopic）直接返回的list的值 故加判断。
-                if(isset($result['list'])) {//dd($result['list']);
+                if(isset($result['list'])) {
                     Cache::put(current($res['detail'])['cacheKey'], $result['list'], $cacheMinutes);
                 }else{
                     Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
