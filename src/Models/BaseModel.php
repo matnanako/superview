@@ -104,7 +104,7 @@ class BaseModel
      *
      * @return string
      */
-    protected function getCurrentPage()
+    public function getCurrentPage()
     {
         return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 1;
     }

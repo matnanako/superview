@@ -44,8 +44,8 @@ return [
 
     //新缓存规则部分是使用
     'type' => [
-        'category' => ['children','utils'],
-        'soft' => ['soft','android','iphone','tv','ipad','mac','bt','mobile','content'],
+        'category' => ['children','utils','banner'],
+        'soft' => ['soft','android','iphone','tv','ipad','mac','bt','mobile','content','mgame'],
         'article' => ['xueyuan','edu','news'],
         'zt' => ['topic'],
         'bk' => ['softbaike']

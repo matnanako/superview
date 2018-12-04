@@ -119,8 +119,8 @@ class SuperView
             return [];
         }
 
-        //分类直接返回
-        if($method=='children') {
+        //分类与分页直接返回   如果有分页 getCurrentPage获取的 未数字字符串
+        if($method=='children' ||  $this->model->getCurrentPage()!==1) {
             $data = $model->$method(...$params);
             return $data;
         }
