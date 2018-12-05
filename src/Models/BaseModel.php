@@ -16,6 +16,8 @@ class BaseModel
 
     protected static $instances;
 
+    protected  static $fitter;
+
     private function __construct()
     {
         $this->dal = Dal::getInstance();
@@ -52,13 +54,24 @@ class BaseModel
     }
 
     /**
-     * 重置当前Model的属性(目前包含分页属性).
+     * 设置列表返回字段
+     *
+     * @return void
+     */
+    public function setFilterOptions($filterOptions)
+    {
+        self::$fitter=$filterOptions;
+    }
+
+    /**
+     * 重置当前Model的属性(目前包含分页属性). &&   列表过滤查询字段（basis，advance）
      *
      * @return void
      */
     public function reset()
     {
         $this->pageOptions = null;
+        self::$fitter='info';
     }
 
     /**
@@ -107,6 +120,16 @@ class BaseModel
     public function getCurrentPage()
     {
         return isset($this->pageOptions['currentPage']) ? $this->pageOptions['currentPage'] : 1;
+    }
+
+    /**
+     * 获取通过SuperView::filter方法设置的filter参数.
+     *
+     * @return string
+     */
+    public static function getFilter()
+    {
+        return isset(self::$fitter) ? self::$fitter : 'info';
     }
 
     /**

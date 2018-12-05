@@ -105,7 +105,16 @@ class SuperView
 
         return $this;
     }
+    /**
+     * Set filter info.
+     *
+     */
+    public function filter($filter = 'info')
+    {
+        $this->model->setFilterOptions($filter);
 
+        return $this;
+    }
     /**
      * @param  string  $method
      * @param  array  $params
@@ -148,5 +157,8 @@ class SuperView
         $model->reset();
 
         return $data;
+    }
+    public function condition($condition){
+
     }
 }

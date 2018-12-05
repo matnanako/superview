@@ -2,6 +2,7 @@
 
 namespace SuperView\Dal\Api;
 
+use SuperView\Models\BaseModel;
 use SuperView\Utils\Api;
 
 /**
@@ -26,6 +27,7 @@ class Base
 
         $params['c'] = $this->virtualDal;
         $params['a'] = $action;
+        $params['filter']= BaseModel::getFilter();
 
         $data = $this->api->get($params);
 
