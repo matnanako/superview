@@ -3,6 +3,7 @@
 namespace SuperView;
 
 use Illuminate\Support\Facades\Cache;
+use SuperView\Models\CategoryModel;
 use SuperView\Utils\CacheKey;
 use SuperView\Utils\Config as SConfig;
 use SuperView\Utils\Cache as SCache;
@@ -128,9 +129,10 @@ class SuperView
             return [];
         }
 
-        //分类与分页直接返回   如果有分页 getCurrentPage获取的 未数字字符串
-        if($method=='children' ||  $this->model->getCurrentPage()!==1) {
+        //分类相关与分页直接返回  (专题中的分类不能通过model确定，需要通过方法cagtegories)
+        if(($model instanceof CategoryModel) ||  $this->model->isPage() || $method=='categories') {
             $data = $model->$method(...$params);
+            $model->reset();
             return $data;
         }
 
@@ -158,7 +160,5 @@ class SuperView
 
         return $data;
     }
-    public function condition($condition){
 
-    }
 }

@@ -190,7 +190,7 @@ class Content extends Base
      * TAG信息列表
      * @return boolean | array
      */
-    public function getListByTag($tag, $page, $limit, $isPic, $order)
+    public function getListByTag($tag,$classid, $page, $limit, $isPic, $order)
     {
         if (!$this->isValidOrder($order)) {
             return false;
@@ -198,6 +198,7 @@ class Content extends Base
 
         $params = [
             'tag'   => $tag,
+            'classid' => $classid,
             'page'  => intval($page),
             'limit' => intval($limit),
             'ispic' => intval($isPic),

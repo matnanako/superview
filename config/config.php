@@ -44,10 +44,10 @@ return [
 
     //新缓存规则部分是使用
     'type' => [
-        'category' => ['children','utils','banner'],
+        'category' => ['children','utils','banner','category'],
         'soft' => ['soft','android','iphone','tv','ipad','mac','bt','mobile','content','mgame'],
         'article' => ['xueyuan','edu','news'],
         'zt' => ['topic'],
-        'bk' => ['softbaike']
+        'bk' => ['softbaike','provider','tag']
     ]
 ];

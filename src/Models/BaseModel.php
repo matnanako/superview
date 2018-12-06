@@ -82,17 +82,37 @@ class BaseModel
     protected function returnWithPage($data, $limit)
     {
         $data['list'] = empty($data['list']) ? [] : $data['list'];
-        $data['count'] = empty($data['count']) ? 0 : $data['count'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.
         if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
-            $response = $data['list'];
+            $response = empty($data['list'])?[]:$data['list'];
         } else {
-            $data['page'] = "";
-            if (!empty($this->pageOptions['route'])) {
-                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
-                $data['page'] = $page->render();
+            //单条查询和多条查询 分页  status 0 单查询  1多查询
+            if (isset($data['status']) && $data['status']==0) {
+                $data['list']['page'] = "";
+            } else {
+                $data['page'] = "";
             }
-            $response = $data;
+            if (!empty($this->pageOptions['route'])) {
+                if (isset($data['status']) && $data['status'] == 1) {
+                    foreach ($data['list'] as $k => &$v) {
+                        $page = new Page($this->pageOptions['route'], isset($v['count'])? $v['count']:0, $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
+                        $v['page'] = $page->render();
+                    }
+                } else {
+                    $page = new Page($this->pageOptions['route'], isset($data['status']) ? $data['list']['count'] : $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
+                    if (isset($data['status'])) {
+                        $data['list']['page'] = $page->render();
+                    } else {
+                        $data['page'] = $page->render();
+                    }
+                }
+            }
+            if (isset($data['status'])) {
+                $response = $data['list'];
+            } else {
+                $response = $data;
+            }
+
         }
         return $response;
     }
@@ -189,5 +209,14 @@ class BaseModel
             $infoUrlTpl
         );
         return $infourl;
+    }
+    /**
+     * 是否设置分页
+     */
+    public function isPage(){
+        if(empty($this->pageOptions) || $this->pageOptions['route'] === false){
+            return false;
+        }
+        return true;
     }
 }

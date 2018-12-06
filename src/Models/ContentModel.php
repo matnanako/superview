@@ -136,13 +136,13 @@ class ContentModel extends BaseModel
     /**
      * TAG信息列表.
      */
-    public function tag($tag = '', $limit = 0, $isPic = 0, $order = 'newstime')
+    public function tag($tag = '',$classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($tag)) {
             return false;
         }
         $page = $this->getCurrentPage();
-        $data = $this->dal()->getListByTag($tag, $page, $limit, $isPic, $order);
+        $data = $this->dal()->getListByTag($tag, $classid, $page, $limit, $isPic, $order);
         $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
