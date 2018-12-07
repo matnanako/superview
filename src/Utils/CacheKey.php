@@ -49,7 +49,7 @@ class CacheKey
             return 'category';
         }
         if(in_array($type,$all_types['article'])){
-            return 'artcicle';
+            return 'article';
         }
         if(in_array($type,$all_types['zt'])){
             return 'zt';
