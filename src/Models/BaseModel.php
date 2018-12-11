@@ -25,7 +25,7 @@ class BaseModel
         $this->dal = Dal::getInstance();
     }
 
-    public static function getInstance($virtualModel = '',$default = 0)
+    public static function getInstance($virtualModel = '',$default = false)
     {
         // 每一个$virtualModel对应一个独立的实例
         if (empty(static::$instances[$virtualModel])) {
@@ -78,7 +78,7 @@ class BaseModel
     public function reset()
     {
         $this->pageOptions = null;
-        $this->isVirtualModels = 0;
+        $this->isVirtualModels = false;
         self::$fitter='info';
     }
 

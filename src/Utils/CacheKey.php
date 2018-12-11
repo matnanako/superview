@@ -38,7 +38,7 @@ class CacheKey
             }
             $depend[$ke]['default']=$change_default;
             if($depend[$ke]['name']=='classid'){
-                if($isVirtualModel==1){
+                if($isVirtualModel==true){
                      $patterns=config('model.'.$virtualModel);
                      $pattern=array_flip($patterns)[$change_default];
                 }
