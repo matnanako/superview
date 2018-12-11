@@ -29,11 +29,11 @@ class SuperView
         class_exists('SCache') ?: class_alias(SCache::class, 'SCache');
     }
 
-    private static function getInstance($modelAlias)
+    private static function getInstance($modelAlias, $default)
     {
         if (empty(self::$instances[$modelAlias])) {
             self::$instances[$modelAlias] = new self();
-            self::$instances[$modelAlias]->model = self::getBindingModel($modelAlias);
+            self::$instances[$modelAlias]->model = self::getBindingModel($modelAlias, $default);
         }
 
         return self::$instances[$modelAlias];
@@ -44,7 +44,7 @@ class SuperView
      *
      * @return object
      */
-    private static function getBindingModel($modelAlias)
+    private static function getBindingModel($modelAlias, $default)
     {
         $models = SConfig::get('models');
         if (array_key_exists($modelAlias, $models)) {
@@ -52,7 +52,7 @@ class SuperView
         } else {
             $model = $models['content'];
         }
-        $model = $model::getInstance($modelAlias);
+        $model = $model::getInstance($modelAlias ,$default);
 
         return $model;
     }
@@ -69,12 +69,12 @@ class SuperView
     /**
      * Set model.
      *
-     * @param  string  $modelAlias
+     * @param  string  $modelAlias $default 是否多模型
      * @return SuperView\SuperView
      */
-    public static function get($modelAlias)
+    public static function get($modelAlias, $default = 0)
     {
-        return self::getInstance($modelAlias);
+        return self::getInstance($modelAlias, $default);
     }
 
     /**

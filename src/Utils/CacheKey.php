@@ -7,10 +7,20 @@ namespace SuperView\Utils;
  */
 class CacheKey
 {
-    public static function makeCachekey($method, $params , $model ,$virtualModel){
-        $key=':' .self::confirm_type($virtualModel);
-        $key.='::' .$virtualModel;
-        $key.='::' . $method;
+    /**
+     * 通过反射组合参数生成key
+     *
+     * @param $method
+     * @param $params
+     * @param $model
+     * @param $virtualModel
+     * @param $isVirtualModel    是否多个model，定制化参数
+     * @return string
+     */
+    public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel){
+        $pivot   = ':' .self::confirm_type($virtualModel);
+        $pattern = $virtualModel;
+        $action  = $method;
         //反射获取方法默认参数以及默认值
         $param=self::reflex($model,$method);
          foreach ($param as $k=>$value) {
@@ -28,9 +38,16 @@ class CacheKey
             }
             $depend[$ke]['default']=$change_default;
             if($depend[$ke]['name']=='classid'){
-                $key.='::' .$change_default;
+                if($isVirtualModel==1){
+                     $patterns=config('model.'.$virtualModel);
+                     $pattern=array_flip($patterns)[$change_default];
+                }
+                     $key=$pivot.'::'.$pattern.'::'.$action.'::'.$change_default;
+
+
             }
         }
+        isset($key)?$key:$key=$pivot.'::'.$pattern.'::'.$action;
         foreach($depend as $k=>$v){
             if(!in_array($v['name'],['limit','isPic','classid'])){
                 if($v['default']) {
@@ -40,7 +57,13 @@ class CacheKey
         }
         return $key;
     }
-    //确认支点
+
+    /**
+     * 确认支点
+     *
+     * @param $virtualModel
+     * @return string
+     */
     public  static function confirm_type($virtualModel){
         $all_types = \Sconfig::get('type');
         $type=$virtualModel;
@@ -60,13 +83,28 @@ class CacheKey
             return 'bk';
         }
     }
-    //反射获取方法参数
+
+    /**
+     * 反射获取参数
+     *
+     * @param $model
+     * @param $method
+     * @return \ReflectionParameter[]
+     */
     public static  function reflex($model, $method){
         $ReflectionFunc = new \ReflectionMethod($model, $method);
         return $ReflectionFunc->getParameters();
     }
 
-    //根据实际传入参数先拆分数组并生成缓存key插入数组
+    /**
+     * 根据实际传入参数先拆分数组并生成缓存key插入数组
+     *
+     * @param $params
+     * @param $model
+     * @param $method
+     * @param $cacheMinutes
+     * @return mixed
+     */
     public static function insertCahce($params, $model, $method, $cacheMinutes){
         foreach($params as $k=>$v){
             if(is_array($v) && count($v)>1){
@@ -107,7 +145,14 @@ class CacheKey
         $result['params']=$params;
         return $result;
     }
-    //生成缓存
+
+    /**
+     * 生成缓存
+     *
+     * @param $result
+     * @param $res
+     * @param $cacheMinutes
+     */
     public static function makeCache($result, $res ,$cacheMinutes){
         if(isset($res['new_arr'])){
             if(isset($res['long']) && count($res['noCacheArr'])>1){
@@ -127,7 +172,13 @@ class CacheKey
             }
         }
     }
-    //读取缓存
+
+    /**
+     * 读取缓存
+     *
+     * @param $arr
+     * @return mixed
+     */
     public static function getCache($arr){
         if(count($arr['detail'])==1){
            return Cache::get($arr['detail'][0]['cacheKey']);
