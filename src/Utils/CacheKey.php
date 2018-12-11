@@ -33,7 +33,9 @@ class CacheKey
         }
         foreach($depend as $k=>$v){
             if(!in_array($v['name'],['limit','isPic','classid'])){
-                $key.='::' .$v['default'];
+                if($v['default']) {
+                     $key.='::' .$v['default'];
+                }
             }
         }
         return $key;
@@ -67,7 +69,7 @@ class CacheKey
     //根据实际传入参数先拆分数组并生成缓存key插入数组
     public static function insertCahce($params, $model, $method, $cacheMinutes){
         foreach($params as $k=>$v){
-            if(count($v)>1){
+            if(is_array($v) && count($v)>1){
                 $result['long']=$k;
                 foreach($v as $ke=>$ve){
                     $result['detail'][$ke]=$params;
