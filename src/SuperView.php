@@ -72,7 +72,7 @@ class SuperView
      * @param  string  $modelAlias $default 是否多模型
      * @return SuperView\SuperView
      */
-    public static function get($modelAlias, $default = 0)
+    public static function get($modelAlias, $default = false)
     {
         return self::getInstance($modelAlias, $default);
     }

@@ -15,7 +15,7 @@ class CacheKey
      * @param $model
      * @param $virtualModel
      * @param $isVirtualModel    是否多个model，定制化参数
-     * @return string
+     * @return array
      */
     public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel){
         $pivot   = ':' .self::confirm_type($virtualModel);
@@ -55,7 +55,9 @@ class CacheKey
                 }
             }
         }
-        return $key;
+        $reslut['depend']=$depend;
+        $reslut['key']=$key;
+        return $reslut;
     }
 
     /**
@@ -113,12 +115,17 @@ class CacheKey
                     $result['detail'][$ke]=$params;
                     $result['detail'][$ke][$k]=[$ve];
                     $result['detail'][$ke]['cacheKey'] = \SCache::getCacheKey($model, $method, $result['detail'][$ke], $cacheMinutes);
+                    $result['detail'][$ke]['depend']  = $result['detail'][$ke]['cacheKey']['depend'];
+                    $result['detail'][$ke]['cacheKey'] =$result['detail'][$ke]['cacheKey']['key'];
+
                 }
             }
         }
         if(!isset($result['long'])){
             $result['detail'][0]=$params;
             $result['detail'][0]['cacheKey'] = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
+            $result['detail'][0]['depend'] = $result['detail'][0]['cacheKey']['depend'];
+            $result['detail'][0]['cacheKey'] = $result['detail'][0]['cacheKey']['key'];
         }
         return self::assemble($result, $params);
     }
@@ -181,12 +188,31 @@ class CacheKey
      */
     public static function getCache($arr){
         if(count($arr['detail'])==1){
-           return Cache::get($arr['detail'][0]['cacheKey']);
-        }
-        foreach($arr['detail'] as $k=> $v){
-            $classid=is_array($arr['detail'][$k][$arr['long']])?$arr['detail'][$k][$arr['long']][0]:$arr['detail'][$k][$arr['long']];
-            $data[$classid]=Cache::get($v['cacheKey']);
+           $limit=self::getLimit($arr['detail'][0]['depend']);
+            if(is_array(Cache::get($arr['detail'][0]['cacheKey']))){
+                 $data = array_slice(Cache::get($arr['detail'][0]['cacheKey']), 0, $limit);
+            }else{
+                $data = Cache::get($arr['detail'][0]['cacheKey']);
+            }
+        }else {
+            foreach ($arr['detail'] as $k => $v) {
+                $classid = is_array($arr['detail'][$k][$arr['long']]) ? $arr['detail'][$k][$arr['long']][0] : $arr['detail'][$k][$arr['long']];
+                $limit=self::getLimit($v['depend']);
+                if(is_array(Cache::get($v['cacheKey']))){
+                     $data[$classid] = array_slice(Cache::get($v['cacheKey']), 0, $limit);
+                 }else{
+                    $data[$classid] = Cache::get($v['cacheKey']);
+                }
+            }
         }
         return $data;
+    }
+    public static  function getLimit($depend){
+        foreach($depend as $v){
+            if($v['name']=='limit'){
+                return $v['default'];
+            }
+        }
+        return 100;
     }
 }
