@@ -210,7 +210,7 @@ class CacheKey
     public static  function getLimit($depend){
         foreach($depend as $v){
             if($v['name']=='limit'){
-                return $v['default'];
+                return $v['default']==0?100:$v['default'];
             }
         }
         return 100;
