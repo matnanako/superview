@@ -102,10 +102,15 @@ class BaseModel
         } else {
             $data['page'] = "";
             if (!empty($this->pageOptions['route'])) {
-                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
+                $page = new Page($this->pageOptions['route'], isset($data['count'])?$data['count']:$data['list']['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
+                isset($data['status'])?$data['list']['page']=$page->render():$data['page']=$page->render();
                 $data['page'] = $page->render();
             }
-            $response = $data;
+            if(isset($data['status'])){
+                $response =$data['list'];
+            }else {
+                $response = $data;
+            }
         }
         return $response;
     }

@@ -35,7 +35,7 @@ class CustomModel extends BaseModel
         $this->arguments = [];
         $this->allCacheKey = [];
         $this->allArgument = [];
-        Self::reset();
+        self::reset();
         return $data['list'];
     }
 
@@ -63,7 +63,7 @@ class CustomModel extends BaseModel
         $this->arguments = [];
         $this->allCacheKey = [];
         $this->allArgument = [];
-        Self::reset();
+        self::reset();
         return $data;
     }
 
