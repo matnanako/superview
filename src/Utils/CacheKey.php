@@ -227,7 +227,7 @@ class CacheKey
      * @return string
      */
     public static function custom($modelAlias, $method, $param){
-        return ':'.self::confirm_type($modelAlias).$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
+        return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
     }
 
     /**
