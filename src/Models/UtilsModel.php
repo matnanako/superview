@@ -13,7 +13,7 @@ class UtilsModel extends BaseModel
     public function friendLinks($type = 0, $classid = 0, $limit = 0)
     {
         $data = $this->dal['utils']->getFriendLinks($type, $classid, $limit);
-        return $data['list'];
+        return $this->returnWithPage($data, $limit);
     }
 
     /**
