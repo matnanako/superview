@@ -28,10 +28,10 @@ class ContentModel extends BaseModel
     /**
      * 排名信息列表.
      */
-    public function rank($period = 'all', $classid = 0, $limit = 0, $isPic = 0)
+    public function rank($rank = 'all', $classid = 0, $limit = 0, $isPic = 0)
     {
         $page = $this->getCurrentPage();
-        $data = $this->dal()->getRankList($classid, $page, $limit, $isPic, $period);
+        $data = $this->dal()->getRankList($classid, $page, $limit, $isPic, $rank);
         $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
