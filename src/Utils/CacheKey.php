@@ -17,47 +17,50 @@ class CacheKey
      * @param $isVirtualModel    是否多个model，定制化参数
      * @return array
      */
-    public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel){
-        $pivot   = ':' .self::confirm_type($virtualModel);
+    public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel = false)
+    {
+        $pivot = ':' . self::confirm_type($virtualModel);
         $pattern = $virtualModel;
-        $action  = $method;
+        $action = $method;
         //反射获取方法默认参数以及默认值
-        $param=self::reflex($model,$method);
-         foreach ($param as $k=>$value) {
-            $depend[$k]['name'] = $value->getName();
-            if ($value->isOptional()) {
-                $depend[$k]['default'] = $value->getDefaultValue();
-            }
+        $param = self::reflex($model, $method);
+        foreach ($param as $k => $value) {
+            $depend[$value->getName()] = isset($params[$value->getPosition()]) ? is_array($params[$value->getPosition()]) ? reset($params[$value->getPosition()]) : $params[$value->getPosition()] : $value->getDefaultValue();
         }
         //设置缓存值(从前往后，将实际参数插入默认参数中，然后classid排在第一个，然后去除limit，ispic，其余参数按顺序排列)
-        foreach($params as $ke=>$ve){
-            if(is_array($ve)){
-                $change_default=current($ve);
-            }else{
-                $change_default=$ve;
-            }
-            $depend[$ke]['default']=$change_default;
-            if($depend[$ke]['name']=='classid'){
-                if($isVirtualModel==true){
-                     $patterns=config('model.'.$virtualModel);
-                     $pattern=array_flip($patterns)[$change_default];
+        foreach ($depend as $k => $v) {
+            if ($k == 'classid') {
+                if ($isVirtualModel == true) {
+                    $patterns = config('model.' . $virtualModel);
+                    $pattern = array_flip($patterns)[$v];
                 }
-                     $key=$pivot.'::'.$pattern.'::'.$action.'::'.$change_default;
-
-
+                $key = $pivot . '::' . $pattern . '::' . $action . '::' . $v;
             }
         }
-        isset($key)?$key:$key=$pivot.'::'.$pattern.'::'.$action;
+        isset($key) ? $key : $key = $pivot . '::' . $pattern . '::' . $action;
+        $key.=  self::filterStr($depend);
+        $reult['depend'] = $depend;
+        $reult['key']  = $key;
+        return $reult;
+    }
+
+    /**
+     * 过滤字段生成最终缓存key
+     *
+     * @param $depend
+     * @param $key
+     * @return mixed
+     */
+    public static function filterStr($depend){
+        $key='';
         foreach($depend as $k=>$v){
-            if(!in_array($v['name'],['limit','isPic','classid'])){
-                if($v['default']) {
-                     $key.='::' .$v['default'];
+            if(!in_array($k,['limit','isPic','classid'])){
+                if($v) {
+                     $key.='::' .(is_array($v)?reset($v):$v);
                 }
             }
         }
-        $reslut['depend']=$depend;
-        $reslut['key']=$key;
-        return $reslut;
+        return $key;
     }
 
     /**
@@ -126,7 +129,7 @@ class CacheKey
             $result['detail'][0]['cacheKey'] = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
             $result['detail'][0]['depend'] = $result['detail'][0]['cacheKey']['depend'];
             $result['detail'][0]['cacheKey'] = $result['detail'][0]['cacheKey']['key'];
-        }
+        }//dd($result);
         return self::assemble($result, $params);
     }
     public static function assemble($result, $params){
@@ -134,8 +137,8 @@ class CacheKey
         foreach($result['detail'] as $key=>$cacheKey){
             if(!\SCache::has($cacheKey['cacheKey'])){
                 if(isset($result['long'])){
-                    $new_arr[]=current($cacheKey[$result['long']]);
-                    $result['noCacheArr'][current($cacheKey[$result['long']])]=$cacheKey['cacheKey'];
+                    $new_arr[]=reset($cacheKey[$result['long']]);
+                    $result['noCacheArr'][reset($cacheKey[$result['long']])]=$cacheKey['cacheKey'];
                 }else{
                     $new_arr[]=$params;
                 }
@@ -150,6 +153,7 @@ class CacheKey
             $result['new_arr'] = $new_arr;
         }
         $result['params']=$params;
+       // dd($result);
         return $result;
     }
 
@@ -162,20 +166,18 @@ class CacheKey
      */
     public static function makeCache($result, $res ,$cacheMinutes){
         if(isset($res['new_arr'])){
-            if(isset($res['long']) && count($res['noCacheArr'])>1){
+            if(isset($res['long']) && count($res['noCacheArr'])>1){//dd($result);
                 foreach($result as $k => $v){
-                    Cache::put($res['noCacheArr'][$k], $v['list'], $cacheMinutes);
+                    Cache::put($res['noCacheArr'][$k], $v, $cacheMinutes);
                 }
             }elseif(isset($res['long']) && count($res['noCacheArr'])==1){
                 //防止数组中仅存在一个没有缓存的时候，此时请求接口传递的为单个数组如[1] ，此时接口返回的结果不包含cid为下标的返回
-                Cache::put(current($res['noCacheArr']), $result['list'], $cacheMinutes);
+                Cache::put(current($res['noCacheArr']), $result, $cacheMinutes);
             }else{
                 //针对未修改的方法（如superTopic）直接返回的list的值 故加判断。
-                if(isset($result['list'])) {
-                    Cache::put(current($res['detail'])['cacheKey'], $result['list'], $cacheMinutes);
-                }else{
+
                     Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
-                }
+
             }
         }
     }
@@ -208,11 +210,14 @@ class CacheKey
         return $data;
     }
     public static  function getLimit($depend){
-        foreach($depend as $v){
-            if($v['name']=='limit'){
-                return $v['default']==0?100:$v['default'];
+        foreach($depend as $k => $v){
+            if($k =='limit'){
+                return $v==0?100:$v;
             }
         }
         return 100;
+    }
+    public static function custom($model, $method, $param){
+       dd($model);
     }
 }

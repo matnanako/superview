@@ -25,7 +25,7 @@ class BaseModel
         $this->dal = Dal::getInstance();
     }
 
-    public static function getInstance($virtualModel = '',$default = false)
+    public static function getInstance($virtualModel = '',$default = 0)
     {
         // 每一个$virtualModel对应一个独立的实例
         if (empty(static::$instances[$virtualModel])) {
@@ -44,7 +44,7 @@ class BaseModel
 
     protected function setIsVirtualModels($default)
     {
-        $this->isVirtualModels = $default;
+        $this->virtualModels = $default;
     }
     /**
      * 设置分页属性.
@@ -78,7 +78,6 @@ class BaseModel
     public function reset()
     {
         $this->pageOptions = null;
-        $this->isVirtualModels = false;
         self::$fitter='info';
     }
 
@@ -92,35 +91,21 @@ class BaseModel
         $data['list'] = empty($data['list']) ? [] : $data['list'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.
         if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
-            $response = empty($data['list'])?[]:$data['list'];
-        } else {
-            //单条查询和多条查询 分页  status 0 单查询  1多查询
-            if (isset($data['status']) && $data['status']==0) {
-                $data['list']['page'] = "";
-            } else {
-                $data['page'] = "";
-            }
-            if (!empty($this->pageOptions['route'])) {
-                if (isset($data['status']) && $data['status'] == 1) {
-                    foreach ($data['list'] as $k => &$v) {
-                        $page = new Page($this->pageOptions['route'], isset($v['count'])? $v['count']:0, $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
-                        $v['page'] = $page->render();
-                    }
-                } else {
-                    $page = new Page($this->pageOptions['route'], isset($data['status']) ? $data['list']['count'] : $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
-                    if (isset($data['status'])) {
-                        $data['list']['page'] = $page->render();
-                    } else {
-                        $data['page'] = $page->render();
-                    }
+            //$response = empty($data['list'])?[]:$data['list'];
+            if (isset($data['status']) && $data['status'] == 1) {
+                foreach($data['list'] as $k => $v){
+                    $response[$k]=$v['list'];
                 }
+            }else{
+                $response = isset($data['list']['list'])?$data['list']['list']:$data['list'];
             }
-            if (isset($data['status'])) {
-                $response = $data['list'];
-            } else {
-                $response = $data;
+        } else {
+            $data['page'] = "";
+            if (!empty($this->pageOptions['route'])) {
+                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
+                $data['page'] = $page->render();
             }
-
+            $response = $data;
         }
         return $response;
     }
@@ -135,8 +120,7 @@ class BaseModel
     {
         //树缓存单独拧出
         if($method=='SuperView\Models\CategoryModel::all'){
-            //return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
-            return ':TotalCategroy';
+            return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
         }
        return CacheKey::makeCachekey($method, $params, $model, $this->virtualModel, $this->isVirtualModels);
     }
