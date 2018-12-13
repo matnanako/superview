@@ -174,7 +174,7 @@ class ContentModel extends BaseModel
             return false;
         }
         $data = $this->dal()->getInfoTopics($id, $limit);
-        return $data;
+        return $this->returnWithPage($data, $limit);
     }
 
     /**
@@ -284,10 +284,7 @@ class ContentModel extends BaseModel
 
         $data = $this->dal()->near($id,$limit,$classid,$equal,$ispic,$order);
         $this->addListInfo($data);
-        if(empty($data['list'])){
-            return [];
-        }
-        return $data['list'];
+        return $this->returnWithPage($data, $limit);
     }
 
 

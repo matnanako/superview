@@ -44,7 +44,7 @@ class BaseModel
 
     protected function setIsVirtualModels($default)
     {
-        $this->virtualModels = $default;
+        $this->isVirtualModels = $default;
     }
     /**
      * 设置分页属性.
