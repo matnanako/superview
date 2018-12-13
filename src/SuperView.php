@@ -4,6 +4,7 @@ namespace SuperView;
 
 use Illuminate\Support\Facades\Cache;
 use SuperView\Models\CategoryModel;
+use SuperView\Models\CustomModel;
 use SuperView\Utils\CacheKey;
 use SuperView\Utils\Config as SConfig;
 use SuperView\Utils\Cache as SCache;
@@ -130,12 +131,14 @@ class SuperView
         }
 
         //分类相关与分页直接返回  (专题中的分类不能通过model确定，需要通过方法cagtegories)
-        if(($model instanceof CategoryModel) ||  $this->model->isPage() || $method=='categories') {
+        if(($model instanceof CategoryModel) ||  $this->model->isPage() || $method=='categories' || ($model instanceof CustomModel)) {
             $data = $model->$method(...$params);
-            $model->reset();
+            //自定义方法独自初始化
+            if(!($model instanceof CustomModel)) {
+                $model->reset();
+            }
             return $data;
         }
-
         // 统一设置缓存
         $cacheMinutes = \SCache::getCacheTime();
         $res=CacheKey::insertCahce($params, $model, $method, $cacheMinutes);

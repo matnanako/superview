@@ -217,7 +217,56 @@ class CacheKey
         }
         return 100;
     }
-    public static function custom($model, $method, $param){
-       dd($model);
+
+    /**
+     * 定制方法的key生成
+     *
+     * @param $modelAlias
+     * @param $method
+     * @param $param
+     * @return string
+     */
+    public static function custom($modelAlias, $method, $param){
+        return ':'.self::confirm_type($modelAlias).$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
+    }
+
+    /**
+     * 判断缓存是否存在
+     *
+     * @param $cacheKey
+     * @return bool
+     */
+    public static function haveCache($cacheKey){
+        if(\SCache::has($cacheKey)) {
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * 定制方法生成缓存
+     *
+     * @param $data
+     * @param $allCacheKey
+     * @param int $cacheMinutes
+     */
+    public static function customMakeCache($data, $allCacheKey, $cacheMinutes=120){
+       foreach($data as $k => $v){
+           Cache::put($allCacheKey[$k], $v, $cacheMinutes);
+       }
+    }
+
+    /**
+     * 返回缓存结果
+     *
+     * @param $allCacheKey
+     * @return mixed
+     *
+     */
+    public static function getAllCache($allCacheKey){
+        foreach($allCacheKey as $k=>$v){
+            $result[$k]=Cache::get($v);
+        }
+        return $result;
     }
 }

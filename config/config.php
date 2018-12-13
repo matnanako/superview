@@ -20,6 +20,7 @@ return [
         'utils' => SuperView\Models\UtilsModel::class,
         'chip' => SuperView\Models\ChipModel::class,
         'banner' => SuperView\Models\BannerModel::class,
+        'custom' => SuperView\Models\CustomModel::class,
     ],
 
     'dals' => [
@@ -30,6 +31,7 @@ return [
         'utils' => SuperView\Dal\Api\Utils::class,
         'chip' => SuperView\Dal\Api\Chip::class,
         'banner' => SuperView\Dal\Api\Banner::class,
+        'custom' => SuperView\Dal\Api\Custom::class,
     ],
 
     'pagination' => [
