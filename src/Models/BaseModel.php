@@ -164,7 +164,7 @@ class BaseModel
         }
         $categoryModel = CategoryModel::getInstance('category');
 
-        if (isset($data['status']) && $data['status']==0) {
+        if (isset($data['status']) && $data['status']==0 && isset($data['list']['count'])) {
             //单个查询
             foreach ($data['list']['list'] as $key => &$value) {
                 $category = $categoryModel->info($value['classid']);

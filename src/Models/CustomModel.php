@@ -72,7 +72,11 @@ class CustomModel extends BaseModel
     public function specials($id, $baikelimit = 5, $softlimit = 8)
     {
         $data = Cache::remember(CacheKey::DetailCache($id), 120, function() use ($id,$baikelimit,$softlimit) {
-               return  $this->dal['custom']->getSpecials($id, $baikelimit, $softlimit);
+            $data = $this->dal['custom']->getSpecials($id, $baikelimit, $softlimit);
+            foreach ($data AS &$datum){
+                $this->addListInfo($datum);
+            }
+            return $data;
         });
         return $data;
     }

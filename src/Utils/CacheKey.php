@@ -153,7 +153,6 @@ class CacheKey
             $result['new_arr'] = $new_arr;
         }
         $result['params']=$params;
-       // dd($result);
         return $result;
     }
 
@@ -175,9 +174,7 @@ class CacheKey
                 Cache::put(current($res['noCacheArr']), $result, $cacheMinutes);
             }else{
                 //针对未修改的方法（如superTopic）直接返回的list的值 故加判断。
-
-                    Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
-
+                 Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
             }
         }
     }
