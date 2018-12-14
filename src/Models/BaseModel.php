@@ -125,7 +125,8 @@ class BaseModel
     {
         //树缓存单独拧出
         if($method=='SuperView\Models\CategoryModel::all'){
-            return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
+            return ':TotalCategory';
+            //return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
         }
        return CacheKey::makeCachekey($method, $params, $model, $this->virtualModel, $this->isVirtualModels);
     }

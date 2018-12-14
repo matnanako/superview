@@ -269,4 +269,14 @@ class CacheKey
         }
         return $result;
     }
+
+    /**
+     * 详情页定制key
+     *
+     * @param $id
+     * @return string
+     */
+    public static function DetailCache($id){
+         return ':detail::specials'.$id;
+    }
 }

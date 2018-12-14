@@ -32,10 +32,7 @@ class CustomModel extends BaseModel
         $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
         $this->addListInfo($data);
         //初始化
-        $this->arguments = [];
-        $this->allCacheKey = [];
-        $this->allArgument = [];
-        self::reset();
+        $this->initialize();
         return $data['list'];
     }
 
@@ -49,7 +46,7 @@ class CustomModel extends BaseModel
     public function getList($limit = 15)
     {
         if($this->arguments){
-            $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);
+            $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);//dd($data);
             foreach($data AS &$value){
                 $this->addListInfo($value);
                 $value = $this->returnWithPage($value,$limit);
@@ -60,10 +57,23 @@ class CustomModel extends BaseModel
         //读取缓存
         $data=CacheKey::getAllCache($this->allCacheKey);
         //初始化
-        $this->arguments = [];
-        $this->allCacheKey = [];
-        $this->allArgument = [];
-        self::reset();
+        $this->initialize();
+        return $data;
+    }
+
+    /**
+     * 详情页定制接口
+     *
+     * @param $id
+     * @param int $baikelimit
+     * @param int $softlimit
+     * @return mixed
+     */
+    public function specials($id, $baikelimit = 5, $softlimit = 8)
+    {
+        $data = Cache::remember(CacheKey::DetailCache($id), 120, function() use ($id,$baikelimit,$softlimit) {
+               return  $this->dal['custom']->getSpecials($id, $baikelimit, $softlimit);
+        });
         return $data;
     }
 
@@ -145,6 +155,14 @@ class CustomModel extends BaseModel
             unset($this->arguments[$key]);
         }
 
+        return $this;
+    }
+    public function initialize(){
+        //初始化
+        $this->arguments = [];
+        $this->allCacheKey = [];
+        $this->allArgument = [];
+        self::reset();
         return $this;
     }
 }
