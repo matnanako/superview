@@ -2,9 +2,6 @@
 
 namespace SuperView\Models;
 
-use Illuminate\Support\Facades\Cache;
-use SuperView\Utils\CacheKey;
-
 class TopicModel extends BaseModel
 {
 
