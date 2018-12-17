@@ -257,7 +257,7 @@ class CacheKey
      */
     public static function getAllCache($allCacheKey){
         foreach($allCacheKey as $k=>$v){
-            $result[$k]=Cache::get($v);
+            $result[$k] = Cache::get($v);
         }
         return $result;
     }
@@ -326,12 +326,25 @@ class CacheKey
                 }
             }
         }
-      if($composite==1) {
-          foreach ($data['data'] as $k => $v) {
-              $data['data'][$k] = $v['list'];
-          }
-      }
+        if($composite==1) {
+            foreach ($data['data'] as $k => $v) {
+                $data['data'][$k] = $v['list'];
+            }
+        }
           return $data['data'];
-      }
+    }
 
+    /**
+     * content模型 且 不是info方法的 執行 addListInfo
+     *
+     * @param $key
+     * @return bool
+     */
+    public static function getModelMethod($key){
+        $all_types = \Sconfig::get('type');
+        if(in_array($key[1],$all_types['soft']) && $key[2]!='info'){
+            return true;
+        }
+        return false;
+    }
 }

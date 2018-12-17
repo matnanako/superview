@@ -53,7 +53,7 @@ class TopicModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal['topic']->taginfo($ztid, $classid, $page, $limit);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
     /**
@@ -67,8 +67,8 @@ class TopicModel extends BaseModel
     public function specials($id, $baikelimit = 5, $softlimit = 8)
     {
         $data = $this->dal['topic']->getSpecials($id, $baikelimit, $softlimit);
-        foreach ($data AS &$datum){
-            $this->addListInfo($datum);
+        foreach ($data AS $key => $datum){
+            $data[$key] = $this->addListInfo($datum);
         }
         return $data;
 

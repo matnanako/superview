@@ -12,7 +12,7 @@ class Topic extends Base
     public function __construct($virtualDal)
     {
         parent::__construct($virtualDal);
-        $this->virtualDal = 'zt';
+        //$this->virtualDal = 'zt';
     }
 
     /**

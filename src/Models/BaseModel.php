@@ -87,7 +87,7 @@ class BaseModel
      * @return array
      */
     protected function returnWithPage($data, $limit)
-    {//dd($data);
+    {
         $data['list'] = empty($data['list']) ? $data : $data['list'];
         $data['count'] = empty($data['count']) ? 0 : $data['count'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.
@@ -143,22 +143,22 @@ class BaseModel
     /**
      * 添加列表包含信息：分类信息、url.
      *
-     * @return void
+     * @return array
      */
-    public function addListInfo(&$data)
+    public function addListInfo($data)
     {
         if (!isset($data['list'])) {
-            $data = [];
-            return;
+            return [];
         }
         $categoryModel = CategoryModel::getInstance('category');
-        foreach ($data['list'] as $key => &$value) {
+        foreach ($data['list'] as $key => $value) {
             $category = $categoryModel->info($value['classid']);
-            $value['infourl'] = $this->infoUrl($value['id'], $category);
-            $value['classname'] = $category['classname'];
-            $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
-            $value['category'] = $category;
+            $data['list'][$key]['infourl'] = $this->infoUrl($value['id'], $category);
+            $data['list'][$key]['classname'] = $category['classname'];
+            $data['list'][$key]['classurl'] = $categoryModel->categoryUrl($value['classid']);
+            $data['list'][$key]['category'] = $category;
         }
+        return $data;
      }
 
     /**

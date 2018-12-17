@@ -21,7 +21,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRecentList($classid, $page, $limit, $isPic);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -32,7 +32,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRankList($classid, $page, $limit, $isPic, $rank);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -43,7 +43,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('good', $classid, $page, $limit, $isPic, $level, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -54,7 +54,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('top', $classid, $page, $limit, $isPic, $level, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -65,7 +65,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getLevelList('firsttitle', $classid, $page, $limit, $isPic, $level, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -76,7 +76,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getTodayList('today', $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -87,7 +87,7 @@ class ContentModel extends BaseModel
     {
         $page = $this->getCurrentPage();
         $data = $this->dal()->getIntervalList($start, $end, $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -115,7 +115,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByTitle($title, $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -129,7 +129,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getRelatedList($id, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -143,7 +143,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByTag($tag, $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -187,7 +187,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByTopicId($topicId, $page, $limit);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -201,7 +201,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal['topic']->getContentByTopicId($topicId, $page, $limit);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -215,7 +215,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -250,7 +250,7 @@ class ContentModel extends BaseModel
         }
         $page = $this->getCurrentPage();
         $data = $this->dal()->getListByFieldValue($field,$value, $classid, $page, $limit, $isPic, $order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 
@@ -283,7 +283,7 @@ class ContentModel extends BaseModel
         }
 
         $data = $this->dal()->near($id,$limit,$classid,$equal,$ispic,$order);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
 

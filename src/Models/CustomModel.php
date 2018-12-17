@@ -36,7 +36,7 @@ class CustomModel extends BaseModel
     public function getOnly($limit = 15)
     {
         $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
-        $this->addListInfo($data);
+        $data = $this->addListInfo($data);
         //初始化
         $this->initialize();
         return $data['list'];
@@ -53,10 +53,12 @@ class CustomModel extends BaseModel
     {
         if($this->arguments){
             $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);//dd($data);
-            foreach($data AS &$value){
-                $this->addListInfo($value);
-                $value = $this->returnWithPage($value,$limit);
-            }
+            foreach($data AS $key=>$value){
+                if(CacheKey::getModelMethod($this->arguments[$key])){
+                    $value=$this->addListInfo($value);
+                }
+                $data[$key] = $this->returnWithPage($value,$limit);
+            };
             //生成缓存
             CacheKey::customMakeCache($data, $this->allCacheKey);
         }
@@ -76,13 +78,13 @@ class CustomModel extends BaseModel
      * @throws \ReflectionException
      */
     public function __call($method, $arguments)
-{
-    $res=CacheKey::customAll($method, $arguments);
-    $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $method, $res['param']];
-    $this->allArgument[] = [$res['modelAlias'], $method, $res['param']];
-    self::prepose($res['key'], $res['modelAlias'], $method, $res['param']);
-    return $this;
-}
+    {
+        $res = CacheKey::customAll($method, $arguments);
+        $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $method, $res['param']];
+        $this->allArgument[] = [$res['modelAlias'], $method, $res['param']];
+        self::prepose($res['key'], $res['modelAlias'], $method, $res['param']);
+        return $this;
+    }
 
     /**
      * 生成缓存的key  删除请求api参数中已有缓存的参数
@@ -93,29 +95,29 @@ class CustomModel extends BaseModel
      * @param $param
      * @return $this
      */
-    public function prepose($key,$modelAlias, $method, $param)
-{
-    $cacheKey=CacheKey::custom($modelAlias, $method, $param);
-    $this->allCacheKey[$key]=$cacheKey;
-    if(CacheKey::haveCache($cacheKey)){
-        unset($this->arguments[$key]);
-    }
+    protected function prepose($key,$modelAlias, $method, $param)
+    {
+        $cacheKey = CacheKey::custom($modelAlias, $method, $param);
+        $this->allCacheKey[$key]=$cacheKey;
+        if(CacheKey::haveCache($cacheKey)){
+            unset($this->arguments[$key]);
+        }
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * 初始化
      *
      * @return $this
      */
-    public function initialize()
-{
-    //初始化
-    $this->arguments = [];
-    $this->allCacheKey = [];
-    $this->allArgument = [];
-    self::reset();
-    return $this;
-}
+    protected function initialize()
+    {
+        //初始化
+        $this->arguments = [];
+        $this->allCacheKey = [];
+        $this->allArgument = [];
+        self::reset();
+        return $this;
+    }
 }

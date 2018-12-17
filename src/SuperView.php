@@ -151,7 +151,6 @@ class SuperView
             //插入缓存
             CacheKey::makeCache($apiResult, $res ,$cacheMinutes);
         }
-
          //统一读取缓存数据
         $data=CacheKey::getCache($res);
 
