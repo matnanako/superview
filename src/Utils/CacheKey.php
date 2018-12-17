@@ -313,6 +313,13 @@ class CacheKey
         return $model;
     }
 
+    /**
+     * 判断复合查询且重组结果（复合查询结果是有多个list的数组['1'=>['list'=>[]],['2'=>['list'=>[]]]]，returnWithPage方法只会返回$data['list'].）
+     *
+     * @param $params
+     * @param $data
+     * @return mixed
+     */
     public static function isComposite($params, $data)
     {
         $composite = 0;
