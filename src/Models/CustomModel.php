@@ -52,7 +52,7 @@ class CustomModel extends BaseModel
     public function getList($limit = 15)
     {
         if($this->arguments){
-            $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);dd($data);
+            $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);
             foreach($data AS $key=>$value){
                 if(CacheKey::getModelMethod($this->arguments[$key])){
                     $value=$this->addListInfo($value);

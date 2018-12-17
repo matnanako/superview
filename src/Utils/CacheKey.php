@@ -349,7 +349,7 @@ class CacheKey
      */
     public static function getModelMethod($key){
         $all_types = \Sconfig::get('type');
-        if(in_array($key[1],$all_types['soft']) && $key[2]!='info'){
+        if((in_array($key[1],$all_types['soft']) or in_array($key[1],$all_types['article']))&& $key[2]!='info' ){
             return true;
         }
         return false;
