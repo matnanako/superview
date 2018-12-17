@@ -312,4 +312,26 @@ class CacheKey
 
         return $model;
     }
+
+    public static function isComposite($params, $data)
+    {
+        $composite = 0;
+        if(isset($params['arguments'])){
+            return $data['data'];
+        }
+        foreach($params as $v){
+            if(is_array($v)){
+                if(count($v)>1){
+                    $composite=1;
+                }
+            }
+        }
+      if($composite==1) {
+          foreach ($data['data'] as $k => $v) {
+              $data['data'][$k] = $v['list'];
+          }
+      }
+          return $data['data'];
+      }
+
 }

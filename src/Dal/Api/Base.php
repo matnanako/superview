@@ -4,6 +4,7 @@ namespace SuperView\Dal\Api;
 
 use SuperView\Models\BaseModel;
 use SuperView\Utils\Api;
+use SuperView\Utils\CacheKey;
 
 /**
 * Base Dal.
@@ -28,13 +29,13 @@ class Base
         $params['c'] = $this->virtualDal;
         $params['a'] = $action;
         $params['filter']= BaseModel::getFilter();
-         $data = $this->api->get($params);
-
+        $data = $this->api->get($params);
         if (isset($data['status']) && $data['status'] > 0) {
-            return $data['data'];
+            return CacheKey::isComposite($params, $data);
         } else {
             return [];
         }
     }
+
 
 }

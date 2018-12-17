@@ -87,30 +87,19 @@ class BaseModel
      * @return array
      */
     protected function returnWithPage($data, $limit)
-    {
-        $data['list'] = empty($data['list']) ? [] : $data['list'];
+    {//dd($data);
+        $data['list'] = empty($data['list']) ? $data : $data['list'];
+        $data['count'] = empty($data['count']) ? 0 : $data['count'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.
         if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
-            //$response = empty($data['list'])?[]:$data['list'];
-            if (isset($data['status']) && $data['status'] == 1) {
-                foreach($data['list'] as $k => $v){
-                    $response[$k]=$v['list'];
-                }
-            }else{
-                $response = isset($data['list']['list'])?$data['list']['list']:$data['list'];
-            }
+            $response = empty($data['list'])?[]:$data['list'];
         } else {
             $data['page'] = "";
             if (!empty($this->pageOptions['route'])) {
-                $page = new Page($this->pageOptions['route'], isset($data['count'])?$data['count']:$data['list']['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
-                isset($data['status'])?$data['list']['page']=$page->render():$data['page']=$page->render();
+                $page = new Page($this->pageOptions['route'], $data['count'], $limit, $this->pageOptions['currentPage'], $this->pageOptions['simple'], $this->pageOptions['options']);
                 $data['page'] = $page->render();
             }
-            if(isset($data['status'])){
-                $response =$data['list'];
-            }else {
-                $response = $data;
-            }
+            $response = $data;
         }
         return $response;
     }
@@ -163,37 +152,13 @@ class BaseModel
             return;
         }
         $categoryModel = CategoryModel::getInstance('category');
-
-        if (isset($data['status']) && $data['status']==0 && isset($data['list']['count'])) {
-            //单个查询
-            foreach ($data['list']['list'] as $key => &$value) {
-                $category = $categoryModel->info($value['classid']);
-                $value['infourl'] = $this->infoUrl($value['id'], $category);
-                $value['classname'] = $category['classname'];
-                $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
-                $value['category'] = $category;
-            }
-        }elseif(isset($data['status']) && $data['status']==1 ) {
-            //多个查询
-            foreach ($data['list'] as $ke => &$ve) {
-                foreach ($ve['list'] as $k => &$v) {
-                    $category = $categoryModel->info($v['classid']);
-                    $v['infourl'] = $this->infoUrl($v['id'], $category);
-                    $v['classname'] = $category['classname'];
-                    $v['classurl'] = $categoryModel->categoryUrl($v['classid']);
-                    $v['category'] = $category;
-                }
-            }
-        }else{
-            //非数组形式查询
-                foreach ($data['list'] as $key => &$value) {
-                    $category = $categoryModel->info($value['classid']);
-                    $value['infourl'] = $this->infoUrl($value['id'], $category);
-                    $value['classname'] = $category['classname'];
-                    $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
-                    $value['category'] = $category;
-                }
-            }
+        foreach ($data['list'] as $key => &$value) {
+            $category = $categoryModel->info($value['classid']);
+            $value['infourl'] = $this->infoUrl($value['id'], $category);
+            $value['classname'] = $category['classname'];
+            $value['classurl'] = $categoryModel->categoryUrl($value['classid']);
+            $value['category'] = $category;
+        }
      }
 
     /**
