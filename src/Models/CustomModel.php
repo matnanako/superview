@@ -12,6 +12,12 @@ use SuperView\SuperView;
 use SuperView\Utils\CacheKey;
 use SuperView\Utils\Config;
 
+/**
+ *
+ * @method top
+ * Class CustomModel
+ * @package SuperView\Models
+ */
 class CustomModel extends BaseModel
 {
     // 最后请求参数(去除已有缓存参数)
@@ -62,59 +68,6 @@ class CustomModel extends BaseModel
     }
 
     /**
-     * 详情页定制接口
-     *
-     * @param $id
-     * @param int $baikelimit
-     * @param int $softlimit
-     * @return mixed
-     */
-    public function specials($id, $baikelimit = 5, $softlimit = 8)
-    {
-        $data = Cache::remember(CacheKey::DetailCache($id), 120, function() use ($id,$baikelimit,$softlimit) {
-            $data = $this->dal['custom']->getSpecials($id, $baikelimit, $softlimit);
-            foreach ($data AS &$datum){
-                $this->addListInfo($datum);
-            }
-            return $data;
-        });
-        return $data;
-    }
-
-    /**
-     * 返回模型类
-     *
-     * @param $modelAlias
-     * @return mixed
-     */
-    private function getModel($modelAlias)
-    {
-        $models = Config::get('models');
-        if (array_key_exists($modelAlias, $models)) {
-            $model = $models[$modelAlias];
-        } else {
-            $model = $models['content'];
-        }
-
-        return $model;
-    }
-
-    /**
-     * 获取方法参数
-     *
-     * @param $class
-     * @param $name
-     * @return \ReflectionParameter[]
-     * @throws \ReflectionException
-     */
-    private function reflex($class, $name)
-    {
-        $ReflectionFunc = new \ReflectionMethod($class, $name);
-
-        return $ReflectionFunc->getParameters();
-    }
-
-    /**
      * 魔术构造请求参数
      *
      * @param $method
@@ -123,27 +76,16 @@ class CustomModel extends BaseModel
      * @throws \ReflectionException
      */
     public function __call($method, $arguments)
-    {
-        $key = array_shift($arguments);
-        $modelAlias = array_shift($arguments);
-        $model = $this->getModel($modelAlias);
-        if (!method_exists($model, $method)){
-            throw new \Exception("调用不存在方法 类:{$model} 方法: {$method}");
-        }
-        $methodParam = $this->reflex($model, $method);
-        $param = [];
-        foreach ($methodParam AS $parameter){
-            $position = $parameter->getPosition();
-            $param[$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
-        }
-        $this->arguments[$key] = [$key, $modelAlias, $method, $param];
-        $this->allArgument[] = [$modelAlias, $method, $param];
-        self::prepose($key,$modelAlias, $method, $param);
-        return $this;
-    }
+{
+    $res=CacheKey::customAll($method, $arguments);
+    $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $method, $res['param']];
+    $this->allArgument[] = [$res['modelAlias'], $method, $res['param']];
+    self::prepose($res['key'], $res['modelAlias'], $method, $res['param']);
+    return $this;
+}
 
     /**
-     * 生成缓存的key
+     * 生成缓存的key  删除请求api参数中已有缓存的参数
      *
      * @param $key
      * @param $modelAlias
@@ -152,21 +94,28 @@ class CustomModel extends BaseModel
      * @return $this
      */
     public function prepose($key,$modelAlias, $method, $param)
-    {
-        $cacheKey=CacheKey::custom($modelAlias, $method, $param);
-        $this->allCacheKey[$key]=$cacheKey;
-        if(CacheKey::haveCache($cacheKey)){
-            unset($this->arguments[$key]);
-        }
+{
+    $cacheKey=CacheKey::custom($modelAlias, $method, $param);
+    $this->allCacheKey[$key]=$cacheKey;
+    if(CacheKey::haveCache($cacheKey)){
+        unset($this->arguments[$key]);
+    }
 
-        return $this;
-    }
-    public function initialize(){
-        //初始化
-        $this->arguments = [];
-        $this->allCacheKey = [];
-        $this->allArgument = [];
-        self::reset();
-        return $this;
-    }
+    return $this;
+}
+
+    /**
+     * 初始化
+     *
+     * @return $this
+     */
+    public function initialize()
+{
+    //初始化
+    $this->arguments = [];
+    $this->allCacheKey = [];
+    $this->allArgument = [];
+    self::reset();
+    return $this;
+}
 }

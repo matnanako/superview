@@ -14,7 +14,7 @@ class CacheKey
      * @param $params
      * @param $model
      * @param $virtualModel
-     * @param $isVirtualModel    是否多个model，定制化参数
+     * @param $isVirtualModel    是否多个model，定制化参数  M->get('soft',ture)->top()
      * @return array
      */
     public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel = false)
@@ -22,12 +22,12 @@ class CacheKey
         $pivot = ':' . self::confirm_type($virtualModel);
         $pattern = $virtualModel;
         $action = $method;
-        //反射获取方法默认参数以及默认值
+        //反射获取方法默认参数以及默认值（优先使用传递的参数作为key，没有用默认值）
         $param = self::reflex($model, $method);
         foreach ($param as $k => $value) {
             $depend[$value->getName()] = isset($params[$value->getPosition()]) ? is_array($params[$value->getPosition()]) ? reset($params[$value->getPosition()]) : $params[$value->getPosition()] : $value->getDefaultValue();
         }
-        //设置缓存值(从前往后，将实际参数插入默认参数中，然后classid排在第一个，然后去除limit，ispic，其余参数按顺序排列)
+        //确保cachekey参数中的第一个为classid
         foreach ($depend as $k => $v) {
             if ($k == 'classid') {
                 if ($isVirtualModel == true) {
@@ -38,6 +38,7 @@ class CacheKey
             }
         }
         isset($key) ? $key : $key = $pivot . '::' . $pattern . '::' . $action;
+        //参数除classid部分，过滤不需要存进缓存的参数，其他参数一一排序组成cachekey
         $key.=  self::filterStr($depend);
         $reult['depend'] = $depend;
         $reult['key']  = $key;
@@ -71,22 +72,12 @@ class CacheKey
      */
     public  static function confirm_type($virtualModel){
         $all_types = \Sconfig::get('type');
-        $type=$virtualModel;
-        if(in_array($type,$all_types['soft'])){
-            return 'soft';
+        foreach($all_types as $k =>$v){
+            if(in_array($virtualModel,$v)){
+                return $k;
+            }
         }
-        if(in_array($type,$all_types['category'])){
-            return 'category';
-        }
-        if(in_array($type,$all_types['article'])){
-            return 'article';
-        }
-        if(in_array($type,$all_types['zt'])){
-            return 'zt';
-        }
-        if(in_array($type,$all_types['bk'])){
-            return 'bk';
-        }
+        return 'Other';
     }
 
     /**
@@ -224,7 +215,11 @@ class CacheKey
      * @return string
      */
     public static function custom($modelAlias, $method, $param){
-        return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
+        if($method== 'specials'){
+            return self::DetailCache($param['id']);
+        }else{
+            return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
+        }
     }
 
     /**
@@ -274,6 +269,47 @@ class CacheKey
      * @return string
      */
     public static function DetailCache($id){
-         return ':detail::specials'.$id;
+         return ':detail::specials::'.$id;
+    }
+
+    /**
+     * 获取custom所有参数及方法
+     *
+     * @param $method
+     * @param $arguments
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function customAll($method, $arguments){
+        $res['key'] = array_shift($arguments);
+        $res['modelAlias'] = array_shift($arguments);
+        $res['model'] = self::getModel($res['modelAlias']);
+        if (!method_exists($res['model'], $method)){
+            throw new \Exception("调用不存在方法 类:{$res['model']} 方法: {$method}");
+        }
+        $methodParam = self::reflex($res['model'], $method);
+        $res['param'] = [];
+        foreach ($methodParam AS $parameter){
+            $position = $parameter->getPosition();
+            $res['param'][$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
+        }
+        return $res;
+    }
+    /**
+     * 返回模型类
+     *
+     * @param $modelAlias
+     * @return mixed
+     */
+    private static function getModel($modelAlias)
+    {
+        $models = Config::get('models');
+        if (array_key_exists($modelAlias, $models)) {
+            $model = $models[$modelAlias];
+        } else {
+            $model = $models['content'];
+        }
+
+        return $model;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace SuperView\Models;
 
+use Illuminate\Support\Facades\Cache;
+use SuperView\Utils\CacheKey;
+
 class TopicModel extends BaseModel
 {
 
@@ -55,6 +58,23 @@ class TopicModel extends BaseModel
         $data = $this->dal['topic']->taginfo($ztid, $classid, $page, $limit);
         $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
+    }
+    /**
+     * 详情页定制接口
+     *
+     * @param $id
+     * @param int $baikelimit
+     * @param int $softlimit
+     * @return mixed
+     */
+    public function specials($id, $baikelimit = 5, $softlimit = 8)
+    {
+        $data = $this->dal['topic']->getSpecials($id, $baikelimit, $softlimit);
+        foreach ($data AS &$datum){
+            $this->addListInfo($datum);
+        }
+        return $data;
+
     }
 
 }
