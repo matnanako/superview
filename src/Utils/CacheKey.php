@@ -156,7 +156,7 @@ class CacheKey
      */
     public static function makeCache($result, $res ,$cacheMinutes){
         if(isset($res['new_arr'])){
-            if(isset($res['long']) && count($res['noCacheArr'])>1){//dd($result);
+            if(isset($res['long']) && count($res['noCacheArr'])>1){
                 foreach($result as $k => $v){
                     Cache::put($res['noCacheArr'][$k], $v, $cacheMinutes);
                 }
@@ -342,16 +342,19 @@ class CacheKey
     }
 
     /**
-     * content模型 且 不是info方法的 執行 addListInfo
+     * content模型 且 不是info方法的 執行 addListInfo   1指需要执行addlist方法   3代表自定义方法需要循环后走adddlist方法  2不需要走addlist方法
      *
      * @param $key
      * @return bool
      */
-    public static function getModelMethod($key){
-        $all_types = \Sconfig::get('type');
-        if((in_array($key[1],$all_types['soft']) or in_array($key[1],$all_types['article']))&& $key[2]!='info' ){
-            return true;
+    public static function getModelMethod($key)
+    {
+        if(self::getModel($key[1])=='SuperView\Models\ContentModel' && $key[2]!='info'){
+            return 1;
         }
-        return false;
+        if($key[2] == 'specials'){
+            return 3;
+        }
+        return 2;
     }
 }

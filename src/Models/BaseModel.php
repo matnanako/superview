@@ -147,16 +147,26 @@ class BaseModel
      */
     public function addListInfo($data)
     {
-        if (!isset($data['list'])) {
-            return [];
-        }
         $categoryModel = CategoryModel::getInstance('category');
-        foreach ($data['list'] as $key => $value) {
-            $category = $categoryModel->info($value['classid']);
-            $data['list'][$key]['infourl'] = $this->infoUrl($value['id'], $category);
-            $data['list'][$key]['classname'] = $category['classname'];
-            $data['list'][$key]['classurl'] = $categoryModel->categoryUrl($value['classid']);
-            $data['list'][$key]['category'] = $category;
+        if(isset($data['list'])){
+            foreach ($data['list'] as $key => $value) {
+                $category = $categoryModel->info($value['classid']);
+                $data['list'][$key]['infourl'] = $this->infoUrl($value['id'], $category);
+                $data['list'][$key]['classname'] = $category['classname'];
+                $data['list'][$key]['classurl'] = $categoryModel->categoryUrl($value['classid']);
+                $data['list'][$key]['category'] = $category;
+            }
+        }else{
+            //以数组形式的复合查询
+            foreach ($data as $key => $value) {
+                foreach ($value as $k => $v) {
+                   $category = $categoryModel->info($v['classid']);
+                   $data[$key][$k]['infourl'] = $this->infoUrl($v['id'], $category);
+                   $data[$key][$k]['classname'] = $category['classname'];
+                   $data[$key][$k]['classurl'] = $categoryModel->categoryUrl($v['classid']);
+                   $data[$key][$k]['category'] = $category;
+                }
+            }
         }
         return $data;
      }

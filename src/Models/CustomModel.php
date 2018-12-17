@@ -43,7 +43,7 @@ class CustomModel extends BaseModel
     }
 
     /**
-     * 暂未实现 获取所有调取的方法的列表  依据顺序返回
+     * 暂未实现 获取所有调取的方法的列表  依据顺序返回   （$res 1指需要执行addlist方法   3代表自定义方法需要循环后走adddlist方法  2不需要走addlist方法）
      *
      * @deprecated
      * @param int $limit
@@ -54,10 +54,15 @@ class CustomModel extends BaseModel
         if($this->arguments){
             $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);
             foreach($data AS $key=>$value){
-                if(CacheKey::getModelMethod($this->arguments[$key])){
-                    $value=$this->addListInfo($value);
+               $res= CacheKey::getModelMethod($this->arguments[$key]);
+                if($res == 1){
+                    $data[$key]=$this->addListInfo($value);
+                }elseif($res == 3){
+                    foreach($value as $k=>$v){
+                        $data[$key][$k]= $this->addListInfo($v);
+                    }
                 }
-                $data[$key] = $this->returnWithPage($value,$limit);
+                $data[$key] = $this->returnWithPage($data[$key],$limit);
             };
             //生成缓存
             CacheKey::customMakeCache($data, $this->allCacheKey);
