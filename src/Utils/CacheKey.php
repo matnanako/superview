@@ -349,7 +349,7 @@ class CacheKey
      */
     public static function getModelMethod($key)
     {
-        if(self::getModel($key[1])=='SuperView\Models\ContentModel' && $key[2]!='info'){
+        if(self::getModel($key[1])=='SuperView\Models\ContentModel' && $key[2]!='info' && $key[2]!='count'){
             return 1;
         }
         if($key[2] == 'specials'){
