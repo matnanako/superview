@@ -93,8 +93,8 @@ class BaseModel
         {
             return $data;
         }
-        $data['list'] = empty($data['list']) ? $data : $data['list'];
-        $data['count'] = empty($data['count']) ? 0 : $data['count'];
+        $data['list'] = isset($data['list']) ? $data['list'] : $data;
+        $data['count'] = isset($data['count']) ? $data['count']: 0;
         // 未设置分页url路由规则, 直接返回'list'包含数组.
         if (empty($this->pageOptions) || $this->pageOptions['route'] === false) {
             $response = empty($data['list'])?[]:$data['list'];
