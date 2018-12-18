@@ -88,6 +88,11 @@ class BaseModel
      */
     protected function returnWithPage($data, $limit)
     {
+        //针对count方法只返回字符串
+        if(is_string($data))
+        {
+            return $data;
+        }
         $data['list'] = empty($data['list']) ? $data : $data['list'];
         $data['count'] = empty($data['count']) ? 0 : $data['count'];
         // 未设置分页url路由规则, 直接返回'list'包含数组.

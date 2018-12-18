@@ -273,7 +273,7 @@ class CacheKey
     }
 
     /**
-     * 获取custom所有参数及方法
+     * 获取custom所有参数及方法    最后修改方法名列如(index方法传递给api时需要修改为 lists)
      *
      * @param $method
      * @param $arguments
@@ -282,7 +282,7 @@ class CacheKey
      */
     public static function customAll($method, $arguments){
         $res['key'] = array_shift($arguments);
-        $res['modelAlias'] = array_shift($arguments);
+        $res['real']['modelAlias'] = $res['modelAlias'] = array_shift($arguments);
         $res['model'] = self::getModel($res['modelAlias']);
         if (!method_exists($res['model'], $method)){
             throw new \Exception("调用不存在方法 类:{$res['model']} 方法: {$method}");
@@ -292,6 +292,14 @@ class CacheKey
         foreach ($methodParam AS $parameter){
             $position = $parameter->getPosition();
             $res['param'][$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
+        }
+        $all_methods= \Sconfig::get('method');
+        $res['method'] = array_key_exists($method,$all_methods) ? $all_methods[$method] : $method;
+        //特殊方法特殊处理
+        if($res['method'] == 'infolist'){
+            $res['modelAlias'] = 'topic';
+            $res['param']['ztid']=$res['param']['topicId'];
+            unset($res['param']['topicId']);
         }
         return $res;
     }
@@ -354,6 +362,10 @@ class CacheKey
         }
         if($key[2] == 'specials'){
             return 3;
+        }
+        //由superTopic方法转换
+        if($key[2] == 'infolist'){
+            return 1;
         }
         return 2;
     }
