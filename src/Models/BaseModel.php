@@ -179,7 +179,7 @@ class BaseModel
     /**
      * 获取详情页url.
      */
-    private function infoUrl($id, $category)
+    public function infoUrl($id, $category)
     {
         $infoUrlTpl = \SConfig::get('info_url');
         $infourl = str_replace(

@@ -30,7 +30,7 @@ class SuperView
         class_exists('SCache') ?: class_alias(SCache::class, 'SCache');
     }
 
-    private static function getInstance($modelAlias, $default)
+    private static function getInstance($modelAlias, $default = false)
     {
         if (empty(self::$instances[$modelAlias])) {
             self::$instances[$modelAlias] = new self();
@@ -59,12 +59,15 @@ class SuperView
     }
 
     /**
-     * @param  array  $configs
-     * @return void
+     *
+     * @param array $configs
+     * @return mixed
      */
     public static function setConfig($configs = [])
     {
         SConfig::import($configs);
+
+        return self::getInstance('content');
     }
 
     /**
@@ -116,6 +119,16 @@ class SuperView
         $this->model->setFilterOptions($filter);
 
         return $this;
+    }
+
+    public function setInfoUrl($arr)
+    {
+        $categoryModel = CategoryModel::getInstance('category');
+        foreach($arr as $k=>$v){
+            $category = $categoryModel->info($v['classid']);
+            $arr[$k]['infourl'] = $this->model->infoUrl($v['id'], $category);
+        }
+         return $arr;
     }
     /**
      * @param  string  $method
