@@ -363,7 +363,7 @@ class CacheKey
         if($key[2] == 'specials'){
             return 3;
         }
-        //由superTopic方法转换
+        //由superTopic方法转换 需要走addlistinfo
         if($key[2] == 'infolist'){
             return 1;
         }
