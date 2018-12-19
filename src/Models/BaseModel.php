@@ -198,4 +198,20 @@ class BaseModel
         }
         return true;
     }
+
+    /**
+     * 是否不需要设置缓存（是否第一页）
+     *
+     * @return bool
+     */
+    public function isCache(){
+        if(empty($this->pageOptions) || $this->pageOptions['route'] === false){
+            return false;
+        }
+        $pageInfo=$this->pageOptions;
+        if($pageInfo['currentPage']==1){
+            return false;
+        }
+        return true;
+    }
 }

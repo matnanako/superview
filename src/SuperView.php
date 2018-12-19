@@ -142,9 +142,8 @@ class SuperView
         if (empty($model) || !is_callable([$model, $method])) {
             return [];
         }
-
-        //分类相关与分页直接返回  (专题中的分类不能通过model确定，需要通过方法cagtegories)
-        if(($model instanceof CategoryModel) ||  $this->model->isPage()  || ($model instanceof CustomModel)) {
+        //分类相关与分页直接返回
+        if(($model instanceof CategoryModel) ||  $this->model->isCache()  || ($model instanceof CustomModel)) {
             $data = $model->$method(...$params);
             //自定义方法独自初始化
             if(!($model instanceof CustomModel)) {
