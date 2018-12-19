@@ -35,8 +35,11 @@ class CustomModel extends BaseModel
      */
     public function getOnly($limit = 15)
     {
-        $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
-        $data = $this->addListInfo($data);
+        $data = Cache::remember(CacheKey::getOnlyCacheKey($this->allArgument), 120, function() use ($limit) {
+            $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
+            $data = $this->addListInfo($data);
+            return $data;
+        });
         //初始化
         $this->initialize();
         return $data['list'];

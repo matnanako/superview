@@ -275,8 +275,8 @@ class CacheKey
     /**
      * 获取custom所有参数及方法    最后修改方法名列如(index方法传递给api时需要修改为 lists)
      *
-     * @param $method
-     * @param $arguments
+     * @param $method    方法
+     * @param $arguments   所有参数
      * @return mixed
      * @throws \Exception
      */
@@ -324,8 +324,8 @@ class CacheKey
     /**
      * 判断复合查询且重组结果（复合查询结果是有多个list的数组['1'=>['list'=>[]],['2'=>['list'=>[]]]]，returnWithPage方法只会返回$data['list'].）
      *
-     * @param $params
-     * @param $data
+     * @param $params   请求api的参数
+     * @param $data     api返回的结果
      * @return mixed
      */
     public static function isComposite($params, $data)
@@ -352,7 +352,7 @@ class CacheKey
     /**
      * content模型 且 不是info方法的 執行 addListInfo   1指需要执行addlist方法   3代表自定义方法需要循环后走adddlist方法  2不需要走addlist方法
      *
-     * @param $key
+     * @param $key    单次请求的所有数据  $this->arguments['key']   array
      * @return bool
      */
     public static function getModelMethod($key)
@@ -368,5 +368,16 @@ class CacheKey
             return 1;
         }
         return 2;
+    }
+
+    /**
+     * getOnly方法的特殊缓存key生成
+     *
+     * @param $params  拼接的请求参数
+     * @return string
+     */
+    public static function getOnlyCacheKey($params)
+    {
+            return ':getOnly::'.md5(json_encode($params));
     }
 }
