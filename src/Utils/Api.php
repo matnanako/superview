@@ -49,7 +49,6 @@ class Api
 
     private function getData($params, $cache = true)
     {
-        file_put_contents(public_path('hello'), json_encode($params, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         $response = $this->http->get('', $params);
         $body = $response->getBody();
         $data = $body->getContents();

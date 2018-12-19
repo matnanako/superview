@@ -28,14 +28,18 @@ class CacheKey
             $depend[$value->getName()] = isset($params[$value->getPosition()]) ? is_array($params[$value->getPosition()]) ? reset($params[$value->getPosition()]) : $params[$value->getPosition()] : $value->getDefaultValue();
         }
         //确保cachekey参数中的第一个为classid
-        foreach ($depend as $k => $v) {
-            if ($k == 'classid') {
-                if ($isVirtualModel == true) {
-                    $patterns = config('model.' . $virtualModel);
-                    $pattern = array_flip($patterns)[$v];
+        if(isset($depend)) {
+            foreach ($depend as $k => $v) {
+                if ($k == 'classid') {
+                    if ($isVirtualModel == true) {
+                        $patterns = config('model.' . $virtualModel);
+                        $pattern = array_flip($patterns)[$v];
+                    }
+                    $key = $pivot . '::' . $pattern . '::' . $action . '::' . $v;
                 }
-                $key = $pivot . '::' . $pattern . '::' . $action . '::' . $v;
             }
+        }else{
+            $depend=[];
         }
         isset($key) ? $key : $key = $pivot . '::' . $pattern . '::' . $action;
         //参数除classid部分，过滤不需要存进缓存的参数，其他参数一一排序组成cachekey
@@ -218,7 +222,7 @@ class CacheKey
         if($method== 'specials'){
             return self::DetailCache($param['id']);
         }else{
-            return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.'::'.(isset($param['classid'])?$param['classid']:'').self::filterStr($param);
+            return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.(isset($param['classid'])?'::'.$param['classid']:'').self::filterStr($param);
         }
     }
 
