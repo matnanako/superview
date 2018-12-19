@@ -275,8 +275,8 @@ class CacheKey
     /**
      * 获取custom所有参数及方法    最后修改方法名列如(index方法传递给api时需要修改为 lists)
      *
-     * @param $method    方法
-     * @param $arguments   所有参数
+     * @param $method   方法
+     * @param $arguments  ＿＿call所有参数
      * @return mixed
      * @throws \Exception
      */

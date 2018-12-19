@@ -8,20 +8,20 @@ class TopicModel extends BaseModel
     /**
      * 专题列表
      */
-    public function index($topicCategoryId = 0, $classid = 0, $limit = 0, $order = 'addtime')
+    public function index($zcid = 0, $classid = 0, $limit = 0, $order = 'addtime')
     {
         $page = $this->getCurrentPage();
-        $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
+        $data = $this->dal['topic']->getList($zcid, $classid, $page, $limit, $order);
         return $this->returnWithPage($data, $limit);
     }
 
     /**
      * index查询结果的总个数
      */
-    public function indexCount($topicCategoryId = 0, $classid = 0, $limit = 0, $order = 'addtime')
+    public function indexCount($zcid = 0, $classid = 0, $limit = 0, $order = 'addtime')
     {
         $page = $this->getCurrentPage();
-        $data = $this->dal['topic']->getList($topicCategoryId, $classid, $page, $limit, $order);
+        $data = $this->dal['topic']->getList($zcid, $classid, $page, $limit, $order);
         if(empty($data['count'])){
             return -1;
         }
