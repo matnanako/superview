@@ -60,5 +60,7 @@ return [
         'superTopic' => 'infolist',
 
         'infoTopics'=> 'speciallist',
+
+        'categories'=> 'classlist',
     ]
 ];
