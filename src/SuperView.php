@@ -143,7 +143,7 @@ class SuperView
             return [];
         }
         //分类相关与分页直接返回
-        if(($model instanceof CategoryModel) ||  $this->model->isCache()  || ($model instanceof CustomModel)) {
+        if(($model instanceof CategoryModel) ||  $this->model->isPage()  || ($model instanceof CustomModel)) {
             $data = $model->$method(...$params);
             //自定义方法独自初始化
             if(!($model instanceof CustomModel)) {
