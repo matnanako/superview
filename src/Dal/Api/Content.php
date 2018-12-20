@@ -239,10 +239,10 @@ class Content extends Base
      * 信息搜索列表
      * @return boolean | array
      */
-    public function getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order)
+    public function getListByKeyword($str, $classid, $page, $limit, $isPic, $order)
     {
         $params = [
-            'str'     => $keyword,
+            'str'     => $str,
             'classid' => ($classid),
             'page'    => intval($page),
             'limit'   => intval($limit),

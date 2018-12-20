@@ -208,13 +208,13 @@ class ContentModel extends BaseModel
     /**
      * 信息搜索列表.
      */
-    public function search($keyword = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    public function search($str = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         if (empty($keyword)) {
             return false;
         }
         $page = $this->getCurrentPage();
-        $data = $this->dal()->getListByKeyword($keyword, $classid, $page, $limit, $isPic, $order);
+        $data = $this->dal()->getListByKeyword($str, $classid, $page, $limit, $isPic, $order);
         $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
