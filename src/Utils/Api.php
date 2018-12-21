@@ -42,14 +42,14 @@ class Api
             return !empty($value);
         });
         // 生成get查询
-        $params = ['query'=>$params];
+//        $params = ['query'=>$params];
         $data = $this->getData($params);
         return json_decode($data, true);
     }
 
     private function getData($params, $cache = true)
     {
-        $response = $this->http->get('', $params);
+        $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();
         return $data;
