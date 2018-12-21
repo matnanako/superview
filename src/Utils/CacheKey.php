@@ -355,7 +355,7 @@ class CacheKey
             return 3;
         }
         //由superTopic方法转换 需要走addlistinfo
-        if($key[2] == 'infolist'){
+        if($key[2] == 'superTopic'){
             return 1;
         }
         return 2;
