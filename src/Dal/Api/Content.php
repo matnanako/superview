@@ -217,7 +217,7 @@ class Content extends Base
             'id'    => ($id),
             'limit' => intval($limit),
         ];
-        return $this->getData('speciallist', $params);
+        return $this->getData('infoTopics', $params);
     }
 
 

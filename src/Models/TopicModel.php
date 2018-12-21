@@ -18,7 +18,7 @@ class TopicModel extends BaseModel
     /**
      * index查询结果的总个数
      */
-    public function indexCount($zcid = 0, $classid = 0, $limit = 0, $order = 'addtime')
+    public function indexCount($topicCategoryId = 0, $classid = 0, $limit = 0, $order = 'addtime')
     {
         $page = $this->getCurrentPage();
         $data = $this->dal['topic']->getList($zcid, $classid, $page, $limit, $order);

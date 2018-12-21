@@ -88,8 +88,8 @@ class CustomModel extends BaseModel
     public function __call($method, $arguments)
     {
         $res = CacheKey::customAll($method, $arguments);
-        $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $res['method'], $res['param']];
-        $this->allArgument[] = [$res['modelAlias'], $res['method'], $res['param']];
+        $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $method, $res['param']];
+        $this->allArgument[] = [$res['modelAlias'], $method, $res['param']];
         //将原本传递的参数进行缓存 保持缓存值一致性
         self::prepose($res['key'], $res['real']['modelAlias'], $method, $res['param']);
         return $this;

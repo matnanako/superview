@@ -194,13 +194,13 @@ class ContentModel extends BaseModel
     /**
      * 专题信息列表, 无法指定频道, 使用该方法获取该专题下的所有频道的内容.
      */
-    public function superTopic($topicId = 0, $limit = 0)
+    public function superTopic($ztid = 0, $limit = 0)
     {
-        if (empty($topicId)) {
+        if (empty($ztid)) {
             return false;
         }
         $page = $this->getCurrentPage();
-        $data = $this->dal['topic']->getContentByTopicId($topicId, $page, $limit);
+        $data = $this->dal['topic']->getContentByTopicId($ztid, $page, $limit);
         $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }

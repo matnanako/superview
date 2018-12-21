@@ -17,7 +17,7 @@ class Tag extends Base
             'limit'  => intval($limit),
             'order'  => $order,
         ];
-        return $this->getData('lists', $params);
+        return $this->getData('index', $params);
     }
 
     public function getInfo($tagname)

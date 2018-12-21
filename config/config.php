@@ -53,14 +53,5 @@ return [
         'bk' => ['softbaike','provider','tag']
     ],
 
-    //方法名称替换
-    'method' => [
-        'index' => 'lists',
 
-        'superTopic' => 'infolist',
-
-        'infoTopics'=> 'speciallist',
-
-        'categories'=> 'classlist',
-    ]
 ];

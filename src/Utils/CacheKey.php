@@ -297,13 +297,10 @@ class CacheKey
             $position = $parameter->getPosition();
             $res['param'][$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
         }
-        $all_methods= \Sconfig::get('method');
-        $res['method'] = array_key_exists($method,$all_methods) ? $all_methods[$method] : $method;
+        $res['method'] = $method;
         //特殊方法特殊处理
-        if($res['method'] == 'infolist'){
+        if($res['method'] == 'superTopic'){
             $res['modelAlias'] = 'topic';
-            $res['param']['ztid']=$res['param']['topicId'];
-            unset($res['param']['topicId']);
         }
         return $res;
     }

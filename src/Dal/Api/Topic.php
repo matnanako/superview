@@ -50,7 +50,7 @@ class Topic extends Base
      */
     public function getCategories()
     {
-        $categories = $this->getData('classlist')['list'];
+        $categories = $this->getData('categories')['list'];
         foreach ($categories as $category) {
             $categoryIndex[$category['classid']] = $category;
         }
@@ -62,14 +62,14 @@ class Topic extends Base
      * 专题信息列表
      * @return boolean | array
      */
-    public function getContentByTopicId($topicId, $page, $limit)
+    public function getContentByTopicId($ztid, $page, $limit)
     {
         $params = [
-            'ztid'  => intval($topicId),
+            'ztid'  => intval($ztid),
             'page'  => intval($page),
             'limit' => intval($limit),
         ];
-        return $this->getData('infolist', $params);
+        return $this->getData('superTopic', $params);
     }
 
     /**
