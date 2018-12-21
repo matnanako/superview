@@ -218,12 +218,13 @@ class CacheKey
      * @param $param
      * @return string
      */
-    public static function custom($modelAlias, $method, $param){
-        if($method== 'specials'){
-            return self::DetailCache($param['id']);
-        }else{
-            return ':'.self::confirm_type($modelAlias).'::'.$modelAlias.'::'.$method.(isset($param['classid'])?'::'.$param['classid']:'').self::filterStr($param);
-        }
+    public static function custom($modelAlias, $method, $param)
+    {
+        return ':' . self::confirm_type($modelAlias)
+            . '::' . $modelAlias . '::'
+            . $method
+            . (isset($param['classid']) ? '::' . $param['classid'] : '')
+            . self::filterStr($param);
     }
 
     /**
@@ -264,16 +265,6 @@ class CacheKey
             $result[$k] = Cache::get($v);
         }
         return $result;
-    }
-
-    /**
-     * 详情页定制key
-     *
-     * @param $id
-     * @return string
-     */
-    public static function DetailCache($id){
-         return ':detail::specials::'.$id;
     }
 
     /**
@@ -339,10 +330,9 @@ class CacheKey
             return $data['data'];
         }
         foreach($params as $v){
-            if(is_array($v)){
-                if(count($v)>1){
-                    $composite=1;
-                }
+            if(is_array($v) && count($v)>1){
+                $composite=1;
+                break;
             }
         }
         if($composite==1) {
