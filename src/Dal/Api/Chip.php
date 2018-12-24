@@ -24,6 +24,6 @@ class Chip extends Base
         $params = [
             'cid'    => $chipid
         ];
-        return $this->getData('detail', $params);
+        return $this->getData('info', $params);
     }
 }

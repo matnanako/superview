@@ -19,16 +19,16 @@ class Topic extends Base
      * 专题列表
      * @return boolean | array
      */
-    public function getList($topicCategoryId, $classid, $page, $limit, $order)
+    public function getList($zcid, $classid, $page, $limit, $order)
     {
         $params = [
-            'zcid'  => ($topicCategoryId),
+            'zcid'  => ($zcid),
             'cid'   => ($classid),
             'page'  => intval($page),
             'limit' => intval($limit),
             'order' => $order,
         ];
-        return $this->getData('lists', $params);
+        return $this->getData('index', $params);
     }
 
     /**
