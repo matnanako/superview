@@ -210,7 +210,7 @@ class ContentModel extends BaseModel
      */
     public function search($str = '', $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
-        if (empty($keyword)) {
+        if (empty($str)) {
             return false;
         }
         $page = $this->getCurrentPage();
