@@ -316,9 +316,9 @@ class ContentModel extends BaseModel
      * @param int $limit
      *
      */
-    public function infoRelated($id = 0, $classid = 0, $limit = 15)
+    public function infoRelated($id = 0, $channel = '', $classid = 0, $limit = 15)
     {
-        $data = $this->dal()->getInfoRelated($id, $classid, $limit);
+        $data = $this->dal()->getInfoRelated($id, $channel, $classid, $limit);
         return $data;
     }
 }
