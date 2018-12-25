@@ -309,4 +309,16 @@ class ContentModel extends BaseModel
         return $this->dal['content:' . $this->virtualModel];
     }
 
+    /**
+     * 定制接口 获取相关软件
+     *
+     * @param int $id
+     * @param int $limit
+     *
+     */
+    public function infoRelated($id = 0, $classid = 0, $limit = 15)
+    {
+        $data = $this->dal()->getInfoRelated($id, $classid, $limit);
+        return $data;
+    }
 }

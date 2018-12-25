@@ -332,4 +332,20 @@ class Content extends Base
         return empty($order) || in_array($order, self::$orderKeys);
     }
 
+    /**
+     * 定制接口 获取相关软件
+     *
+     * @param $id
+     * @param $limit
+     * @return array|bool|mixed
+     */
+    public function getInfoRelated($id, $classid, $limit)
+    {
+        $params = [
+            'id'     => $id,
+            'classid' => $classid,
+            'limit' => $limit,
+        ];
+        return $this->getData('infoRelated', $params);
+    }
 }
