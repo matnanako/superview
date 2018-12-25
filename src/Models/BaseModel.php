@@ -155,6 +155,7 @@ class BaseModel
         $categoryModel = CategoryModel::getInstance('category');
         if(isset($data['list'])){
             foreach ($data['list'] as $key => $value) {
+                if(!isset($value['classid']) || !isset($value['id'])) return $data;   //此判断针对getOnly部分方法如专题不需要走addlist方法的
                 $category = $categoryModel->info($value['classid']);
                 $data['list'][$key]['infourl'] = $this->infoUrl($value['id'], $category);
                 $data['list'][$key]['classname'] = $category['classname'];
