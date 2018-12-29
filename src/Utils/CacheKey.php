@@ -310,7 +310,7 @@ class CacheKey
             foreach ($methodParam AS $parameter) {
                 $pa['name'] = $parameter->name;
                 $pa['position'] = $parameter->getPosition();
-                $pa['defaultValue'] = $parameter->getDefaultValue();
+                $pa['defaultValue'] = $parameter->isOptional() ? $parameter->getDefaultValue() : '';
                 $data[] = $pa;
             }
             \SCache::forever($key, $data);
