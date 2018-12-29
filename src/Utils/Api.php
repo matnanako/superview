@@ -49,6 +49,7 @@ class Api
 
     private function getData($params, $cache = true)
     {
+        $params['cache'] = 1;
         $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();
