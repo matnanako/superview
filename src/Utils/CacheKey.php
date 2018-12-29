@@ -82,23 +82,16 @@ class CacheKey
         }
         return 'Other';
     }
-
     /**
      * 反射获取参数
      *
      * @param $model
      * @param $method
      * @return \ReflectionParameter[]
-     * @throws \Exception
      */
-    public static function reflex($model, $method)
-    {
-        $key = 'reflex::' . $model . '::' . $method;
-        if (!\SCache::has($key)) {
-            $ReflectionFunc = new \ReflectionMethod($model, $method);
-            \SCache::forever($key, $ReflectionFunc->getParameters());
-        }
-        return \SCache::get($key);
+    public static  function reflex($model, $method){
+        $ReflectionFunc = new \ReflectionMethod($model, $method);
+        return $ReflectionFunc->getParameters();
     }
 
     /**
@@ -276,25 +269,53 @@ class CacheKey
     /**
      * 获取custom所有参数及方法    最后修改方法名列如(index方法传递给api时需要修改为 lists)
      *
-     * @param string $method   方法
-     * @param array $arguments  ＿＿call所有参数
+     * @param string $method 方法
+     * @param array $arguments ＿＿call所有参数
      * @return mixed
      * @throws \Exception
      */
-    public static function customAll($method, $arguments){
+    public static function customAll($method, $arguments)
+    {
         $res['key'] = array_shift($arguments);
-        $res['real']['modelAlias'] = $res['modelAlias'] = array_shift($arguments);
-        $res['model'] = self::getModel($res['modelAlias']);
-        if (!method_exists($res['model'], $method)){
-            throw new \Exception("调用不存在方法 类:{$res['model']} 方法: {$method}");
-        }
-        $methodParam = self::reflex($res['model'], $method);
+        $res['modelAlias'] = array_shift($arguments);
+        $methodParam = self::reflexMethod($res['modelAlias'], $method);
         $res['param'] = [];
-        foreach ($methodParam AS $parameter){
-            $position = $parameter->getPosition();
-            $res['param'][$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
+        foreach ($methodParam AS $parameter) {
+            $position = $parameter['position'];
+            $res['param'][$parameter['name']] = isset($arguments[$position]) ? $arguments[$position] : $parameter['defaultValue'];
         }
         return $res;
+    }
+
+
+    /**
+     * 反射获取参数
+     *
+     * @param string $modelAlias 模型别名
+     * @param string $method 方法名
+     * @return \ReflectionParameter[]
+     * @throws \Exception
+     */
+    public static function reflexMethod($modelAlias, $method)
+    {
+        $key = 'reflex::' . $modelAlias . '::' . $method;
+        if (!\SCache::has($key)) {
+            $model = self::getModel($modelAlias);
+            if (!method_exists($model, $method)) {
+                throw new \Exception("调用不存在方法 类:{$model} 方法: {$method}");
+            }
+            $ReflectionFunc = new \ReflectionMethod($model, $method);
+            $methodParam = $ReflectionFunc->getParameters();
+            $data = array();
+            foreach ($methodParam AS $parameter) {
+                $pa['name'] = $parameter->name;
+                $pa['position'] = $parameter->getPosition();
+                $pa['defaultValue'] = $parameter->getDefaultValue();
+                $data[] = $pa;
+            }
+            \SCache::forever($key, $data);
+        }
+        return \SCache::get($key);
     }
 
     /**

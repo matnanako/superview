@@ -89,7 +89,7 @@ class CustomModel extends BaseModel
         $this->arguments[$res['key']] = [$res['key'], $res['modelAlias'], $method, $res['param']];
         $this->allArgument[] = [$res['modelAlias'], $method, $res['param']];
         //将原本传递的参数进行缓存 保持缓存值一致性
-        self::prepose($res['key'], $res['real']['modelAlias'], $method, $res['param']);
+        self::prepose($res['key'], $res['modelAlias'], $method, $res['param']);
         return $this;
     }
 
