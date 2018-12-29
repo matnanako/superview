@@ -8,9 +8,7 @@
 namespace SuperView\Models;
 
 use Illuminate\Support\Facades\Cache;
-use SuperView\SuperView;
 use SuperView\Utils\CacheKey;
-use SuperView\Utils\Config;
 
 /**
  *
@@ -23,7 +21,7 @@ class CustomModel extends BaseModel
     // 最后请求参数(去除已有缓存参数)
     protected $arguments = [];
     //请求参数适用于getOnly方法（所有参数）
-    protected $allArgument =[];
+    protected $allArgument = [];
     //所有参数
     protected $allCacheKey = [];
 
@@ -35,7 +33,7 @@ class CustomModel extends BaseModel
      */
     public function getOnly($limit = 15)
     {
-        $data = Cache::remember(CacheKey::getOnlyCacheKey($this->allArgument), 120, function() use ($limit) {
+        $data = \SCache::remember(CacheKey::getOnlyCacheKey($this->allArgument), 120, function () use ($limit) {
             $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
             $data = $this->addListInfo($data);
             return $data;
@@ -54,24 +52,24 @@ class CustomModel extends BaseModel
      */
     public function getList($limit = 15)
     {
-        if($this->arguments){
+        if ($this->arguments) {
             $data = $this->dal['custom']->getList('getList', ['arguments' => $this->arguments, 'limit' => $limit]);
-            foreach($data AS $key=>$value){
-               $res= CacheKey::getModelMethod($this->arguments[$key]);
-                if($res == 1){
-                    $data[$key]=$this->addListInfo($value);
-                }elseif($res == 3){
-                    foreach($value as $k=>$v){
-                        $data[$key][$k]= $this->addListInfo($v);
+            foreach ($data AS $key => $value) {
+                $res = CacheKey::getModelMethod($this->arguments[$key]);
+                if ($res == 1) {
+                    $data[$key] = $this->addListInfo($value);
+                } elseif ($res == 3) {
+                    foreach ($value as $k => $v) {
+                        $data[$key][$k] = $this->addListInfo($v);
                     }
                 }
-                $data[$key] = $this->returnWithPage($data[$key],$limit);
+                $data[$key] = $this->returnWithPage($data[$key], $limit);
             };
             //生成缓存
             CacheKey::customMakeCache($data, $this->allCacheKey);
         }
         //读取缓存
-        $data=CacheKey::getAllCache($this->allCacheKey);
+        $data = CacheKey::getAllCache($this->allCacheKey);
         //初始化
         $this->initialize();
         return $data;
@@ -83,7 +81,7 @@ class CustomModel extends BaseModel
      * @param $method
      * @param $arguments
      * @return $this
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __call($method, $arguments)
     {
@@ -104,11 +102,11 @@ class CustomModel extends BaseModel
      * @param $param
      * @return $this
      */
-    protected function prepose($key,$modelAlias, $method, $param)
+    protected function prepose($key, $modelAlias, $method, $param)
     {
         $cacheKey = CacheKey::custom($modelAlias, $method, $param);
-        $this->allCacheKey[$key]=$cacheKey;
-        if(CacheKey::haveCache($cacheKey)){
+        $this->allCacheKey[$key] = $cacheKey;
+        if (CacheKey::haveCache($cacheKey)) {
             unset($this->arguments[$key]);
         }
 

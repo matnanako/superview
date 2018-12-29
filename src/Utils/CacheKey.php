@@ -53,7 +53,6 @@ class CacheKey
      * 过滤字段生成最终缓存key
      *
      * @param $depend
-     * @param $key
      * @return mixed
      */
     public static function filterStr($depend){
@@ -90,10 +89,16 @@ class CacheKey
      * @param $model
      * @param $method
      * @return \ReflectionParameter[]
+     * @throws \Exception
      */
-    public static  function reflex($model, $method){
-        $ReflectionFunc = new \ReflectionMethod($model, $method);
-        return $ReflectionFunc->getParameters();
+    public static function reflex($model, $method)
+    {
+        $key = 'reflex::' . $model . '::' . $method;
+        if (!\SCache::has($key)) {
+            $ReflectionFunc = new \ReflectionMethod($model, $method);
+            \SCache::forever($key, $ReflectionFunc->getParameters());
+        }
+        return \SCache::get($key);
     }
 
     /**
@@ -233,11 +238,9 @@ class CacheKey
      * @param $cacheKey
      * @return bool
      */
-    public static function haveCache($cacheKey){
-        if(\SCache::has($cacheKey)) {
-                return true;
-        }
-        return false;
+    public static function haveCache($cacheKey)
+    {
+        return \SCache::has($cacheKey);
     }
 
     /**
@@ -247,10 +250,11 @@ class CacheKey
      * @param $allCacheKey
      * @param int $cacheMinutes
      */
-    public static function customMakeCache($data, $allCacheKey, $cacheMinutes=120){
-       foreach($data as $k => $v){
-           Cache::put($allCacheKey[$k], $v, $cacheMinutes);
-       }
+    public static function customMakeCache($data, $allCacheKey, $cacheMinutes = 120)
+    {
+        foreach ($data as $k => $v) {
+            \SCache::put($allCacheKey[$k], $v, $cacheMinutes);
+        }
     }
 
     /**
@@ -260,9 +264,11 @@ class CacheKey
      * @return mixed
      *
      */
-    public static function getAllCache($allCacheKey){
-        foreach($allCacheKey as $k=>$v){
-            $result[$k] = Cache::get($v);
+    public static function getAllCache($allCacheKey)
+    {
+        $result = array();
+        foreach ($allCacheKey as $k => $v) {
+            $result[$k] = \SCache::get($v);
         }
         return $result;
     }
@@ -270,8 +276,8 @@ class CacheKey
     /**
      * 获取custom所有参数及方法    最后修改方法名列如(index方法传递给api时需要修改为 lists)
      *
-     * @param $method   方法
-     * @param $arguments  ＿＿call所有参数
+     * @param string $method   方法
+     * @param array $arguments  ＿＿call所有参数
      * @return mixed
      * @throws \Exception
      */
@@ -288,13 +294,9 @@ class CacheKey
             $position = $parameter->getPosition();
             $res['param'][$parameter->name] = isset($arguments[$position]) ? $arguments[$position] : $parameter->getDefaultValue();
         }
-        $res['method'] = $method;
-        //特殊方法特殊处理
-        if($res['method'] == 'superTopic'){
-            $res['modelAlias'] = 'topic';
-        }
         return $res;
     }
+
     /**
      * 返回模型类
      *
@@ -303,59 +305,53 @@ class CacheKey
      */
     private static function getModel($modelAlias)
     {
-        $models = Config::get('models');
-        if (array_key_exists($modelAlias, $models)) {
-            $model = $models[$modelAlias];
-        } else {
-            $model = $models['content'];
-        }
-
-        return $model;
+        $models = \SConfig::get('models');
+        return array_key_exists($modelAlias, $models) ? $models[$modelAlias] : $models['content'];
     }
 
     /**
      * 判断复合查询且重组结果（复合查询结果是有多个list的数组['1'=>['list'=>[]],['2'=>['list'=>[]]]]，returnWithPage方法只会返回$data['list'].）
      *
-     * @param $params   请求api的参数
-     * @param $data     api返回的结果
+     * @param array $params 请求api的参数
+     * @param array $data api返回的结果
      * @return mixed
      */
     public static function isComposite($params, $data)
     {
-        $composite = 0;
-        if(isset($params['arguments'])){
+        if (isset($params['arguments'])) {
             return $data['data'];
         }
-        foreach($params as $v){
-            if(is_array($v) && count($v)>1){
-                $composite=1;
+        $composite = 0;
+        foreach ($params as $v) {
+            if (is_array($v) && count($v) > 1) {
+                $composite = 1;
                 break;
             }
         }
-        if($composite==1) {
+        if ($composite == 1) {
             foreach ($data['data'] as $k => $v) {
                 $data['data'][$k] = $v['list'];
             }
         }
-          return $data['data'];
+        return $data['data'];
     }
 
     /**
-     * content模型 且 不是info方法的 執行 addListInfo   1指需要执行addlist方法   3代表自定义方法需要循环后走adddlist方法  2不需要走addlist方法
+     * content模型且不是info方法的 執行 addListInfo
      *
-     * @param $key    单次请求的所有数据  $this->arguments['key']   array
-     * @return bool
+     * @param array $key 单次请求的所有数据
+     * @return int 1指需要执行addlist方法 2不需要走addlist方法 3代表自定义方法需要循环后走adddlist方法
      */
     public static function getModelMethod($key)
     {
-        if(self::getModel($key[1])=='SuperView\Models\ContentModel' && $key[2]!='info' && $key[2]!='count'){
+        if (self::getModel($key[1]) == 'SuperView\Models\ContentModel' && $key[2] != 'info' && $key[2] != 'count') {
             return 1;
         }
-        if($key[2] == 'specials'){
+        if ($key[2] == 'specials') {
             return 3;
         }
         //由superTopic方法转换 需要走addlistinfo
-        if($key[2] == 'superTopic'){
+        if ($key[2] == 'superTopic') {
             return 1;
         }
         return 2;
@@ -364,11 +360,11 @@ class CacheKey
     /**
      * getOnly方法的特殊缓存key生成
      *
-     * @param $params  拼接的请求参数
+     * @param array $params 拼接的请求参数
      * @return string
      */
     public static function getOnlyCacheKey($params)
     {
-            return ':getOnly::'.md5(json_encode($params));
+        return ':getOnly::' . md5(json_encode($params));
     }
 }
