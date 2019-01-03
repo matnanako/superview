@@ -33,7 +33,11 @@ class CustomModel extends BaseModel
      */
     public function getOnly($limit = 15)
     {
-        $data = \SCache::remember(CacheKey::getOnlyCacheKey($this->allArgument), 120, function () use ($limit) {
+        $onlyKey = CacheKey::getOnlyCacheKey($this->allArgument);
+        if (!empty(\SConfig::get('refresh_cache'))) {
+            \SCache::clearCache($onlyKey);
+        }
+        $data = \SCache::remember($onlyKey, \SCache::getCacheTime(), function () use ($limit) {
             $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
             $data = $this->addListInfo($data);
             return $data;
@@ -64,9 +68,9 @@ class CustomModel extends BaseModel
                     }
                 }
                 $data[$key] = $this->returnWithPage($data[$key], $limit);
-            };
+            }
             //生成缓存
-            CacheKey::customMakeCache($data, $this->allCacheKey);
+            CacheKey::customMakeCache($data, $this->allCacheKey, \SCache::getCacheTime());
         }
         //读取缓存
         $data = CacheKey::getAllCache($this->allCacheKey);
@@ -106,10 +110,9 @@ class CustomModel extends BaseModel
     {
         $cacheKey = CacheKey::custom($modelAlias, $method, $param);
         $this->allCacheKey[$key] = $cacheKey;
-        if (CacheKey::haveCache($cacheKey)) {
+        if (empty(\SConfig::get('refresh_cache')) && CacheKey::haveCache($cacheKey)) {
             unset($this->arguments[$key]);
         }
-
         return $this;
     }
 

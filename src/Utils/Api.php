@@ -47,9 +47,9 @@ class Api
         return json_decode($data, true);
     }
 
-    private function getData($params, $cache = true)
+    private function getData($params)
     {
-        $params['cache'] = 1;
+        $params['cache'] = empty(\SConfig::get('refresh_cache')) ? 1 : 0;
         $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();

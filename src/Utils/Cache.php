@@ -2,7 +2,6 @@
 
 namespace SuperView\Utils;
 
-use Closure;
 use Illuminate\Support\Facades\Cache as CacheFacade;
 
 class Cache extends CacheFacade
@@ -14,7 +13,8 @@ class Cache extends CacheFacade
 
     /**
      * 调用laravel Cache方法.
-     *
+     * @param $method
+     * @param  $params
      * @return object
      */
     public static function __callStatic($method, $params)
@@ -29,8 +29,7 @@ class Cache extends CacheFacade
 
     /**
      * clear cache.
-     *
-     * @return object
+     * @param string $key
      */
     public static function clearCache($key)
     {
@@ -61,9 +60,8 @@ class Cache extends CacheFacade
     /**
      * Set cache time.
      *
-     * @param  string  $minutes
-     * @param  array  $keepCacheTime 是否保持设置
-     * @return object
+     * @param  string $cacheMinutes
+     * @param  array $keepCacheTime 是否保持设置
      */
     public static function setCacheTime($cacheMinutes, $keepCacheTime)
     {
@@ -74,7 +72,10 @@ class Cache extends CacheFacade
 
     /**
      * 判断缓存时间并相应生成缓存KEY.
-     *
+     * @param $model
+     * @param $method
+     * @param $params
+     * @param $cacheMinutes
      * @return object
      */
     public static function getCachekey($model, $method, $params, $cacheMinutes)
@@ -82,13 +83,14 @@ class Cache extends CacheFacade
         if (empty($cacheMinutes)) {
             $cache_key = false;
         } else {
-            $cache_key = $model->makeCacheKey($method ,$params ,$model);
+            $cache_key = $model->makeCacheKey($method, $params, $model);
         }
         return $cache_key;
     }
 
 
-    public static function has($key){
+    public static function has($key)
+    {
         return parent::has($key);
     }
 
