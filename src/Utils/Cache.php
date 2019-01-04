@@ -34,7 +34,7 @@ class Cache extends CacheFacade
     public static function clearCache($key)
     {
         // 如果参数设置了刷新缓存配置则清除缓存
-        if (!empty(\SConfig::get('refresh_cache'))) {
+        if (!empty(\SConfig::get('refresh_cache')) && $key != ':TotalCategory') {
             parent::forget($key);
         }
     }
