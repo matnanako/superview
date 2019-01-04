@@ -12,8 +12,6 @@ class BaseModel
 
     protected $virtualModel;
 
-    protected $isVirtualModels;
-
     protected $pageOptions;
 
     protected static $instances;
@@ -25,13 +23,12 @@ class BaseModel
         $this->dal = Dal::getInstance();
     }
 
-    public static function getInstance($virtualModel = '',$default = 0)
+    public static function getInstance($virtualModel = '')
     {
         // 每一个$virtualModel对应一个独立的实例
         if (empty(static::$instances[$virtualModel])) {
             static::$instances[$virtualModel] = new static();
             static::$instances[$virtualModel]->setVirtualModel($virtualModel);
-            static::$instances[$virtualModel]->setIsVirtualModels($default);
         }
 
         return static::$instances[$virtualModel];
@@ -40,11 +37,6 @@ class BaseModel
     protected function setVirtualModel($virtualModel)
     {
         $this->virtualModel = $virtualModel;
-    }
-
-    protected function setIsVirtualModels($default)
-    {
-        $this->isVirtualModels = $default;
     }
     /**
      * 设置分页属性.
@@ -122,7 +114,7 @@ class BaseModel
             return ':TotalCategory';
             //return md5(\SConfig::get('api_base_url') . get_class($this). ':' . $method  . ':' . $this->virtualModel . ':' . http_build_query($this->pageOptions?:[]) . ':' . http_build_query($params));
         }
-       return CacheKey::makeCachekey($method, $params, $model, $this->virtualModel, $this->isVirtualModels);
+       return CacheKey::makeCachekey($method, $params, $model, $this->virtualModel);
     }
 
     /**
