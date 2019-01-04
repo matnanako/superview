@@ -128,7 +128,7 @@ class CacheKey
     public static function assemble($result, $params){
         //将没有缓存的数据组合！new_arr区分是否有未缓存的数据。params为默认传递过来去除已有缓存和不需要缓存的的新值，用于统一传递api请求
         foreach($result['detail'] as $key=>$cacheKey){
-            if(!\SCache::has($cacheKey['cacheKey'])){
+            if(!\SCache::has($cacheKey['cacheKey']) || \SConfig::get('refresh_cache') == 1){
                 if(isset($result['long'])){
                     $new_arr[]=reset($cacheKey[$result['long']]);
                     $result['noCacheArr'][reset($cacheKey[$result['long']])]=$cacheKey['cacheKey'];
