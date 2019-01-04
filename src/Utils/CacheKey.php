@@ -17,7 +17,7 @@ class CacheKey
      * @param $isVirtualModel    是否多个model，定制化参数  M->get('soft',ture)->top()
      * @return array
      */
-    public static function makeCachekey($method, $params, $model, $virtualModel ,$isVirtualModel = false)
+    public static function makeCachekey($method, $params, $model, $virtualModel, $isVirtualModel = false)
     {
         $pivot = ':' . self::confirm_type($virtualModel);
         $pattern = $virtualModel;
@@ -28,7 +28,7 @@ class CacheKey
             $depend[$value->getName()] = isset($params[$value->getPosition()]) ? is_array($params[$value->getPosition()]) ? reset($params[$value->getPosition()]) : $params[$value->getPosition()] : $value->getDefaultValue();
         }
         //确保cachekey参数中的第一个为classid
-        if(isset($depend)) {
+        if (isset($depend)) {
             foreach ($depend as $k => $v) {
                 if ($k == 'classid') {
                     if ($isVirtualModel == true) {
@@ -38,14 +38,14 @@ class CacheKey
                     $key = $pivot . '::' . $pattern . '::' . $action . '::' . $v;
                 }
             }
-        }else{
-            $depend=[];
+        } else {
+            $depend = [];
         }
         isset($key) ? $key : $key = $pivot . '::' . $pattern . '::' . $action;
         //参数除classid部分，过滤不需要存进缓存的参数，其他参数一一排序组成cachekey
-        $key.=  self::filterStr($depend);
+        $key .= self::filterStr($depend);
         $reult['depend'] = $depend;
-        $reult['key']  = $key;
+        $reult['key'] = $key;
         return $reult;
     }
 
@@ -55,12 +55,13 @@ class CacheKey
      * @param $depend
      * @return mixed
      */
-    public static function filterStr($depend){
-        $key='';
-        foreach($depend as $k=>$v){
-            if(!in_array($k,['limit','isPic','classid'])){
-                if($v) {
-                     $key.='::' .(is_array($v)?reset($v):$v);
+    public static function filterStr($depend)
+    {
+        $key = '';
+        foreach ($depend as $k => $v) {
+            if (!in_array($k, ['limit', 'isPic', 'classid'])) {
+                if ($v) {
+                    $key .= '::' . (is_array($v) ? reset($v) : $v);
                 }
             }
         }
@@ -73,15 +74,17 @@ class CacheKey
      * @param $virtualModel
      * @return string
      */
-    public  static function confirm_type($virtualModel){
+    public static function confirm_type($virtualModel)
+    {
         $all_types = \Sconfig::get('type');
-        foreach($all_types as $k =>$v){
-            if(in_array($virtualModel,$v)){
+        foreach ($all_types as $k => $v) {
+            if (in_array($virtualModel, $v)) {
                 return $k;
             }
         }
         return 'Other';
     }
+
     /**
      * 反射获取参数
      *
@@ -89,7 +92,8 @@ class CacheKey
      * @param $method
      * @return \ReflectionParameter[]
      */
-    public static  function reflex($model, $method){
+    public static function reflex($model, $method)
+    {
         $ReflectionFunc = new \ReflectionMethod($model, $method);
         return $ReflectionFunc->getParameters();
     }
@@ -103,49 +107,52 @@ class CacheKey
      * @param $cacheMinutes
      * @return mixed
      */
-    public static function insertCahce($params, $model, $method, $cacheMinutes){
-        foreach($params as $k=>$v){
-            if(is_array($v) && count($v)>1){
-                $result['long']=$k;
-                foreach($v as $ke=>$ve){
-                    $result['detail'][$ke]=$params;
-                    $result['detail'][$ke][$k]=[$ve];
+    public static function insertCahce($params, $model, $method, $cacheMinutes)
+    {
+        foreach ($params as $k => $v) {
+            if (is_array($v) && count($v) > 1) {
+                $result['long'] = $k;
+                foreach ($v as $ke => $ve) {
+                    $result['detail'][$ke] = $params;
+                    $result['detail'][$ke][$k] = [$ve];
                     $result['detail'][$ke]['cacheKey'] = \SCache::getCacheKey($model, $method, $result['detail'][$ke], $cacheMinutes);
-                    $result['detail'][$ke]['depend']  = $result['detail'][$ke]['cacheKey']['depend'];
-                    $result['detail'][$ke]['cacheKey'] =$result['detail'][$ke]['cacheKey']['key'];
+                    $result['detail'][$ke]['depend'] = $result['detail'][$ke]['cacheKey']['depend'];
+                    $result['detail'][$ke]['cacheKey'] = $result['detail'][$ke]['cacheKey']['key'];
 
                 }
             }
         }
-        if(!isset($result['long'])){
-            $result['detail'][0]=$params;
+        if (!isset($result['long'])) {
+            $result['detail'][0] = $params;
             $result['detail'][0]['cacheKey'] = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
             $result['detail'][0]['depend'] = $result['detail'][0]['cacheKey']['depend'];
             $result['detail'][0]['cacheKey'] = $result['detail'][0]['cacheKey']['key'];
         }//dd($result);
         return self::assemble($result, $params);
     }
-    public static function assemble($result, $params){
+
+    public static function assemble($result, $params)
+    {
         //将没有缓存的数据组合！new_arr区分是否有未缓存的数据。params为默认传递过来去除已有缓存和不需要缓存的的新值，用于统一传递api请求
-        foreach($result['detail'] as $key=>$cacheKey){
-            if(!\SCache::has($cacheKey['cacheKey']) || \SConfig::get('refresh_cache') == 1){
-                if(isset($result['long'])){
-                    $new_arr[]=reset($cacheKey[$result['long']]);
-                    $result['noCacheArr'][reset($cacheKey[$result['long']])]=$cacheKey['cacheKey'];
-                }else{
-                    $new_arr[]=$params;
+        foreach ($result['detail'] as $key => $cacheKey) {
+            if (!\SCache::has($cacheKey['cacheKey']) || \SConfig::get('refresh_cache') == 1) {
+                if (isset($result['long'])) {
+                    $new_arr[] = reset($cacheKey[$result['long']]);
+                    $result['noCacheArr'][reset($cacheKey[$result['long']])] = $cacheKey['cacheKey'];
+                } else {
+                    $new_arr[] = $params;
                 }
             }
 
         }
         //是数组且存在没有缓存的情况
-        if(isset($result['long']) && isset($new_arr)) {
+        if (isset($result['long']) && isset($new_arr)) {
             $params[$result['long']] = $new_arr;
         }
-        if(isset($new_arr)) {
+        if (isset($new_arr)) {
             $result['new_arr'] = $new_arr;
         }
-        $result['params']=$params;
+        $result['params'] = $params;
         return $result;
     }
 
@@ -156,18 +163,19 @@ class CacheKey
      * @param $res
      * @param $cacheMinutes
      */
-    public static function makeCache($result, $res ,$cacheMinutes){
-        if(isset($res['new_arr'])){
-            if(isset($res['long']) && count($res['noCacheArr'])>1){
-                foreach($result as $k => $v){
+    public static function makeCache($result, $res, $cacheMinutes)
+    {
+        if (isset($res['new_arr'])) {
+            if (isset($res['long']) && count($res['noCacheArr']) > 1) {
+                foreach ($result as $k => $v) {
                     Cache::put($res['noCacheArr'][$k], $v, $cacheMinutes);
                 }
-            }elseif(isset($res['long']) && count($res['noCacheArr'])==1){
+            } elseif (isset($res['long']) && count($res['noCacheArr']) == 1) {
                 //防止数组中仅存在一个没有缓存的时候，此时请求接口传递的为单个数组如[1] ，此时接口返回的结果不包含cid为下标的返回
                 Cache::put(current($res['noCacheArr']), $result, $cacheMinutes);
-            }else{
+            } else {
                 //针对未修改的方法（如superTopic）直接返回的list的值 故加判断。
-                 Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
+                Cache::put(current($res['detail'])['cacheKey'], $result, $cacheMinutes);
             }
         }
     }
@@ -178,31 +186,34 @@ class CacheKey
      * @param $arr
      * @return mixed
      */
-    public static function getCache($arr){
-        if(count($arr['detail'])==1){
-           $limit=self::getLimit($arr['detail'][0]['depend']);
-            if(is_array(Cache::get($arr['detail'][0]['cacheKey']))){
-                 $data = array_slice(Cache::get($arr['detail'][0]['cacheKey']), 0, $limit);
-            }else{
+    public static function getCache($arr)
+    {
+        if (count($arr['detail']) == 1) {
+            $limit = self::getLimit($arr['detail'][0]['depend']);
+            if (is_array(Cache::get($arr['detail'][0]['cacheKey']))) {
+                $data = array_slice(Cache::get($arr['detail'][0]['cacheKey']), 0, $limit);
+            } else {
                 $data = Cache::get($arr['detail'][0]['cacheKey']);
             }
-        }else {
+        } else {
             foreach ($arr['detail'] as $k => $v) {
                 $classid = is_array($arr['detail'][$k][$arr['long']]) ? $arr['detail'][$k][$arr['long']][0] : $arr['detail'][$k][$arr['long']];
-                $limit=self::getLimit($v['depend']);
-                if(is_array(Cache::get($v['cacheKey']))){
-                     $data[$classid] = array_slice(Cache::get($v['cacheKey']), 0, $limit);
-                 }else{
+                $limit = self::getLimit($v['depend']);
+                if (is_array(Cache::get($v['cacheKey']))) {
+                    $data[$classid] = array_slice(Cache::get($v['cacheKey']), 0, $limit);
+                } else {
                     $data[$classid] = Cache::get($v['cacheKey']);
                 }
             }
         }
         return $data;
     }
-    public static  function getLimit($depend){
-        foreach($depend as $k => $v){
-            if($k =='limit'){
-                return $v==0?100:$v;
+
+    public static function getLimit($depend)
+    {
+        foreach ($depend as $k => $v) {
+            if ($k == 'limit') {
+                return $v == 0 ? 100 : $v;
             }
         }
         return 100;
@@ -219,10 +230,10 @@ class CacheKey
     public static function custom($modelAlias, $method, $param)
     {
         return ':' . self::confirm_type($modelAlias)
-            . '::' . $modelAlias . '::'
-            . $method
-            . (isset($param['classid']) ? '::' . $param['classid'] : '')
-            . self::filterStr($param);
+        . '::' . $modelAlias . '::'
+        . $method
+        . (isset($param['classid']) ? '::' . $param['classid'] : '')
+        . self::filterStr($param);
     }
 
     /**
