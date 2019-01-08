@@ -94,10 +94,11 @@ class Topic extends Base
      * @param $softlimit
      * @return array|bool
      */
-    public function getSpecials($id,$baikelimit,$softlimit)
+    public function getSpecials($id, $model, $baikelimit, $softlimit)
     {
         $params = [
             'id'    => $id,
+            'model' => $model,
             'baikelimit' => $baikelimit,
             'softlimit' => $softlimit,
         ];

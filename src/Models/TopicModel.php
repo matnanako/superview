@@ -60,13 +60,14 @@ class TopicModel extends BaseModel
      * 详情页定制接口
      *
      * @param $id
+     * @param string $model
      * @param int $baikelimit
      * @param int $softlimit
      * @return mixed
      */
-    public function specials($id, $baikelimit = 5, $softlimit = 8)
+    public function specials($id, $model = 'soft',$baikelimit = 5, $softlimit = 8)
     {
-        $data = $this->dal['topic']->getSpecials($id, $baikelimit, $softlimit);
+        $data = $this->dal['topic']->getSpecials($id, $model, $baikelimit, $softlimit);
         foreach ($data AS $key => $datum){
             $data[$key] = $this->addListInfo($datum);
         }
