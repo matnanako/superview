@@ -272,7 +272,7 @@ class CacheKey
             return 3;
         }
         //由superTopic方法转换 需要走addlistinfo
-        if ($key[2] == 'superTopic') {
+        if ($key[2] == 'superTopic' || $key[2] == 'taginfo') {
             return 1;
         }
         return 2;
