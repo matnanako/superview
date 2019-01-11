@@ -18,6 +18,8 @@ class BaseModel
 
     protected  static $fitter;
 
+    protected  $actionPage = false;
+
     private function __construct()
     {
         $this->dal = Dal::getInstance();
@@ -63,6 +65,24 @@ class BaseModel
     }
 
     /**
+     * 设置是否使用page方法
+     *
+     */
+    public function setActionPage()
+    {
+        $this->actionPage = true;
+    }
+
+    /**
+     * 获取是否设置page方法
+     *
+     * @return bool
+     */
+    public function getActionPage()
+    {
+       return $this->actionPage;
+    }
+    /**
      * 重置当前Model的属性(目前包含分页属性). &&   列表过滤查询字段（basis，advance）
      *
      * @return void
@@ -70,7 +90,8 @@ class BaseModel
     public function reset()
     {
         $this->pageOptions = null;
-        self::$fitter='info';
+        self::$fitter = 'info';
+        $this->actionPage = false;
     }
 
     /**

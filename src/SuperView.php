@@ -107,7 +107,7 @@ class SuperView
     public function page($route = null, $currentPage = 1, $simple = false, $options = [])
     {
         $this->model->setPageOptions(['route' => $route, 'currentPage' => $currentPage, 'simple' => $simple, 'options' => $options]);
-
+        $this->model->setActionPage();
         return $this;
     }
 
@@ -145,7 +145,7 @@ class SuperView
             return [];
         }
         //分类相关与分页直接返回  复合查询不往下继续执行。
-        if (($model instanceof CategoryModel) || $this->model->isPage() || ($model instanceof CustomModel)) {
+        if (($model instanceof CategoryModel) || $this->model->getActionPage() || ($model instanceof CustomModel)) {
             $data = $model->$method(...$params);
             //自定义方法独自初始化
             if (!($model instanceof CustomModel)) {
