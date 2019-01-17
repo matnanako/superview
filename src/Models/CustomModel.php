@@ -44,7 +44,7 @@ class CustomModel extends BaseModel
         });
         //初始化
         $this->initialize();
-        return $data['list'];
+        return isset($data['list'])?$data['list']:$data;
     }
 
     /**
