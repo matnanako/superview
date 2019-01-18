@@ -33,15 +33,15 @@ class CustomModel extends BaseModel
      */
     public function getOnly($limit = 15)
     {
-        $onlyKey = CacheKey::getOnlyCacheKey($this->allArgument);
-        if (!empty(\SConfig::get('refresh_cache'))) {
-            \SCache::clearCache($onlyKey);
-        }
-        $data = \SCache::remember($onlyKey, \SCache::getCacheTime(), function () use ($limit) {
+//        $onlyKey = CacheKey::getOnlyCacheKey($this->allArgument);
+//        if (!empty(\SConfig::get('refresh_cache'))) {
+//            \SCache::clearCache($onlyKey);
+//        }
+//        $data = \SCache::remember($onlyKey, \SCache::getCacheTime(), function () use ($limit) {
             $data = $this->dal['custom']->getList('getOnly', ['arguments' => $this->allArgument, 'limit' => $limit]);
             $data = $this->addListInfo($data);
-            return $data;
-        });
+//            return $data;
+//        });
         //初始化
         $this->initialize();
         return isset($data['list'])?$data['list']:$data;
