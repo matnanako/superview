@@ -90,5 +90,20 @@ class TopicModel extends BaseModel
         return $this->returnWithPage($data, $limit);
     }
 
+    /**
+     * 天极定制接口
+     *
+     * @param $id
+     * @param int $limit
+     * @param int $baikelimit
+     * @return mixed
+     */
+    public function topics($id, $limit = 5, $baikelimit = 30){
+        $data = $this->dal['topic']->getTopics($id, $limit, $baikelimit);
+        foreach ($data AS $key => $datum){
+            $data[$key] = $this->addListInfo($datum);
+        }
+        return $data;
+    }
 
 }

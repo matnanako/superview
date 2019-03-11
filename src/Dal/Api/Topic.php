@@ -104,4 +104,23 @@ class Topic extends Base
         ];
         return $this->getData('specials', $params);
     }
+
+    /**
+     * 天极定制接口
+     *
+     * @param $id
+     * @param $limit
+     * @param $baikelimit
+     * @return array|bool|mixed
+     */
+    public function getTopics($id, $limit, $baikelimit)
+    {
+        $params = [
+            'id'  => intval($id),
+            'baikelimit' => $baikelimit,
+            'limit' => intval($limit),
+        ];
+        return $this->getData('topics', $params);
+
+    }
 }

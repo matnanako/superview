@@ -268,7 +268,7 @@ class CacheKey
         if (self::getModel($key[1]) == 'SuperView\Models\ContentModel' && $key[2] != 'info' && $key[2] != 'count') {
             return 1;
         }
-        if ($key[2] == 'specials') {
+        if (in_array($key[2],['specials', 'topics'])) {
             return 3;
         }
         //由superTopic方法转换 需要走addlistinfo
