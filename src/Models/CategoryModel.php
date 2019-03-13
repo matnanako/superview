@@ -253,7 +253,7 @@ class CategoryModel extends BaseModel
 
         if (empty($channels)) {
             // Store the cache forever.
-            $cache_key = parent::makeCacheKey(__METHOD__);
+            $cache_key = 'categoryFirst';
             $channels = \SCache::sear($cache_key, function () {
                 $categories = $this->all();
                 $channels = [];
