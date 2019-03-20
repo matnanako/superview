@@ -161,7 +161,7 @@ class CacheKey
     {
         $result = array();
         foreach ($allCacheKey as $k => $v) {
-            $result[$k] = \SCache::get($v);
+            $result[$k] = \SCache::get($v) ?: [];
         }
         return $result;
     }
