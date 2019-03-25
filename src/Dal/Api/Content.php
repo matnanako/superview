@@ -349,4 +349,28 @@ class Content extends Base
         ];
         return $this->getData('infoRelated', $params);
     }
+
+    /**
+     * 根据Tag词查询title定制方法
+     *
+     * @param $str
+     * @param int $classid
+     * @param int $limit
+     * @param int $isPic
+     * @param string $order
+     * @return mixed
+     */
+    public function getRelatedSearch($str, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        $params = [
+            'str'     => $str,
+            'classid' => $classid,
+            'limit' => $limit,
+            'ispic'   => intval($isPic),
+            'order'   => $order,
+
+        ];
+        return $this->relatedSearch('infoRelated', $params);
+
+    }
 }

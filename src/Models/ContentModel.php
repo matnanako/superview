@@ -307,4 +307,23 @@ class ContentModel extends BaseModel
         $data = $this->dal()->getInfoRelated($id, $channel, $classid, $limit);
         return $data;
     }
+
+    /**
+     * 根据Tag词查询title定制方法
+     *
+     * @param $channel
+     * @param $str
+     * @param int $classid
+     * @param int $limit
+     * @param int $isPic
+     * @param string $order
+     */
+    public function relatedSearch($str, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        $data = $this->dal['topic']->getRelatedSearch($str, $classid, $limit, $isPic, $order);
+        foreach ($data AS $key => $datum){
+            $data[$key] = $this->addListInfo($data);
+        }
+        return $data;
+    }
 }
