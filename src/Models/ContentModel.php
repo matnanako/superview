@@ -321,9 +321,7 @@ class ContentModel extends BaseModel
     public function relatedSearch($str, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
         $data = $this->dal()->getRelatedSearch($str, $classid, $limit, $isPic, $order);
-        foreach ($data AS $key => $datum){
-            $data[$key] = $this->addListInfo($data);
-        }
+        $data = $this->addListInfo($data);
         return $data;
     }
 
