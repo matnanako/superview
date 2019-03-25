@@ -360,7 +360,7 @@ class Content extends Base
      * @param string $order
      * @return mixed
      */
-    public function getRelatedSearch($str, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    public function getRelatedSearch($str, $classid, $limit, $isPic, $order)
     {
         $params = [
             'str'     => $str,
@@ -370,7 +370,33 @@ class Content extends Base
             'order'   => $order,
 
         ];
-        return $this->relatedSearch('infoRelated', $params);
+        return $this->getData('relatedSearch', $params);
 
+    }
+
+    /**
+     * 根据字段搜索
+     *
+     * @param $field
+     * @param $value
+     * @param $classid
+     * @param $page
+     * @param $limit
+     * @param $ispic
+     * @param $order
+     * @return array|bool|mixed
+     */
+    public function getExactMatch($field,$value, $classid, $page, $limit, $ispic, $order)
+    {
+        $params = [
+            'value'   => $value,
+            'field'   => $field,
+            'classid' => ($classid),
+            'page'    => intval($page),
+            'limit'   => intval($limit),
+            'ispic'   => intval($ispic),
+            'order'   => $order,
+        ];
+        return $this->getData('exactMatch', $params);
     }
 }

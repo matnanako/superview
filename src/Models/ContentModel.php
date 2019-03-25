@@ -320,10 +320,30 @@ class ContentModel extends BaseModel
      */
     public function relatedSearch($str, $classid = 0, $limit = 0, $isPic = 0, $order = 'newstime')
     {
-        $data = $this->dal['topic']->getRelatedSearch($str, $classid, $limit, $isPic, $order);
+        $data = $this->dal()->getRelatedSearch($str, $classid, $limit, $isPic, $order);
         foreach ($data AS $key => $datum){
             $data[$key] = $this->addListInfo($data);
         }
         return $data;
+    }
+
+    /**
+     * 根据字段搜索
+     *
+     * @param $field
+     * @param $value
+     * @param int $classid
+     * @param int $limit
+     * @param int $ispic
+     * @param string $order
+     * @return array
+     */
+    public function exactMatch($field, $value, $classid = 0, $limit = 0, $ispic =0, $order = 'newstime')
+    {
+
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getExactMatch($field,$value, $classid, $page, $limit, $ispic, $order);
+        $data = $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
     }
 }
