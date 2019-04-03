@@ -344,4 +344,25 @@ class ContentModel extends BaseModel
         $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
+
+    /**
+     * 定制版 信息相关列表
+     *
+     * @param $model             $id对应的模型
+     * @param int $id
+     * @param int $limit
+     * @param int $isPic
+     * @param string $order
+     * @return array|bool
+     */
+    public function relatedModel($model, $id = 0, $limit = 0, $isPic = 0, $order = 'newstime')
+    {
+        if (empty($id)) {
+            return false;
+        }
+        $page = $this->getCurrentPage();
+        $data = $this->dal()->getRelatedModel($model, $id, $page, $limit, $isPic, $order);
+        $data = $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
+    }
 }

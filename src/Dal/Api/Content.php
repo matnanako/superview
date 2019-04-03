@@ -399,4 +399,31 @@ class Content extends Base
         ];
         return $this->getData('exactMatch', $params);
     }
+
+    /**
+     * 定制版 信息相关列表
+     *
+     * @param $model
+     * @param $id
+     * @param $page
+     * @param $limit
+     * @param $isPic
+     * @param $order
+     * @return array|bool|mixed
+     */
+    public function getRelatedModel($model, $id, $page, $limit, $isPic, $order)
+    {
+        if (!$this->isValidOrder($order)) {
+            return false;
+        }
+        $params = [
+            'model' => $model,
+            'id'    => ($id),
+            'page'  => intval($page),
+            'limit' => intval($limit),
+            'ispic' => intval($isPic),
+            'order' => $order,
+        ];
+        return $this->getData('relatedModel', $params);
+    }
 }
