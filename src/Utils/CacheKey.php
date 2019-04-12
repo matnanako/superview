@@ -104,7 +104,7 @@ class CacheKey
      */
     public static function insertCahce($params, $model, $method, $cacheMinutes)
     {
-        $cacheKeyInfo = \SCache::getCacheKey($model, $method, $params, $cacheMinutes);
+        $cacheKeyInfo = \SCache::getCachekey($model, $method, $params, $cacheMinutes);
         return $cacheKeyInfo['key'];
     }
 
