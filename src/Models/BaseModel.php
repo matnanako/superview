@@ -20,6 +20,8 @@ class BaseModel
 
     protected  $actionPage = false;
 
+    public static $additional = false;
+
     private function __construct()
     {
         $this->dal = Dal::getInstance();
@@ -34,6 +36,11 @@ class BaseModel
         }
 
         return static::$instances[$virtualModel];
+    }
+
+    public function setAdditional($arr)
+    {
+        static::$additional = $arr;
     }
 
     protected function setVirtualModel($virtualModel)
@@ -92,6 +99,7 @@ class BaseModel
         $this->pageOptions = null;
         self::$fitter = 'info';
         $this->actionPage = false;
+        static::$additional = false;
     }
 
     /**

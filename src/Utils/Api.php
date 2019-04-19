@@ -3,6 +3,7 @@
 namespace SuperView\Utils;
 
 use GuzzleHttp\Client as HttpClient;
+use SuperView\Models\BaseModel;
 
 class Api
 {
@@ -50,6 +51,9 @@ class Api
     private function getData($params)
     {
         $params['cache'] = empty(\SConfig::get('refresh_cache')) ? 1 : 0;
+        if(BaseModel::$additional){
+           $params = array_merge($params,BaseModel::$additional);
+        }
         $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();

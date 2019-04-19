@@ -122,6 +122,17 @@ class SuperView
         return $this;
     }
 
+    /**
+     * Set additional info.
+     *
+     */
+    public function additional($arr = [])
+    {
+        $this->model->setAdditional($arr);
+
+        return $this;
+    }
+
     public function setInfoUrl($arr)
     {
         $categoryModel = CategoryModel::getInstance('category');
