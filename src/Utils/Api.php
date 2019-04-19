@@ -42,6 +42,9 @@ class Api
         $params = array_filter($params, function ($value) {
             return !empty($value);
         });
+        if(BaseModel::$additional){
+             $params = array_merge($params,BaseModel::$additional);
+        }
         // 生成get查询
 //        $params = ['query'=>$params];
         $data = $this->getData($params);
@@ -51,9 +54,6 @@ class Api
     private function getData($params)
     {
         $params['cache'] = empty(\SConfig::get('refresh_cache')) ? 1 : 0;
-        if(BaseModel::$additional){
-           $params = array_merge($params,BaseModel::$additional);
-        }
         $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();
