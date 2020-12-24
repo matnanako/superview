@@ -106,4 +106,21 @@ class TopicModel extends BaseModel
         return $data;
     }
 
+    /**
+     * 专题自定义查询
+     *
+     * @param $field
+     * @param $value
+     * @param int $classid
+     * @param int $limit
+     * @param string $order
+     * @return array|string
+     */
+    public function match($field, $value, $classid = 0, $limit = 0, $order = 'addtime')
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal['topic']->getMatch($field,$value, $classid, $limit, $order, $page);
+        $data = $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
+    }
 }

@@ -123,4 +123,28 @@ class Topic extends Base
         return $this->getData('topics', $params);
 
     }
+
+    /**
+     * 专题自定义查询 专题自定义查询
+     *
+     * @param $field
+     * @param $value
+     * @param $classid
+     * @param $limit
+     * @param $order
+     * @param $page
+     * @return array|bool|mixed
+     */
+    public function getMatch($field, $value, $classid, $limit, $order, $page)
+    {
+        $params = [
+            'field'  => $field,
+            'value' => $value,
+            'classid' => intval($classid),
+            'limit' => intval($limit),
+            'order' => $order,
+            'page' => $page,
+        ];
+        return $this->getData('match', $params);
+    }
 }
