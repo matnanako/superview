@@ -54,6 +54,8 @@ class Api
     private function getData($params)
     {
         $params['cache'] = empty(\SConfig::get('refresh_cache')) ? 1 : 0;
+        $params['table_suffix'] = \SConfig::get('table_suffix') ?: '';
+
         $response = $this->http->post('', ['form_params' =>$params]);
         $body = $response->getBody();
         $data = $body->getContents();
