@@ -11,6 +11,9 @@ return [
     // Api service host.
     'api_base_url' => 'http://xzwh.api.zz314.com/downza',
 
+    //数据库后缀
+    'table_suffix' => '',
+
     // Models alias map to class.
     'models' => [
         'content' => SuperView\Models\ContentModel::class,
