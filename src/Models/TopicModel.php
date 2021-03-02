@@ -123,4 +123,56 @@ class TopicModel extends BaseModel
         $data = $this->addListInfo($data);
         return $this->returnWithPage($data, $limit);
     }
+
+    /**
+     * 获取游戏攻略标签
+     *
+     * @param $ztid
+     * @param $id
+     * @param $classid
+     * @return mixed
+     */
+    public function label($ztid, $id, $classid = 0, $limit = 0)
+    {
+        return  $this->dal['topic']->getLabel($ztid, $id, $classid, $limit);
+    }
+
+    /**
+     * 热门标签
+     *
+     * @param $ztid
+     * @param int $limit
+     * @return mixed
+     */
+    public function hotLabel($ztid, $limit = 0)
+    {
+        return $this->dal['topic']->getHotLabel($ztid, $limit);
+    }
+
+    /**
+     * 专题标签下关联软件列表
+     *
+     * @param $ztid
+     * @param $labelid
+     * @param int $limit
+     * @param int $order
+     * @return mixed
+     */
+    public function labelList($ztid, $labelid = 0, $limit = 0, $order = 'newstime')
+    {
+        $page = $this->getCurrentPage();
+        $data = $this->dal['topic']->getLabelList($ztid, $labelid, $limit, $page);
+        $data = $this->addListInfo($data);
+        return $this->returnWithPage($data, $limit);
+    }
+
+    /**
+     * 所有标签
+     *
+     * @return mixed
+     */
+    public function allLabel()
+    {
+        return $this->dal['topic']->getAllLabel();
+    }
 }

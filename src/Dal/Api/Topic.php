@@ -147,4 +147,69 @@ class Topic extends Base
         ];
         return $this->getData('match', $params);
     }
+
+    /**
+     * 获取标签
+     *
+     * @param $ztid
+     * @param $id
+     * @param $classid
+     * @param $limit
+     * @return array|bool|mixed
+     */
+    public function getLabel($ztid, $id, $classid, $limit)
+    {
+        $params = [
+            'ztid' => intval($ztid),
+            'id' => intval($id),
+            'classid' => intval($classid),
+            'limit' => intval($limit)
+        ];
+        return $this->getData('label', $params);
+    }
+
+    /**
+     * 热门标签
+     *
+     * @param $ztid
+     * @param $limit
+     * @return mixed
+     */
+    public function getHotLabel($ztid, $limit)
+    {
+        $params = [
+            'ztid' => intval($ztid),
+            'limit'=> intval($limit)
+        ];
+        return $this->getData('hotLabel', $params);
+    }
+
+    /**
+     * 专题标签下关联软件列表
+     *
+     * @param $ztid
+     * @param $labelid
+     * @param $limit
+     * @return array|bool|mixed
+     */
+    public function getLabelList($ztid, $labelid, $limit, $page)
+    {
+        $params = [
+            'ztid' => intval($ztid),
+            'labelid' => intval($labelid),
+            'limit' => intval($limit),
+            'page' => $page
+        ];
+        return $this->getData('labelList', $params);
+    }
+
+    /**
+     * 获取所有标签
+     *
+     * @return array|bool|mixed
+     */
+    public function getAllLabel()
+    {
+        return $this->getData('allLabel');
+    }
 }
