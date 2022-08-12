@@ -426,4 +426,25 @@ class Content extends Base
         ];
         return $this->getData('relatedModel', $params);
     }
+
+
+    /**
+     * 排序信息列表
+     *
+     * @param $classid
+     * @param $page
+     * @param $limit
+     * @param $order
+     * @return array|false|mixed
+     */
+    public function getOrderList($classid, $page, $limit, $order)
+    {
+        $params = [
+            'classid' => $classid,
+            'page' => $page,
+            'limit' => intval($limit),
+            'order' => $order,
+        ];
+        return $this->getData('order', $params);
+    }
 }
